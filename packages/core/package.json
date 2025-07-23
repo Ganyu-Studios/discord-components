@@ -1,5 +1,5 @@
 {
-	"name": "@skyra/discord-components-core",
+	"name": "@pengu/discord-components-core",
 	"version": "4.0.2",
 	"description": "Web components to easily build and display fake Discord messages on your webpages.",
 	"author": "@skyra",

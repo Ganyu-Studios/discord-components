@@ -1725,6 +1725,40 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@pengu/discord-components-core@workspace:^, @pengu/discord-components-core@workspace:packages/core":
+  version: 0.0.0-use.local
+  resolution: "@pengu/discord-components-core@workspace:packages/core"
+  dependencies:
+    "@custom-elements-manifest/analyzer": "npm:^0.10.4"
+    "@favware/cliff-jumper": "npm:^6.0.0"
+    "@lit/context": "npm:^1.1.6"
+    "@web/dev-server": "npm:^0.4.6"
+    "@web/dev-server-esbuild": "npm:^1.0.4"
+    concurrently: "npm:^9.2.0"
+    lit: "npm:^3.3.1"
+    ts-lit-plugin: "npm:^2.0.2"
+    typescript: "npm:^5.8.3"
+  languageName: unknown
+  linkType: soft
+
+"@pengu/discord-components-react@workspace:^, @pengu/discord-components-react@workspace:packages/react":
+  version: 0.0.0-use.local
+  resolution: "@pengu/discord-components-react@workspace:packages/react"
+  dependencies:
+    "@lit/react": "npm:^1.0.8"
+    "@pengu/discord-components-core": "workspace:^"
+    "@types/react": "npm:^19.1.8"
+    colorette: "npm:^2.0.20"
+    react: "npm:^19.1.0"
+    rimraf: "npm:^6.0.1"
+    tsup: "npm:^8.5.0"
+    typescript: "npm:^5.8.3"
+  peerDependencies:
+    react: 16.8.x || 17.x || 18.x || 19.x
+    react-dom: 16.8.x || 17.x || 18.x || 19.x
+  languageName: unknown
+  linkType: soft
+
 "@pkgjs/parseargs@npm:^0.11.0":
   version: 0.11.0
   resolution: "@pkgjs/parseargs@npm:0.11.0"
@@ -2084,40 +2118,6 @@ __metadata:
   checksum: 10/16551c787f5328c8ef05fd9831ade64369ccc992df78deb635ec6c44af217d2f1b43f8728c348cdc4e00585ff2fad6e00d8155199cbf6b154acc45fe65cbf0aa
   languageName: node
   linkType: hard
-
-"@skyra/discord-components-core@workspace:^, @skyra/discord-components-core@workspace:packages/core":
-  version: 0.0.0-use.local
-  resolution: "@skyra/discord-components-core@workspace:packages/core"
-  dependencies:
-    "@custom-elements-manifest/analyzer": "npm:^0.10.4"
-    "@favware/cliff-jumper": "npm:^6.0.0"
-    "@lit/context": "npm:^1.1.6"
-    "@web/dev-server": "npm:^0.4.6"
-    "@web/dev-server-esbuild": "npm:^1.0.4"
-    concurrently: "npm:^9.2.0"
-    lit: "npm:^3.3.1"
-    ts-lit-plugin: "npm:^2.0.2"
-    typescript: "npm:^5.8.3"
-  languageName: unknown
-  linkType: soft
-
-"@skyra/discord-components-react@workspace:^, @skyra/discord-components-react@workspace:packages/react":
-  version: 0.0.0-use.local
-  resolution: "@skyra/discord-components-react@workspace:packages/react"
-  dependencies:
-    "@lit/react": "npm:^1.0.8"
-    "@skyra/discord-components-core": "workspace:^"
-    "@types/react": "npm:^19.1.8"
-    colorette: "npm:^2.0.20"
-    react: "npm:^19.1.0"
-    rimraf: "npm:^6.0.1"
-    tsup: "npm:^8.5.0"
-    typescript: "npm:^5.8.3"
-  peerDependencies:
-    react: 16.8.x || 17.x || 18.x || 19.x
-    react-dom: 16.8.x || 17.x || 18.x || 19.x
-  languageName: unknown
-  linkType: soft
 
 "@stylistic/eslint-plugin-jsx@npm:^4.2.0":
   version: 4.2.0
@@ -4891,9 +4891,9 @@ __metadata:
     "@astrojs/check": "npm:0.9.4"
     "@astrojs/lit": "npm:^4.3.0"
     "@astrojs/starlight": "npm:0.34.5"
+    "@pengu/discord-components-core": "workspace:^"
+    "@pengu/discord-components-react": "workspace:^"
     "@sapphire/docusaurus-plugin-npm2yarn2pnpm": "npm:2.0.2"
-    "@skyra/discord-components-core": "workspace:^"
-    "@skyra/discord-components-react": "workspace:^"
     "@types/react": "npm:19.1.8"
     "@types/react-dom": "npm:^19.1.6"
     "@webcomponents/template-shadowroot": "npm:^0.2.1"

@@ -1,5 +1,5 @@
 {
-	"name": "@skyra/discord-components-react",
+	"name": "@pengu/discord-components-react",
 	"version": "4.0.2",
 	"description": "React bindings for @skyra/discord-components-core",
 	"author": "@skyra",
@@ -30,7 +30,7 @@
 	},
 	"dependencies": {
 		"@lit/react": "^1.0.8",
-		"@skyra/discord-components-core": "workspace:^",
+		"@pengu/discord-components-core": "workspace:^",
 		"react": "^19.1.0"
 	},
 	"devDependencies": {
