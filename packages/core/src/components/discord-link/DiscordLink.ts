@@ -13,7 +13,7 @@ export class DiscordLink extends LitElement implements LightTheme {
 	 */
 	public static override readonly styles = css`
 		a {
-			color: color-mix(in oklab, hsl(213.934 calc(1 * 85.915%) 72.157% /1) 100%, #000 0%);
+			color: var(--color, color-mix(in oklab, hsl(213.934 calc(1 * 85.915%) 72.157% /1) 100%, #000 0%));
 			text-decoration: none;
 		}
 
@@ -21,8 +21,8 @@ export class DiscordLink extends LitElement implements LightTheme {
 			text-decoration: underline;
 		}
 
-		.discord-link-light-theme a {
-			color: #00b0f4;
+		a.discord-link-light-theme {
+			--color: #0074e3;
 		}
 	`;
 

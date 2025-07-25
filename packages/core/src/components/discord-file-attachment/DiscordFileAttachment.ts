@@ -32,6 +32,12 @@ export class DiscordFileAttachment extends LitElement implements LightTheme {
 				padding-bottom: 0.125rem;
 				position: relative;
 				border-radius: 8px;
+				--shadow-color: hsl(none 0% 0%/0.14);
+				box-shadow: 0 1px 4px 0 var(--shadow-color);
+			}
+
+			:host([light-theme]) {
+				--shadow-color: hsl(none 0% 0%/0.08);
 			}
 
 			:host > * {
@@ -49,6 +55,7 @@ export class DiscordFileAttachment extends LitElement implements LightTheme {
 				top: -8px;
 				right: -8px;
 				border-radius: 5px;
+				overflow: hidden;
 				outline: 1px solid color-mix(in oklab, hsl(231.429 calc(1 * 6.542%) 20.98% /1) 100%, #000 0%);
 				background-color: color-mix(in oklab, hsl(232.5 calc(1 * 6.897%) 22.745% /1) 100%, #000 0%);
 
@@ -103,20 +110,18 @@ export class DiscordFileAttachment extends LitElement implements LightTheme {
 				width: 432px;
 				max-width: 100%;
 				flex: auto;
-				background-color: #393a41;
+				background-color: var(--background, #393a41);
 				align-items: center;
 				flex-direction: row;
 				display: flex;
 				box-sizing: border-box;
 				letter-spacing: 0;
-				border: 1px solid #44454c;
-				--shadow-color: hsl(none 0% 0%/0.14);
-				box-shadow: 0 1px 4px 0 var(--shadow-color);
+				border: 1px solid var(--border-color, #44454c);
 			}
 
 			.discord-file-attachment-light-theme.discord-file-attachment-mosaic-style {
-				border-color: #f3f3f3;
-				background-color: #f9f9f9;
+				--background: color-mix(in oklab, hsl(0 calc(1 * 0%) 100% /1) 100%, #000 0%);
+				--border-color: color-mix(in oklab, hsl(240 calc(1 * 4%) 60.784% /0.2784313725490196) 100%, hsl(0 0% 0% /0.2784313725490196) 0%);
 			}
 
 			.discord-file-attachment-icon {
@@ -146,6 +151,25 @@ export class DiscordFileAttachment extends LitElement implements LightTheme {
 				font-weight: 400;
 				color: #adaeb4;
 				margin-right: 8px;
+			}
+
+			.discord-file-attachment-light-theme .discord-file-attachment-metadata {
+				color: #6d6e77;
+			}
+
+			.discord-button-download-attachment-light-theme {
+				outline-color: #fbfbfb;
+				.discord-link-download-attachment {
+					background-color: #fbfbfb;
+					color: #5f606a;
+				}
+				&:hover {
+					outline-color: #e4e4e4 !important;
+					.discord-link-download-attachment {
+						background-color: #e4e4e4;
+						color: #2e2f34;
+					}
+				}
 			}
 		`,
 		DiscordMediaSpoileableCover.hostStyles
@@ -229,7 +253,7 @@ export class DiscordFileAttachment extends LitElement implements LightTheme {
 		return html` <div class="discord-file-attachment-non-visual-media-item-container">
 			<div class="discord-file-attachment-non-visual-media-item">
 				<div class="discord-file-attachment-mosaic-item-media">
-					${DiscordMediaSpoileableCover.inject(this.spoiler)}
+					${DiscordMediaSpoileableCover.inject(this.spoiler, this.lightTheme)}
 					<div class=${classMap({ 'discord-file-attachment-mosaic-style': true, 'discord-file-attachment-light-theme': this.lightTheme })}>
 						${FileAttachment({
 							class: 'discord-file-attachment-icon',
@@ -259,7 +283,12 @@ export class DiscordFileAttachment extends LitElement implements LightTheme {
 					</div>
 				</div>
 			</div>
-			<div class="discord-button-download-attachment">
+			<div
+				class=${classMap({
+					'discord-button-download-attachment': true,
+					'discord-button-download-attachment-light-theme': this.lightTheme
+				})}
+			>
 				<a
 					class="discord-link-download-attachment"
 					aria-label="Download"

@@ -36,6 +36,7 @@ export class DiscordSectionComponents extends LitElement {
 		if (children !== 1) return (this.hasOnlyOneTextDisplayChild = false);
 		const hasTextDisplay = this.querySelector('discord-text-display');
 		this.hasOnlyOneTextDisplayChild = Boolean(hasTextDisplay);
+		return undefined;
 	}
 
 	protected override render() {

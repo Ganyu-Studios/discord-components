@@ -32,7 +32,7 @@ export class DiscordMessages extends LitElement implements LightTheme {
 
 		:host([light-theme]) {
 			color: #747f8d;
-			background-color: #fff;
+			background-color: #fbfbfb;
 			border-color: #dedede;
 		}
 

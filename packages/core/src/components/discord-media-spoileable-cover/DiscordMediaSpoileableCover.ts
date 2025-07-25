@@ -24,6 +24,9 @@ export class DiscordMediaSpoileableCover extends LitElement {
 				z-index: 10;
 
 				span {
+					color: #fff;
+					line-height: 15px;
+					height: 15px;
 					display: inline-block;
 					background-color: var(--span-bg);
 					border-radius: 20px;
@@ -49,12 +52,23 @@ export class DiscordMediaSpoileableCover extends LitElement {
 			}
 		}
 
+		:host:has(discord-media-spoileable-cover[light-theme='true']:not([is-revealed])) {
+			--bg: color-mix(in oklab, hsl(233.333 calc(1 * 4.225%) 58.235% /1) 100%, #000 0%);
+			discord-media-spoileable-cover + * {
+				opacity: 0;
+			}
+		}
+
 		:host(:hover):has(discord-media-spoileable-cover:not([is-revealed])) {
 			--bg: color-mix(in oklab, hsl(232.5 calc(1 * 4.167%) 62.353% /1) 100%, #000 0%);
 
 			discord-media-spoileable-cover {
 				--span-bg: hsl(0 calc(1 * 0%) 0% /0.8784313725490196);
 			}
+		}
+
+		:host(:hover):has(discord-media-spoileable-cover[light-theme='true']:not([is-revealed])) {
+			--bg: color-mix(in oklab, hsl(234 calc(1 * 4.274%) 45.882% /1) 100%, #000 0%);
 		}
 	`;
 
@@ -65,8 +79,8 @@ export class DiscordMediaSpoileableCover extends LitElement {
 		this.isRevealed = true;
 	}
 
-	public static inject(isSpoiler = false) {
-		return html`${when(isSpoiler, () => html`<discord-media-spoileable-cover></discord-media-spoileable-cover>`)}`;
+	public static inject(isSpoiler = false, lightTheme = false) {
+		return html`${when(isSpoiler, () => html`<discord-media-spoileable-cover light-theme=${lightTheme}></discord-media-spoileable-cover>`)}`;
 	}
 
 	protected override render() {

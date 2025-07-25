@@ -78,7 +78,7 @@ export class DiscordMessage extends LitElement implements LightTheme {
 			width: 2px;
 		}
 
-		:host([highlight]) {
+		:host([highlight][light-theme]) {
 			background-color: rgba(250, 166, 26, 0.1);
 		}
 
@@ -109,6 +109,11 @@ export class DiscordMessage extends LitElement implements LightTheme {
 		:host([light-theme]) {
 			color: #2e3338;
 			border-color: #eceeef;
+			--message-hover-background-color: color-mix(
+				in oklab,
+				hsl(240 calc(1 * 4%) 60.784% /0.12156862745098039) 100%,
+				hsl(0 0% 0% /0.12156862745098039) 0%
+			);
 		}
 
 		.discord-author-avatar {
@@ -207,8 +212,7 @@ export class DiscordMessage extends LitElement implements LightTheme {
 		}
 
 		:host(:hover) {
-			/* background-color: hsl(0 calc(1 * 0%) 0.8%/0.03); */
-			background-color: #3a3b41;
+			background-color: var(--message-hover-background-color, #3a3b41);
 		}
 
 		:host([highlight]:hover) {
