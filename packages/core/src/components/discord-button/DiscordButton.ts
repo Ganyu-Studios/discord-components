@@ -1,8 +1,10 @@
+import { consume } from '@lit/context';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { when } from 'lit/directives/when.js';
 import { DiscordComponentsError } from '../../util.js';
+import { discordContainerContext } from '../discord-container/DiscordContainer.js';
 import LaunchIcon from '../svgs/LaunchIcon.js';
 
 @customElement('discord-button')
@@ -17,7 +19,6 @@ export class DiscordButton extends LitElement {
 			align-items: center;
 			cursor: pointer;
 			margin: 4px 8px 4px 0;
-			padding: 2px 16px;
 			width: auto;
 			height: 32px;
 			min-width: 60px;
@@ -28,54 +29,69 @@ export class DiscordButton extends LitElement {
 			transition:
 				background-color 0.17s ease,
 				color 0.17s ease;
-			border-radius: 3px;
+			border-radius: 8px;
 			font-size: 14px;
 			font-weight: 500;
-			line-height: 16px;
+			line-height: 18px;
 			text-decoration: none !important;
-			/* CSS Reset to unset button styling */
-			border-width: unset;
-			border-style: unset;
-			border-color: unset;
-			border-image: unset;
-			box-sizing: unset;
+			border: 1px solid #47484f;
+			box-sizing: border-box;
+			padding: 3px 11px;
 			font-family: 'gg sans', 'Noto Sans', Whitney, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+
+			&.is-in-container {
+				margin: 0;
+			}
+		}
+
+		.discord-button-launch {
+			margin-left: 8px;
+		}
+
+		:host([small]) > *:first-child,
+		:host > *:first-child.is-in-container {
+			height: 32px;
+			line-height: 18px;
+			min-height: 32px;
 		}
 
 		.success {
 			color: #fff;
-			background-color: #3ba55d;
+			background-color: #00863a;
+			border-color: #148f49 !important;
 		}
 
 		.success.hoverable:hover {
-			background-color: #2d7d46;
+			background-color: #047e37;
 		}
 
 		.destructive {
 			color: #fff;
-			background-color: #ed4245;
+			background-color: #d22d39;
+			border-color: #d63d49 !important;
 		}
 
 		.destructive.hoverable:hover {
-			background-color: #c03537;
+			background-color: #b42831;
 		}
 
 		.primary {
 			color: #fff;
 			background-color: #5865f2;
+			border-color: #6571f3 !important;
 		}
 
 		.primary.hoverable:hover {
-			background-color: #4752c4;
+			background-color: #4654c0;
 		}
 
 		.secondary {
 			color: #fff;
-			background-color: #4f545c;
+			background-color: #44454c;
 		}
 
 		.secondary.hoverable:hover {
-			background-color: #5d6269;
+			background-color: #4c4c54;
 		}
 
 		.disabled {
@@ -93,6 +109,11 @@ export class DiscordButton extends LitElement {
 			width: 1.375em;
 			height: 1.375em;
 			vertical-align: bottom;
+		}
+
+		.discord-button-content {
+			display: flex;
+			align-items: center;
 		}
 	`;
 
@@ -138,7 +159,13 @@ export class DiscordButton extends LitElement {
 	@property({ reflect: true, attribute: 'modal-id' })
 	public accessor modalId: string;
 
+	@property({ type: Boolean, reflect: true, attribute: 'small' })
+	public accessor small = false;
+
 	private readonly validButtonTypes = new Set(['primary', 'secondary', 'success', 'destructive']);
+
+	@consume({ context: discordContainerContext })
+	public accessor isInContainer = false;
 
 	public checkType() {
 		if (this.type) {
@@ -151,7 +178,7 @@ export class DiscordButton extends LitElement {
 	}
 
 	public checkParentElement() {
-		if (this.parentElement?.tagName.toLowerCase() !== 'discord-action-row') {
+		if (this.parentElement?.tagName.toLowerCase() !== 'discord-action-row' && this.parentElement?.tagName.toLowerCase() !== 'discord-section') {
 			throw new DiscordComponentsError('All <discord-button> components must be direct children of <discord-action-row>.');
 		}
 	}
@@ -186,22 +213,35 @@ export class DiscordButton extends LitElement {
 		const isActiveLinkButton = this.url && !this.disabled;
 
 		const content = html`
-			${when(this.emoji, () => html`<img src=${this.emoji} alt=${this.emojiName} draggable="true" class="emoji" />`)}
-			<span>
-				<slot></slot>
-			</span>
-			${when(this.url, () => LaunchIcon())}
+			<div class="discord-button-content">
+				${when(this.emoji, () => html`<img src=${this.emoji} alt=${this.emojiName} draggable="true" class="emoji" />`)}
+				<span>
+					<slot></slot>
+				</span>
+				${when(this.url, () => LaunchIcon())}
+			</div>
 		`;
 
 		if (isActiveLinkButton) {
-			return html`<a class="secondary" href=${this.url} target="_blank" rel="noopener noreferrer">${content}</a>`;
+			return html`<a
+				class=${classMap({
+					'is-in-container': this.isInContainer,
+					secondary: true,
+					hoverable: true
+				})}
+				href=${this.url}
+				target="_blank"
+				rel="noopener noreferrer"
+				>${content}</a
+			>`;
 		}
 
 		return html`<button
 			class=${classMap({
 				[this.type]: true,
 				disabled: this.disabled,
-				hoverable: !this.disabled
+				hoverable: !this.disabled,
+				'is-in-container': this.isInContainer
 			})}
 			@click=${this.handleButtonClick}
 		>

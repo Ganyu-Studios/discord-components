@@ -49,6 +49,16 @@ export { DiscordUnderlined } from './components/discord-underlined/DiscordUnderl
 export { DiscordUnorderedList } from './components/discord-unordered-list/DiscordUnorderedList.js';
 export { DiscordVerifiedAuthorTag } from './components/discord-verified-author-tag/DiscordVerifiedAuthorTag.js';
 export { DiscordVideoAttachment } from './components/discord-video-attachment/DiscordVideoAttachment.js';
+// components v2
+export { DiscordContainer } from './components/discord-container/DiscordContainer.js';
+export { DiscordSection } from './components/discord-section/DiscordSection.js';
+export { DiscordSectionComponents } from './components/discord-section-components/DiscordSectionComponents.js';
+export { DiscordTextDisplay } from './components/discord-text-display/DiscordTextDisplay.js';
+export { DiscordSeparator } from './components/discord-separator/DiscordSeparator.js';
+export { DiscordThumbnail } from './components/discord-thumbnail/DiscordThumbnail.js';
+export { DiscordMediaGallery } from './components/discord-media-gallery/DiscordMediaGallery.js';
+export { DiscordMediaGalleryItem } from './components/discord-media-gallery-tem/DiscordMediaGalleryItem.js';
+export { DiscordComponentsColumn } from './components/discord-components-column/DiscordComponentsColumn.js';
 
 /* EXPORTS END */
 export { getConfig, setConfig } from './config.js';

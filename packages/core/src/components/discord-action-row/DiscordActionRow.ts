@@ -1,7 +1,7 @@
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
-@customElement('discord-action-row')
+@customElement('discord-action-row') // hey
 export class DiscordActionRow extends LitElement {
 	/**
 	 * @internal
@@ -10,6 +10,7 @@ export class DiscordActionRow extends LitElement {
 		:host {
 			display: flex;
 			flex-wrap: wrap;
+			gap: 8px;
 		}
 	`;
 

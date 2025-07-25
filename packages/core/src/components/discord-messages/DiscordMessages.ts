@@ -22,7 +22,7 @@ export class DiscordMessages extends LitElement implements LightTheme {
 	public static override readonly styles = css`
 		:host {
 			color: #fff;
-			background-color: #36393e;
+			background-color: #323339;
 			display: block;
 			font-size: 16px;
 			font-family: 'gg sans', 'Noto Sans', Whitney, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;

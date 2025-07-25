@@ -4,8 +4,9 @@ import { customElement, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { when } from 'lit/directives/when.js';
-import '../discord-link/DiscordLink.js';
 import type { LightTheme } from '../../types.js';
+import '../discord-link/DiscordLink.js';
+import { DiscordMediaSpoileableCover } from '../discord-media-spoileable-cover/DiscordMediaSpoileableCover.js';
 import { messagesLightTheme } from '../discord-messages/DiscordMessages.js';
 import AttachmentDownloadButton from '../svgs/AttachmentDownloadButton.js';
 import FileAttachment from '../svgs/FileAttachment.js';
@@ -15,127 +16,140 @@ export class DiscordFileAttachment extends LitElement implements LightTheme {
 	/**
 	 * @internal
 	 */
-	public static override readonly styles = css`
-		:host {
-			display: grid;
-			height: -moz-fit-content;
-			height: fit-content;
-			grid-auto-flow: row;
-			grid-row-gap: 0.25rem;
-			grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
-			text-indent: 0;
-			min-height: 0;
-			min-width: 0;
-			padding-top: 0.125rem;
-			padding-bottom: 0.125rem;
-			position: relative;
-		}
+	public static override readonly styles = [
+		css`
+			:host {
+				display: grid;
+				height: -moz-fit-content;
+				height: fit-content;
+				grid-auto-flow: row;
+				grid-row-gap: 0.25rem;
+				grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+				text-indent: 0;
+				min-height: 0;
+				min-width: 0;
+				padding-top: 0.125rem;
+				padding-bottom: 0.125rem;
+				position: relative;
+				border-radius: 8px;
+			}
 
-		:host > * {
-			justify-self: start;
-			align-self: start;
-		}
+			:host > * {
+				justify-self: start;
+				align-self: start;
+			}
 
-		.discord-file-attachment-non-visual-media-item-container:hover .discord-button-download-attachment {
-			display: block !important;
-		}
+			.discord-file-attachment-non-visual-media-item-container:hover .discord-button-download-attachment {
+				display: block !important;
+			}
 
-		.discord-button-download-attachment {
-			display: none;
-			position: absolute;
-			top: -8px;
-			right: -8px;
-			border-radius: 5px;
-			outline: color-mix(in oklab, hsl(220 calc(1 * 6.5%) 18% / 1) 100%, black 0%);
-			background-color: color-mix(in oklab, hsl(223 calc(1 * 6.7%) 20.6% / 1) 100%, black 0%);
-		}
+			.discord-button-download-attachment {
+				display: none;
+				position: absolute;
+				top: -8px;
+				right: -8px;
+				border-radius: 5px;
+				outline: 1px solid color-mix(in oklab, hsl(231.429 calc(1 * 6.542%) 20.98% /1) 100%, #000 0%);
+				background-color: color-mix(in oklab, hsl(232.5 calc(1 * 6.897%) 22.745% /1) 100%, #000 0%);
 
-		.discord-link-download-attachment {
-			color: color-mix(in oklab, hsl(215 calc(1 * 8.8%) 73.3% / 1) 100%, black 0%);
-			display: flex;
-		}
+				&:hover {
+					background-color: #3c3d43;
+				}
+			}
 
-		.discord-icon-download {
-			padding: 6px;
-		}
+			:host:has(discord-media-spoileable-cover:not([is-revealed])) .discord-button-download-attachment {
+				display: none !important;
+			}
 
-		.discord-file-attachment-non-visual-media-item-container {
-			margin-top: 8px;
-			max-width: 100%;
-			display: flex;
-			flex-direction: column;
-			position: relative;
-		}
+			.discord-link-download-attachment {
+				color: color-mix(in oklab, hsl(215 calc(1 * 8.8%) 73.3% / 1) 100%, black 0%);
+				display: flex;
+			}
 
-		.discord-file-attachment-non-visual-media-item {
-			width: -moz-fit-content;
-			width: fit-content;
-			max-width: 100%;
-		}
+			.discord-icon-download {
+				padding: 6px;
+			}
 
-		.discord-file-attachment-mosaic-item-media {
-			position: relative;
-			max-height: inherit;
-			border-radius: 2px;
-			width: 100%;
-			align-items: center;
-			display: flex;
-			flex-flow: row nowrap;
-			max-width: 100%;
-			height: 100%;
-		}
+			.discord-file-attachment-non-visual-media-item-container {
+				margin-top: var(--media-item-container-margin-top, 8px);
+				max-width: 100%;
+				display: flex;
+				flex-direction: column;
+				position: relative;
+			}
 
-		.discord-file-attachment-mosaic-style {
-			padding: 16px;
-			border-radius: 8px;
-			width: 432px;
-			max-width: 100%;
-			flex: auto;
-			border-color: #202020;
-			background-color: #282828;
+			.discord-file-attachment-non-visual-media-item {
+				width: -moz-fit-content;
+				width: fit-content;
+				max-width: 100%;
+			}
 
-			align-items: center;
-			flex-direction: row;
-			display: flex;
-			box-sizing: border-box;
-			letter-spacing: 0;
-			border: 1px solid transparent;
-		}
+			.discord-file-attachment-mosaic-item-media {
+				position: relative;
+				max-height: inherit;
+				border-radius: 2px;
+				width: 100%;
+				align-items: center;
+				display: flex;
+				flex-flow: row nowrap;
+				max-width: 100%;
+				height: 100%;
+				overflow: hidden;
+			}
 
-		.discord-file-attachment-light-theme.discord-file-attachment-mosaic-style {
-			border-color: #f3f3f3;
-			background-color: #f9f9f9;
-		}
+			.discord-file-attachment-mosaic-style {
+				padding: 16px;
+				border-radius: 8px;
+				width: 432px;
+				max-width: 100%;
+				flex: auto;
+				background-color: #393a41;
+				align-items: center;
+				flex-direction: row;
+				display: flex;
+				box-sizing: border-box;
+				letter-spacing: 0;
+				border: 1px solid #44454c;
+				--shadow-color: hsl(none 0% 0%/0.14);
+				box-shadow: 0 1px 4px 0 var(--shadow-color);
+			}
 
-		.discord-file-attachment-icon {
-			width: 30px;
-			height: 40px;
-			margin-right: 8px;
-			flex-shrink: 0;
-		}
+			.discord-file-attachment-light-theme.discord-file-attachment-mosaic-style {
+				border-color: #f3f3f3;
+				background-color: #f9f9f9;
+			}
 
-		.discord-file-attachment-inner {
-			flex: 1;
-			white-space: nowrap;
-			text-overflow: ellipsis;
-			overflow: hidden;
-		}
+			.discord-file-attachment-icon {
+				width: 30px;
+				height: 40px;
+				margin-right: 8px;
+				flex-shrink: 0;
+			}
 
-		.discord-file-attachment-filename-link-wrapper {
-			color: #00aff4;
-			white-space: nowrap;
-			text-overflow: ellipsis;
-			overflow: hidden;
-		}
+			.discord-file-attachment-inner {
+				flex: 1;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				overflow: hidden;
+			}
 
-		.discord-file-attachment-metadata {
-			line-height: 16px;
-			font-size: 12px;
-			font-weight: 400;
-			color: hsl(223 calc(1 * 5.8%) 52.9% / 1);
-			margin-right: 8px;
-		}
-	`;
+			.discord-file-attachment-filename-link-wrapper {
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				font-size: 16px;
+			}
+
+			.discord-file-attachment-metadata {
+				line-height: 16px;
+				font-size: 12px;
+				font-weight: 400;
+				color: #adaeb4;
+				margin-right: 8px;
+			}
+		`,
+		DiscordMediaSpoileableCover.hostStyles
+	];
 
 	/**
 	 * The name of the file
@@ -204,16 +218,25 @@ export class DiscordFileAttachment extends LitElement implements LightTheme {
 	@property()
 	public accessor type: string;
 
+	@property({ type: Boolean, reflect: true })
+	public accessor spoiler = false;
+
 	@consume({ context: messagesLightTheme, subscribe: true })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
 	public accessor lightTheme = false;
 
 	protected override render() {
-		return html`<div class="discord-file-attachment-non-visual-media-item-container">
+		return html` <div class="discord-file-attachment-non-visual-media-item-container">
 			<div class="discord-file-attachment-non-visual-media-item">
 				<div class="discord-file-attachment-mosaic-item-media">
+					${DiscordMediaSpoileableCover.inject(this.spoiler)}
 					<div class=${classMap({ 'discord-file-attachment-mosaic-style': true, 'discord-file-attachment-light-theme': this.lightTheme })}>
-						${FileAttachment({ class: 'discord-file-attachment-icon', alt: 'Attachment file type: unknown', title: 'unknown' })}
+						${FileAttachment({
+							class: 'discord-file-attachment-icon',
+							alt: 'Attachment file type: unknown',
+							title: 'unknown',
+							type: this.type
+						})}
 						<div class="discord-file-attachment-inner">
 							<div class="discord-file-attachment-filename-link-wrapper">
 								<discord-link
