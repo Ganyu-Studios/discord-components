@@ -1,0 +1,83 @@
+@use 'sass:meta';
+
+@font-face {
+	font-family: 'Whitney';
+	src: url('https://cdn.skyra.pw/whitney-font/v2/Book.woff') format('woff');
+	font-weight: 400;
+}
+
+@font-face {
+	font-family: 'Whitney';
+	src: url('https://cdn.skyra.pw/whitney-font/v2/Medium.woff') format('woff');
+	font-weight: 500;
+}
+
+@font-face {
+	font-family: 'Whitney';
+	src: url('https://cdn.skyra.pw/whitney-font/v2/Semibold.woff') format('woff');
+	font-weight: 600;
+}
+
+@font-face {
+	font-family: 'Whitney';
+	src: url('https://cdn.skyra.pw/whitney-font/v2/Bold.woff') format('woff');
+	font-weight: 700;
+}
+
+discord-code-block {
+	@include meta.load-css('highlight.js/styles/github-dark.css');
+}
+
+[light-theme] discord-code-block,
+discord-code-block[light-theme] {
+	@include meta.load-css('highlight.js/styles/github.css');
+}
+
+discord-code-block[light-theme] .discord-code-block-pre {
+	--border: 1px solid #d3d4da;
+	--background-color: #f4f5fa;
+}
+
+.discord-code-block-pre {
+	font-family: 'Consolas', 'Courier New', Courier, monospace;
+	margin-top: 0.25rem;
+
+	background-color: var(
+		--background-color,
+		color-mix(in oklab, hsl(234.935 calc(1 * 85.556%) 64.706% /0.0784313725490196) 100%, hsl(0 0% 0% /0.0784313725490196) 0%)
+	);
+
+	border: var(--border, 1px solid color-mix(in oklab, hsl(240 calc(1 * 4%) 60.784% /0.2) 100%, hsl(0 0% 0% /0.2) 0%));
+}
+
+.discord-code-block-pre--multiline {
+	display: block;
+	margin-bottom: 0.5rem;
+	margin-top: 0.25em;
+	padding: 0.5em;
+	border-radius: 4px;
+	color: #b9bbbe;
+	font-size: 0.875rem;
+}
+
+.discord-code-block-pre--multiline.hljs {
+	color: #b9bbbe;
+}
+
+code.hljs {
+	white-space: pre-wrap;
+	background: none !important;
+	padding: unset !important;
+}
+
+discord-embed {
+	.discord-code-block-pre {
+		--background-color: color-mix(in oklab, hsl(230 calc(1 * 6.383%) 18.431% /1) 100%, #000 0%);
+		--border: none;
+	}
+	&[light-theme] {
+		.discord-code-block-pre {
+			--background-color: #f3f3f4;
+		}
+	}
+}
