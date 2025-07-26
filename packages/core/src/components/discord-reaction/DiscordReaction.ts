@@ -21,22 +21,20 @@ export class DiscordReaction extends LitElement implements LightTheme {
 			user-select: none;
 			transition: none 0.1s ease;
 			transition-property: background-color, border-color;
-			background-color: #2f3136;
-			border: 1px solid transparent;
+			background-color: var(--background-color, hsl(240 calc(1 * 4%) 60.784% /0.0784313725490196));
+			border: 1px solid var(--border-color, transparent);
 		}
 
 		:host([light-theme]) > *:first-child {
-			background-color: #f2f3f5;
+			--background-color: hsl(240 calc(1 * 4%) 60.784% /0.1607843137254902);
 		}
 
 		:host > *:first-child:hover {
-			background-color: #36393f;
-			border-color: #fff2;
+			--background-color: hsl(240 calc(1 * 4%) 60.784% /0.1607843137254902);
 		}
 
 		:host([light-theme]:not([reacted])) > *:first-child:hover {
-			background-color: white;
-			border-color: #0003;
+			--border-color: hsl(0 calc(1 * 0%) 0% /0.2);
 		}
 
 		:host([reacted]) > *:first-child {

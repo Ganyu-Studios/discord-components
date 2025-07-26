@@ -11,7 +11,6 @@ export class DiscordThread extends LitElement implements LightTheme {
 	 */
 	public static override readonly styles = css`
 		:host {
-			background-color: #2f3136;
 			border-radius: 4px;
 			cursor: pointer;
 			margin-top: 8px;
@@ -21,10 +20,13 @@ export class DiscordThread extends LitElement implements LightTheme {
 			display: inline-flex;
 			width: fit-content;
 			flex-direction: column;
+			background-color: var(--background, #393a41);
+			border: 1px solid var(--border, #44454c);
 		}
 
 		:host([light-theme]) {
-			background-color: #f2f3f5;
+			--background: color-mix(in oklab, hsl(0 calc(1 * 0%) 100% /1) 100%, #000 0%);
+			--border: color-mix(in oklab, hsl(240 calc(1 * 4%) 60.784% /0.2784313725490196) 100%, hsl(0 0% 0% /0.2784313725490196) 0%);
 		}
 
 		:host .discord-thread-top {
@@ -56,16 +58,21 @@ export class DiscordThread extends LitElement implements LightTheme {
 			white-space: nowrap;
 		}
 
-		:host([light-theme]) .discord-thread-name {
-			color: #060607;
-		}
-
 		:host .discord-thread-cta {
-			color: #00aff4;
+			color: var(--color, color-mix(in oklab, hsl(213.934 calc(1 * 85.915%) 72.157% /1) 100%, #000 0%));
 			flex-shrink: 0;
 			font-size: 0.875rem;
 			font-weight: 600;
 			line-height: 1.125rem;
+		}
+
+		:host([light-theme]) {
+			.discord-thread-name {
+				color: #060607;
+			}
+			.discord-thread-cta {
+				--color: #0074e3;
+			}
 		}
 
 		:host .discord-thread-cta:hover {

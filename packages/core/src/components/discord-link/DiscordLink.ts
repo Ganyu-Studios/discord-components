@@ -16,13 +16,12 @@ export class DiscordLink extends LitElement implements LightTheme {
 			color: var(--color, color-mix(in oklab, hsl(213.934 calc(1 * 85.915%) 72.157% /1) 100%, #000 0%));
 			text-decoration: none;
 		}
+		a.discord-link-light-theme {
+			--color: #0074e3;
+		}
 
 		a:hover {
 			text-decoration: underline;
-		}
-
-		a.discord-link-light-theme {
-			--color: #0074e3;
 		}
 	`;
 

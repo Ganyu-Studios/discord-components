@@ -212,7 +212,7 @@
 						<discord-custom-emoji name="skyra" url="https://github.com/NM-EEA-Y.png"></discord-custom-emoji>
 						<discord-embed slot="embeds" color="#0F52BA" embed-title="diamond Emojis in the embed title">
 							<discord-embed-description slot="description">
-								Custom emojis in the embed description:
+								Custom emojis in the <discord-code>embed</discord-code> description:
 								<discord-custom-emoji
 									name="pikawow"
 									url="https://raw.githubusercontent.com/skyra-project/discord-components-implementations/main/shared/public/pikawow.png"
@@ -229,6 +229,31 @@
 					<discord-message profile="favna"> They can also be jumbo sized to represent if the message only has emojis: </discord-message>
 					<discord-message profile="favna">
 						<discord-custom-emoji jumbo name="skyra" url="https://github.com/NM-EEA-Y.png"></discord-custom-emoji>
+					</discord-message>
+				</discord-messages>
+				<discord-messages light-theme>
+					<discord-message profile="favna">
+						Hey these are some custom <discord-code>emojis:</discord-code>
+						<discord-custom-emoji
+							name="blobparty"
+							url="https://raw.githubusercontent.com/skyra-project/discord-components-implementations/main/shared/public/blobparty.gif"
+						></discord-custom-emoji>
+						<discord-custom-emoji name="skyra" url="https://github.com/NM-EEA-Y.png"></discord-custom-emoji>
+						<discord-embed slot="embeds" color="#0F52BA" embed-title="diamond Emojis in the embed title">
+							<discord-embed-description slot="description">
+								Custom emojis in the <discord-code>embed</discord-code> description:
+								<discord-custom-emoji
+									name="pikawow"
+									url="https://raw.githubusercontent.com/skyra-project/discord-components-implementations/main/shared/public/pikawow.png"
+									embed-emoji
+								></discord-custom-emoji>
+							</discord-embed-description>
+							<discord-embed-fields slot="fields">
+								<discord-embed-field field-title="dragonite Custom emojis in the field title">
+									Custom emojis in the field content <discord-custom-emoji name="sapphire" embed-emoji></discord-custom-emoji>
+								</discord-embed-field>
+							</discord-embed-fields>
+						</discord-embed>
 					</discord-message>
 				</discord-messages>
 				<h3 class="title">Server Invites</h3>
@@ -1250,6 +1275,35 @@
 
 				<h3 class="title">With all slots of a message filled</h3>
 				<discord-messages>
+					<discord-message profile="skyra">
+						This is the text of the message
+						<discord-command slot="reply" profile="favna" command="command"></discord-command>
+						<discord-image-attachment
+							slot="attachments"
+							url="https://raw.githubusercontent.com/skyra-project/discord-components-implementations/main/shared/public/lit.png"
+							height="100"
+							width="100"
+							alt="lit-logo"
+						></discord-image-attachment>
+						<discord-embed slot="embeds" color="#0F52BA" embed-title="Embed title">
+							<discord-embed-description slot="description"> Embed description </discord-embed-description>
+							<discord-embed-fields slot="fields">
+								<discord-embed-field field-title="Field title"> Field value </discord-embed-field>
+							</discord-embed-fields>
+						</discord-embed>
+						<discord-reactions slot="reactions">
+							<discord-reaction
+								name="👀"
+								emoji="https://raw.githubusercontent.com/skyra-project/discord-components-implementations/main/shared/public/eyes.svg"
+							></discord-reaction>
+						</discord-reactions>
+						<discord-thread slot="thread" name="Thread under the message" cta="2 Messages">
+							<discord-thread-message profile="skyra">Pong!</discord-thread-message>
+						</discord-thread>
+					</discord-message>
+				</discord-messages>
+
+				<discord-messages light-theme>
 					<discord-message profile="skyra">
 						This is the text of the message
 						<discord-command slot="reply" profile="favna" command="command"></discord-command>

@@ -36,6 +36,10 @@ export class DiscordCommand extends LitElement implements LightTheme {
 				cursor: default;
 			}
 
+			:host([light-theme]) .discord-slash-command-name {
+				background-color: hsl(235deg 85.6% 64.7% / 15%);
+			}
+
 			:host .discord-slash-command-name:hover {
 				color: #fffffd !important;
 				background-color: #5865f2;

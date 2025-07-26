@@ -50,19 +50,19 @@ export class DiscordEmbed extends LitElement implements LightTheme {
 		}
 
 		:host .discord-embed-wrapper {
-			background-color: #2f3136;
-			max-width: 520px;
-			border: 1px solid rgba(46, 48, 54, 0.6);
 			border-radius: 0 4px 4px 0;
 			justify-self: start;
 			align-self: start;
 			display: grid;
 			box-sizing: border-box;
+			max-width: 520px;
+			background-color: var(--background, #393a41);
+			border: 1px solid var(--border, #44454c);
 		}
 
 		:host([light-theme]) .discord-embed-wrapper {
-			background-color: rgb(242, 243, 245);
-			border-color: rgba(205, 205, 205, 0.3);
+			--background: color-mix(in oklab, hsl(0 calc(1 * 0%) 100% /1) 100%, #000 0%);
+			--border: color-mix(in oklab, hsl(240 calc(1 * 4%) 60.784% /0.2784313725490196) 100%, hsl(0 0% 0% /0.2784313725490196) 0%);
 		}
 
 		:host .discord-embed-wrapper .discord-embed-grid {
@@ -156,14 +156,17 @@ export class DiscordEmbed extends LitElement implements LightTheme {
 			min-width: 0;
 		}
 
-		:host([light-theme]) .discord-embed-title {
-			color: #060607;
-		}
-
 		:host .discord-embed-title a {
-			color: #00aff4;
+			color: var(--color, color-mix(in oklab, hsl(213.934 calc(1 * 85.915%) 72.157% /1) 100%, #000 0%));
 			font-weight: 600;
 			text-decoration: none;
+		}
+
+		:host([light-theme]) .discord-embed-title {
+			color: #060607;
+			a {
+				--color: #0074e3;
+			}
 		}
 
 		:host .discord-embed-title a:hover {

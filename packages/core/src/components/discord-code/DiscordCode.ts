@@ -1,6 +1,7 @@
 import { consume } from '@lit/context';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
 import type { LightTheme } from '../../types.js';
 import { messagesLightTheme } from '../discord-messages/DiscordMessages.js';
 
@@ -11,7 +12,6 @@ export class DiscordCode extends LitElement implements LightTheme {
 	 */
 	public static override readonly styles = css`
 		:host {
-			background-color: #2f3136;
 			white-space: break-spaces;
 			font-family:
 				Consolas,
@@ -28,6 +28,7 @@ export class DiscordCode extends LitElement implements LightTheme {
 				Courier,
 				monospace;
 			border-radius: 3px;
+			font-size: 85%;
 		}
 
 		code {
@@ -35,9 +36,14 @@ export class DiscordCode extends LitElement implements LightTheme {
 			margin: -0.2em;
 			border-radius: 3px;
 			border: none;
-			font-size: 85%;
 			text-indent: 0;
 			white-space: pre-wrap;
+			background-color: var(
+				--background-color,
+				color-mix(in oklab, hsl(234.935 calc(1 * 85.556%) 64.706% /0.0784313725490196) 100%, hsl(0 0% 0% /0.0784313725490196) 0%)
+			);
+
+			border: var(--border, 1px solid color-mix(in oklab, hsl(240 calc(1 * 4%) 60.784% /0.2) 100%, hsl(0 0% 0% /0.2) 0%));
 		}
 
 		:host([multiline]) code {
@@ -46,8 +52,6 @@ export class DiscordCode extends LitElement implements LightTheme {
 			font-size: 0.875rem;
 			line-height: 1.125rem;
 			padding: 0.5em;
-			background: #2b2d31;
-			border: 1px solid #1e1f22;
 		}
 
 		:host([embed]) code {
@@ -62,9 +66,9 @@ export class DiscordCode extends LitElement implements LightTheme {
 			background: #1e1f22;
 		}
 
-		:host([light-theme]) code {
-			border-color: #e3e5e8;
-			background-color: #f2f3f5;
+		:host([light-theme]) {
+			--border: 1px solid #d3d4da;
+			--background-color: #f4f5fa;
 		}
 
 		:host([light-theme][embed]) code {
@@ -91,7 +95,11 @@ export class DiscordCode extends LitElement implements LightTheme {
 	protected override render() {
 		if (this.multiline) {
 			return html`<discord-pre ?embed=${this.embed}
-				><code><slot></slot></code
+				><code
+					class=${classMap({
+						'is-in-embed': this.isInEmbed
+					})}
+					><slot></slot></code
 			></discord-pre>`;
 		}
 

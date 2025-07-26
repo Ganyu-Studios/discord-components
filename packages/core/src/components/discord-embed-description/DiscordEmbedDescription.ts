@@ -1,8 +1,11 @@
+import { consume } from '@lit/context';
 import { css, html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
+import type { LightTheme } from '../../types.js';
+import { messagesLightTheme } from '../discord-messages/DiscordMessages.js';
 
 @customElement('discord-embed-description')
-export class DiscordEmbedDescription extends LitElement {
+export class DiscordEmbedDescription extends LitElement implements LightTheme {
 	/**
 	 * @internal
 	 */
@@ -15,7 +18,23 @@ export class DiscordEmbedDescription extends LitElement {
 			margin-top: 8px;
 			min-width: 0;
 		}
+
+		::slotted(discord-code) {
+			margin: 0px 2px;
+			--background-color: color-mix(in oklab, hsl(230 calc(1 * 6.383%) 18.431% /1) 100%, #000 0%);
+			--border: none;
+		}
+
+		:host([light-theme]) {
+			::slotted(discord-code) {
+				--background-color: #f3f3f4;
+			}
+		}
 	`;
+
+	@consume({ context: messagesLightTheme, subscribe: true })
+	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
+	public accessor lightTheme = false;
 
 	protected override render() {
 		return html`<slot></slot>`;

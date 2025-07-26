@@ -79,13 +79,13 @@ export class DiscordThreadMessage extends LitElement implements LightTheme {
 		}
 
 		:host .discord-message-edited {
-			color: #72767d;
+			color: #abacb2;
 			font-size: 10px;
 			margin-left: 5px;
 		}
 
 		:host .discord-thread-message-timestamp {
-			color: #72767d;
+			color: #abacb2;
 			flex-shrink: 0;
 			margin-left: 8px;
 			font-size: 0.875rem;
