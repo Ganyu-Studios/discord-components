@@ -260,7 +260,7 @@ export class DiscordVideoAttachment extends DiscordMediaLifecycle implements Lig
 	 * ```
 	 */
 	@property()
-	public accessor href: string;
+	public href: string;
 
 	/**
 	 * A poster of the video, this is a static image of the video that is used as thumbnail when not yet having played the video
@@ -271,11 +271,11 @@ export class DiscordVideoAttachment extends DiscordMediaLifecycle implements Lig
 	 * ```
 	 */
 	@property()
-	public accessor poster: string;
+	public poster: string;
 
 	@consume({ context: messagesLightTheme, subscribe: true })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	private playPausePopAnimationContainerRef: Ref<HTMLDivElement> = createRef();
 

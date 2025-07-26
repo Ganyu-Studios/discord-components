@@ -229,62 +229,62 @@ export class DiscordInputText extends LitElement {
 	 * The type of input text
 	 */
 	@property({ reflect: true, attribute: 'type', type: String })
-	public accessor type: 'paragraph' | 'short' = 'paragraph';
+	public type: 'paragraph' | 'short' = 'paragraph';
 
 	/**
 	 * if the input text is required
 	 */
 	@property({ reflect: true, attribute: 'required', type: Boolean })
-	public accessor required: boolean = false;
+	public required: boolean = false;
 
 	/**
 	 * The label of input text
 	 */
 	@property({ reflect: true, attribute: 'label', type: String })
-	public accessor label: string;
+	public label: string;
 
 	/**
 	 * The place of input text
 	 */
 	@property({ reflect: true, attribute: 'placeholder', type: String })
-	public accessor placeholder: string;
+	public placeholder: string;
 
 	/**
 	 * The minimal length of input text
 	 */
 	@property({ reflect: true, attribute: 'min-length', type: Number })
-	public accessor minLength = 0;
+	public minLength = 0;
 
 	/**
 	 * The maximal length of input text
 	 */
 	@property({ reflect: true, attribute: 'max-length', type: Number })
-	public accessor maxLength = 4_000;
+	public maxLength = 4_000;
 
 	/**
 	 * The theme of modal
 	 */
 	@consume({ context: messagesLightTheme, subscribe: true })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	/**
 	 * The default value of modal
 	 */
 	@property({ type: String, reflect: true, attribute: 'default-value' })
-	public accessor defaultValue = '';
+	public defaultValue = '';
 
 	@state()
-	protected accessor value = '';
+	protected value = '';
 
 	@state()
-	public accessor hasWarning = false;
+	public hasWarning = false;
 
 	@state()
-	protected accessor calculatedMaxLength: number | null = null;
+	protected calculatedMaxLength: number | null = null;
 
 	@state()
-	protected accessor calculatedCharactersCount = 0;
+	protected calculatedCharactersCount = 0;
 
 	public override connectedCallback() {
 		super.connectedCallback();

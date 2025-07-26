@@ -5,7 +5,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { when } from 'lit/directives/when.js';
 import { avatars, profiles } from '../../config.js';
-import type { Profile, LightTheme, DiscordTimestamp } from '../../types.js';
+import type { DiscordTimestamp, LightTheme, Profile } from '../../types.js';
 import { handleTimestamp } from '../../util.js';
 import '../discord-author-info/DiscordAuthorInfo.js';
 import type { DiscordMention } from '../discord-mention/DiscordMention.js';
@@ -266,7 +266,7 @@ export class DiscordMessage extends LitElement implements LightTheme {
 	 * The id of the profile data to use.
 	 */
 	@property()
-	public accessor profile: string | undefined = undefined;
+	public profile: string | undefined = undefined;
 
 	/**
 	 * The message author's username.
@@ -274,95 +274,95 @@ export class DiscordMessage extends LitElement implements LightTheme {
 	 * @defaultValue 'User'
 	 */
 	@property()
-	public accessor author: string | undefined = 'User';
+	public author: string | undefined = 'User';
 
 	/**
 	 * The message author's avatar. Can be an avatar shortcut, relative path, or external link.
 	 */
 	@property()
-	public accessor avatar: string | undefined = undefined;
+	public avatar: string | undefined = undefined;
 
 	/**
 	 * Whether the message author is a bot or not.
 	 * Only works if `server` and `officialApp` is `false` or `undefined`.
 	 */
 	@property({ type: Boolean })
-	public accessor bot = false;
+	public bot = false;
 
 	/**
 	 * Whether the message author is a server crosspost webhook or not.
 	 * Only works if `bot` and `officialApp` is `false` or `undefined`.
 	 */
 	@property({ type: Boolean })
-	public accessor server = false;
+	public server = false;
 
 	/**
 	 * Whether the message author is official app.
 	 * Only works if `bot` and `server` is `falns`
 	 */
 	@property({ type: Boolean, attribute: 'official-app' })
-	public accessor officialApp = false;
+	public officialApp = false;
 
 	/**
 	 * Whether the bot is verified or not.
 	 * Only works if `bot` is `true`
 	 */
 	@property({ type: Boolean })
-	public accessor verified = false;
+	public verified = false;
 
 	/**
 	 * Whether the author is the original poster.
 	 */
 	@property({ type: Boolean })
-	public accessor op = false;
+	public op = false;
 
 	/**
 	 * Whether the message has been edited or not.
 	 */
 	@property({ type: Boolean })
-	public accessor edited = false;
+	public edited = false;
 
 	/**
 	 * The message author's primary role color. Can be any [CSS color value](https://www.w3schools.com/cssref/css_colors_legal.asp).
 	 */
 	@property({ attribute: 'role-color' })
-	public accessor roleColor: string | undefined = undefined;
+	public roleColor: string | undefined = undefined;
 
 	/**
 	 * The message author's role icon URL.
 	 */
 	@property({ attribute: 'role-icon' })
-	public accessor roleIcon: string | undefined = undefined;
+	public roleIcon: string | undefined = undefined;
 
 	/**
 	 * The name of the role to use as alternative image text.
 	 */
 	@property({ attribute: 'role-name' })
-	public accessor roleName: string | undefined = undefined;
+	public roleName: string | undefined = undefined;
 
 	/**
 	 * The clan's tag icon URL.
 	 */
 	@property({ attribute: 'clan-icon' })
-	public accessor clanIcon: string | undefined = undefined;
+	public clanIcon: string | undefined = undefined;
 
 	/**
 	 * The name of the clan you are part of
 	 */
 	@property({ attribute: 'clan-tag' })
-	public accessor clanTag: string | undefined = undefined;
+	public clanTag: string | undefined = undefined;
 
 	/**
 	 * Whether to highlight this message.
 	 */
 	@property({ type: Boolean, reflect: true })
-	public accessor highlight = false;
+	public highlight = false;
 
 	/**
 	 * Whether to make this message ephemeral.
 	 */
 	@property({ type: Boolean, reflect: true })
-	public accessor ephemeral = false;
+	public ephemeral = false;
 
 	/**
 	 * The timestamp to use for the message date.
@@ -374,34 +374,34 @@ export class DiscordMessage extends LitElement implements LightTheme {
 		converter: (value) => handleTimestamp(value, false, false),
 		attribute: true
 	})
-	public accessor timestamp: DiscordTimestamp = new Date();
+	public timestamp: DiscordTimestamp = new Date();
 
 	/**
 	 * Whether to use 24-hour format for the timestamp.
 	 */
 	@property({ type: Boolean, attribute: 'twenty-four' })
-	public accessor twentyFour = false;
+	public twentyFour = false;
 
 	@property({ type: Boolean, attribute: 'message-body-only' })
-	public accessor messageBodyOnly = false;
+	public messageBodyOnly = false;
 
 	@consume({ context: messagesLightTheme })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	@consume({ context: messagesCompactMode })
 	@property({ type: Boolean, reflect: true, attribute: 'compact-mode' })
-	public accessor compactMode = false;
+	public compactMode = false;
 
 	@consume({ context: messagesNoBackground })
 	@property({ type: Boolean, reflect: true, attribute: 'no-background' })
-	public accessor noBackground = false;
+	public noBackground = false;
 
 	@property({ type: Boolean, reflect: true, attribute: 'has-thread' })
-	public accessor hasThread = false;
+	public hasThread = false;
 
 	@property({ reflect: false, attribute: 'dismiss-message-clicked' })
-	public accessor dismissMessageClicked: () => void = () => {};
+	public dismissMessageClicked: () => void = () => {};
 
 	protected override willUpdate(): void {
 		this.hasThread = Array.from(this.children).some((child): boolean => child.tagName.toLowerCase() === 'discord-thread');

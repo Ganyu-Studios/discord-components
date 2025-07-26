@@ -219,7 +219,7 @@ export class DiscordInvite extends LitElement implements LightTheme {
 	 * The server icon to display for the invite.
 	 */
 	@property()
-	public accessor icon = defaultDiscordAvatars.blue;
+	public icon = defaultDiscordAvatars.blue;
 
 	/**
 	 * The server's name.
@@ -227,13 +227,13 @@ export class DiscordInvite extends LitElement implements LightTheme {
 	 * @defaultValue 'Discord Server'
 	 */
 	@property()
-	public accessor name = 'Discord Server';
+	public name = 'Discord Server';
 
 	/**
 	 * The URL to open when you click on the join button.
 	 */
 	@property()
-	public accessor url: string;
+	public url: string;
 
 	/**
 	 * The number of members online on the server.
@@ -241,7 +241,7 @@ export class DiscordInvite extends LitElement implements LightTheme {
 	 * @defaultValue 0
 	 */
 	@property({ type: Number })
-	public accessor online = 0;
+	public online = 0;
 
 	/**
 	 * The number of members on the server.
@@ -249,21 +249,21 @@ export class DiscordInvite extends LitElement implements LightTheme {
 	 * @defaultValue 0
 	 */
 	@property({ type: Number })
-	public accessor members = 0;
+	public members = 0;
 
 	/**
 	 * Whether the server is verified.
 	 * Only works if `partnered` is `false` or `undefined`.
 	 */
 	@property({ type: Boolean })
-	public accessor verified = false;
+	public verified = false;
 
 	/**
 	 * Whether the server is partnered.
 	 * Only works if `verified` is `false` or `undefined`.
 	 */
 	@property({ type: Boolean })
-	public accessor partnered = false;
+	public partnered = false;
 
 	/**
 	 * Invitation embed title.
@@ -271,7 +271,7 @@ export class DiscordInvite extends LitElement implements LightTheme {
 	 * @defaultValue "You've been invited to join a server"
 	 */
 	@property({ attribute: 'invite-title' })
-	public accessor inviteTitle = "You've been invited to join a server";
+	public inviteTitle = "You've been invited to join a server";
 
 	/**
 	 * The join button.
@@ -279,11 +279,11 @@ export class DiscordInvite extends LitElement implements LightTheme {
 	 * @defaultValue 'Join'
 	 */
 	@property({ attribute: 'join-btn' })
-	public accessor joinBtn = 'Join';
+	public joinBtn = 'Join';
 
 	@consume({ context: messagesLightTheme })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	protected override render() {
 		return html`<div class="discord-invite-header">${this.inviteTitle}</div>

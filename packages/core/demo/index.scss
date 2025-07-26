@@ -1,0 +1,37 @@
+@import url('../styles/base.scss');
+
+body {
+	color: #eee;
+	background-color: #2a2a2a;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.body-wrapper {
+	margin-left: 1rem;
+	margin-right: 1rem;
+}
+
+.logo {
+	display: inline-block;
+	font-weight: bold;
+	font-size: 2em;
+	margin: 0;
+}
+
+.title {
+	border-bottom: 1px solid #4a4a4a;
+	padding-bottom: 0.25em;
+}
+
+.subtitle {
+	padding-bottom: 0.125em;
+}
+
+.link {
+	color: #008080;
+	text-decoration: none;
+}
+
+.link:hover {
+	text-decoration: underline;
+}

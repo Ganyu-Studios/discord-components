@@ -27,7 +27,7 @@ export class DiscordLink extends LitElement implements LightTheme {
 
 	@consume({ context: messagesLightTheme, subscribe: true })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	/**
 	 * The URL to link
@@ -38,25 +38,25 @@ export class DiscordLink extends LitElement implements LightTheme {
 	 * ```
 	 */
 	@property()
-	public accessor href: string;
+	public href: string;
 
 	/**
 	 * The `<a>` tag {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#rel | `rel`}
 	 */
 	@property()
-	public accessor rel: string;
+	public rel: string;
 
 	/**
 	 * The `<a>` tag {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target | `target`}
 	 */
 	@property()
-	public accessor target: '_blank' | '_parent' | '_self' | '_top';
+	public target: '_blank' | '_parent' | '_self' | '_top';
 
 	/**
 	 * The `<a>` tag {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#type | `type`}
 	 */
 	@property()
-	public accessor type: string;
+	public type: string;
 
 	protected override render() {
 		return html`<a

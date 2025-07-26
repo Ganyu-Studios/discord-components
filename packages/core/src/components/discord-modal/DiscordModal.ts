@@ -409,7 +409,7 @@ export class DiscordModal extends LitElement implements LightTheme {
 	 * The id of the profile data to use.
 	 */
 	@property()
-	public accessor profile: string | undefined = undefined;
+	public profile: string | undefined = undefined;
 
 	/**
 	 * The message author's username.
@@ -417,38 +417,38 @@ export class DiscordModal extends LitElement implements LightTheme {
 	 * @defaultValue 'User'
 	 */
 	@property()
-	public accessor author: string | undefined = 'User';
+	public author: string | undefined = 'User';
 
 	/**
 	 * The modal's author's avatar. Can be an avatar shortcut, relative path, or external link.
 	 */
 	@property()
-	public accessor avatar: string | undefined = undefined;
+	public avatar: string | undefined = undefined;
 
 	/**
 	 * The `id` property of the `dialog` component. This is used to open the modal from the button and should match with `modal-id` on the button.
 	 */
 	@property({ reflect: true, attribute: 'modal-id' })
-	public accessor modalId: string;
+	public modalId: string;
 
 	/**
 	 * The title of the modal, displayed at the top
 	 */
 	@property({ reflect: true, attribute: 'modal-title' })
-	public accessor modalTitle: string;
+	public modalTitle: string;
 
 	@property({ reflect: false, noAccessor: true, attribute: false })
-	public accessor submitForm: (...args: unknown[]) => void;
+	public submitForm: (...args: unknown[]) => void;
 
 	@property({ reflect: false, noAccessor: true, attribute: false })
-	public accessor closeForm: (...args: unknown[]) => void;
+	public closeForm: (...args: unknown[]) => void;
 
 	@consume({ context: messagesLightTheme, subscribe: true })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	@state()
-	public accessor originalBodyOverflow: string;
+	public originalBodyOverflow: string;
 
 	protected dialogRef: Ref<HTMLDialogElement> = createRef();
 

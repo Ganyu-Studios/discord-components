@@ -51,13 +51,13 @@ export class DiscordEmbedFooter extends LitElement implements LightTheme {
 	 * The image to use next to the footer text.
 	 */
 	@property({ attribute: 'footer-image' })
-	public accessor footerImage: string;
+	public footerImage: string;
 
 	/**
 	 * The alt attribute to use for the {@link DiscordEmbedFooter.footerImage}
 	 */
 	@property({ attribute: 'footer-image-alt' })
-	public accessor footerImageAlt: string;
+	public footerImageAlt: string;
 
 	/**
 	 * The timestamp to use for the message date. When supplying a string, the format must be `01/31/2000`.
@@ -68,11 +68,11 @@ export class DiscordEmbedFooter extends LitElement implements LightTheme {
 		converter: (value) => handleTimestamp(value),
 		attribute: true
 	})
-	public accessor timestamp: DiscordTimestamp;
+	public timestamp: DiscordTimestamp;
 
 	@consume({ context: messagesLightTheme, subscribe: true })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	public updateTimestamp(value?: DiscordTimestamp): void {
 		if (value && !Number.isNaN(new Date(value).getTime())) {

@@ -1,3 +1,4 @@
+import { minifyHTMLLiteralsPlugin } from 'esbuild-plugin-minify-html-literals';
 import { defineConfig, type Options } from 'tsup';
 import { dependencies } from './package.json';
 
@@ -38,6 +39,7 @@ export default [
 		minify: true,
 		noExternal: ['@penwin/discord-components-core'],
 		format: 'esm',
+		esbuildPlugins: [minifyHTMLLiteralsPlugin()],
 		outExtension: () => ({ js: '.mjs' })
 	})
 ];

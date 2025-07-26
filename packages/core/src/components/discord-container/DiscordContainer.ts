@@ -2,9 +2,9 @@ import { consume, createContext, provide } from '@lit/context';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
-import '../discord-custom-emoji/DiscordCustomEmoji.js';
 import { when } from 'lit/directives/when.js';
 import type { LightTheme } from '../../types.js';
+import '../discord-custom-emoji/DiscordCustomEmoji.js';
 import { DiscordMediaSpoileableCover } from '../discord-media-spoileable-cover/DiscordMediaSpoileableCover.js';
 import { messagesLightTheme } from '../discord-messages/DiscordMessages.js';
 
@@ -66,17 +66,17 @@ export class DiscordContainer extends LitElement implements LightTheme {
 	 * Can be any [CSS color value](https://www.w3schools.com/cssref/css_colors_legal.asp).
 	 */
 	@property({ type: String, reflect: true, attribute: 'accent-color' })
-	public accessor accentColor: string;
+	public accentColor: string;
 
 	@provide({ context: discordContainerContext })
-	public accessor isInContainer = true;
+	public isInContainer = true;
 
 	@consume({ context: messagesLightTheme, subscribe: true })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	@property({ type: Boolean, reflect: true })
-	public accessor spoiler = false;
+	public spoiler = false;
 
 	protected override render() {
 		return html`

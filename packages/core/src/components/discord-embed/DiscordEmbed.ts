@@ -236,31 +236,31 @@ export class DiscordEmbed extends LitElement implements LightTheme {
 	 * Can be any [CSS color value](https://www.w3schools.com/cssref/css_colors_legal.asp).
 	 */
 	@property()
-	public accessor color: string;
+	public color: string;
 
 	/**
 	 * The author's name.
 	 */
 	@property({ attribute: 'author-name' })
-	public accessor authorName: string;
+	public authorName: string;
 
 	/**
 	 * The author's avatar URL.
 	 */
 	@property({ attribute: 'author-image' })
-	public accessor authorImage: string;
+	public authorImage: string;
 
 	/**
 	 * The URL to open when you click on the author's name.
 	 */
 	@property({ attribute: 'author-url' })
-	public accessor authorUrl: string;
+	public authorUrl: string;
 
 	/**
 	 * The embed title.
 	 */
 	@property({ attribute: 'embed-title' })
-	public accessor embedTitle: string;
+	public embedTitle: string;
 
 	/**
 	 * An emoji that is prefixed to {@link DiscordEmbed.embedTitle | embedTitle}.
@@ -273,25 +273,25 @@ export class DiscordEmbed extends LitElement implements LightTheme {
 	 * work so we provide this as an alternative method.
 	 */
 	@property({ attribute: false })
-	public accessor embedEmojisMap: { [key: string]: Emoji } = {};
+	public embedEmojisMap: { [key: string]: Emoji } = {};
 
 	/**
 	 * The URL to open when you click on the embed title.
 	 */
 	@property()
-	public accessor url: string;
+	public url: string;
 
 	/**
 	 * The thumbnail image to use.
 	 */
 	@property()
-	public accessor thumbnail: string;
+	public thumbnail: string;
 
 	/**
 	 * The embed image to use (displayed at the bottom).
 	 */
 	@property()
-	public accessor image: string;
+	public image: string;
 
 	/**
 	 * The embed video to use (displayed at the bottom, same slot as the image).
@@ -306,7 +306,7 @@ export class DiscordEmbed extends LitElement implements LightTheme {
 	 * @example https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_1080p_stereo.ogg
 	 */
 	@property()
-	public accessor video: string;
+	public video: string;
 
 	/**
 	 * The provider to show above the embed, for example for YouTube videos it will show "YouTube" at the top of the embed (above the author)
@@ -314,11 +314,11 @@ export class DiscordEmbed extends LitElement implements LightTheme {
 	 * @example YouTube
 	 */
 	@property()
-	public accessor provider: string;
+	public provider: string;
 
 	@consume({ context: messagesLightTheme, subscribe: true })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	protected override render() {
 		const emojiParsedAuthorName = this.parseTitle(this.authorName);

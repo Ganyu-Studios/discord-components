@@ -91,7 +91,7 @@ export class DiscordMediaGallery extends LitElement {
 	`;
 
 	@property({ type: Number, attribute: false })
-	public accessor size = 0;
+	public size = 0;
 
 	protected override updated() {
 		const items = this.querySelectorAll('discord-media-gallery-item');

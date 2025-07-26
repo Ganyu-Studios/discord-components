@@ -87,7 +87,7 @@ export class DiscordReaction extends LitElement implements LightTheme {
 	 * The reaction emoji image URL.
 	 */
 	@property()
-	public accessor emoji: string;
+	public emoji: string;
 
 	/**
 	 * The name of the emoji to use as alternative image text.
@@ -95,7 +95,7 @@ export class DiscordReaction extends LitElement implements LightTheme {
 	 * @defaultValue ':emoji'
 	 */
 	@property()
-	public accessor name = ':emoji:';
+	public name = ':emoji:';
 
 	/**
 	 * The number of people who reacted.
@@ -103,7 +103,7 @@ export class DiscordReaction extends LitElement implements LightTheme {
 	 * @defaultValue 1
 	 */
 	@property({ type: Number })
-	public accessor count = 1;
+	public count = 1;
 
 	/**
 	 * Whether the reaction should show as reacted by the user.
@@ -111,7 +111,7 @@ export class DiscordReaction extends LitElement implements LightTheme {
 	 * @defaultValue false
 	 */
 	@property({ type: Boolean, reflect: true })
-	public accessor reacted = false;
+	public reacted = false;
 
 	/**
 	 * Whether the reaction should be reactive.
@@ -122,11 +122,11 @@ export class DiscordReaction extends LitElement implements LightTheme {
 	 * @defaultValue false
 	 */
 	@property({ type: Boolean })
-	public accessor interactive = false;
+	public interactive = false;
 
 	@consume({ context: messagesLightTheme })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	protected override render() {
 		return html`<div class="discord-reaction-inner" @click=${this.handleReactionClick} @keydown=${this.handleReactionClick}>

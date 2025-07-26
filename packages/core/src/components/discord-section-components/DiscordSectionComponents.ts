@@ -25,10 +25,10 @@ export class DiscordSectionComponents extends LitElement {
 
 	@consume({ context: discordSectionWithButton, subscribe: true })
 	@property({ type: Boolean, attribute: false })
-	public accessor withButton = false;
+	public withButton = false;
 
 	@property({ type: Boolean, attribute: false })
-	public accessor hasOnlyOneTextDisplayChild = false;
+	public hasOnlyOneTextDisplayChild = false;
 
 	protected calcHasOnlyOneTextDisplayChild() {
 		if (!this.withButton) return (this.hasOnlyOneTextDisplayChild = false);

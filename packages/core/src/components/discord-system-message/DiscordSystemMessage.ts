@@ -148,27 +148,27 @@ export class DiscordSystemMessage extends LitElement implements LightTheme {
 	 * The timestamp to use for the message date.
 	 */
 	@property({ type: String })
-	public accessor timestamp: DiscordTimestamp = new Date();
+	public timestamp: DiscordTimestamp = new Date();
 
 	/**
 	 * The type of system message this is, this will change the icon shown.
 	 * Valid values: `join`, `leave`, `call`, `missed-call`, `boost`, `edit`, `thread`, `pin`, `alert`, `upgrade` and `error`.
 	 */
 	@property({ reflect: true, attribute: 'type' })
-	public accessor type: 'alert' | 'boost' | 'call' | 'edit' | 'error' | 'join' | 'leave' | 'missed-call' | 'pin' | 'thread' | 'upgrade' = 'join';
+	public type: 'alert' | 'boost' | 'call' | 'edit' | 'error' | 'join' | 'leave' | 'missed-call' | 'pin' | 'thread' | 'upgrade' = 'join';
 
 	/**
 	 * Whether this message is to show channel name changes, used to match Discord's style.
 	 */
 	@property({ type: Boolean, reflect: true, attribute: 'channel-name' })
-	public accessor channelName = false;
+	public channelName = false;
 
 	@property({ type: Boolean, reflect: true, attribute: 'has-thread' })
-	public accessor hasThread = false;
+	public hasThread = false;
 
 	@consume({ context: messagesLightTheme })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	public checkType() {
 		if (typeof this.type !== 'string') {

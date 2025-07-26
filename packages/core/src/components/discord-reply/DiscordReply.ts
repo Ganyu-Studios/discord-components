@@ -246,7 +246,7 @@ export class DiscordReply extends LitElement implements LightTheme {
 	 * The id of the profile data to use.
 	 */
 	@property()
-	public accessor profile: string;
+	public profile: string;
 
 	/**
 	 * The message author's username.
@@ -254,89 +254,89 @@ export class DiscordReply extends LitElement implements LightTheme {
 	 * @defaultValue 'User'
 	 */
 	@property()
-	public accessor author = 'User';
+	public author = 'User';
 
 	/**
 	 * The message author's avatar. Can be an avatar shortcut, relative path, or external link.
 	 */
 	@property()
-	public accessor avatar: string;
+	public avatar: string;
 
 	/**
 	 * Whether the message author is a bot or not.
 	 * Only works if `server` and `officialApp` is `false` or `undefined`.
 	 */
 	@property({ type: Boolean })
-	public accessor bot = false;
+	public bot = false;
 
 	/**
 	 * Whether the message author is a server crosspost webhook or not.
 	 * Only works if `bot` and `officialApp` is `false` or `undefined`.
 	 */
 	@property({ type: Boolean })
-	public accessor server = false;
+	public server = false;
 
 	/**
 	 * Whether the message author is a server crosspost webhook or not.
 	 * Only works if `bot` and `server` is `false` or `undefined`.
 	 */
 	@property({ type: Boolean, attribute: 'official-app' })
-	public accessor officialApp = false;
+	public officialApp = false;
 
 	/**
 	 * Whether the author is the original poster.
 	 */
 	@property({ type: Boolean })
-	public accessor op = false;
+	public op = false;
 
 	/**
 	 * Whether the bot is verified or not.
 	 * Only works if `bot` is `true`
 	 */
 	@property({ type: Boolean })
-	public accessor verified = false;
+	public verified = false;
 
 	/**
 	 * Whether the message has been edited or not.
 	 */
 	@property({ type: Boolean })
-	public accessor edited = false;
+	public edited = false;
 
 	/**
 	 * The message author's primary role color. Can be any [CSS color value](https://www.w3schools.com/cssref/css_colors_legal.asp).
 	 */
 	@property({ attribute: 'role-color' })
-	public accessor roleColor: string;
+	public roleColor: string;
 
 	/**
 	 * Whether the referenced message is from a response of a slash command.
 	 */
 	@property({ type: Boolean })
-	public accessor command = false;
+	public command = false;
 
 	/**
 	 * Whether the referenced message contains attachments.
 	 */
 	@property({ type: Boolean })
-	public accessor attachment = false;
+	public attachment = false;
 
 	/**
 	 * Whether this reply pings the original message sender, prepending an "\@" on the author's username.
 	 */
 	@property({ type: Boolean })
-	public accessor mentions = false;
+	public mentions = false;
 
 	/**
 	 * The clan icon of the author, which comes from the enabled clan tag
 	 */
 	@property({ attribute: 'clan-icon' })
-	public accessor clanIcon: string;
+	public clanIcon: string;
 
 	/**
 	 * The clan name of the author, which comes from the enabled clan tag
 	 */
 	@property({ attribute: 'clan-tag' })
-	public accessor clanTag: string;
+	public clanTag: string;
 
 	/**
 	 * Whether this reply is a deleted message.
@@ -360,18 +360,18 @@ export class DiscordReply extends LitElement implements LightTheme {
 	 * - {@link DiscordReply.clanTag | clanTag}
 	 */
 	@property({ type: Boolean, reflect: true })
-	public accessor deleted = false;
+	public deleted = false;
 
 	@consume({ context: messagesLightTheme })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	/**
 	 * Whether to use compact mode or not.
 	 */
 	@consume({ context: messagesCompactMode })
 	@property({ type: Boolean, reflect: true, attribute: 'compact-mode' })
-	public accessor compactMode = false;
+	public compactMode = false;
 
 	private resolveAvatar(avatar: string): string {
 		return avatars[avatar] ?? avatar ?? avatars.default;

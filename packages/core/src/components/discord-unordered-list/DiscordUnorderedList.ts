@@ -30,7 +30,7 @@ export class DiscordUnorderedList extends LitElement {
 	 * @defaultValue false
 	 */
 	@property({ type: Boolean, reflect: true })
-	public accessor nested = false;
+	public nested = false;
 
 	public checkChildren() {
 		const allChildrenAreListItems = Array.from(this.children).every((child) => {

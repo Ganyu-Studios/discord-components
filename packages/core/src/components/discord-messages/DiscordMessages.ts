@@ -97,35 +97,35 @@ export class DiscordMessages extends LitElement implements LightTheme {
 	 */
 	@provide({ context: messagesLightTheme })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	/**
 	 * Whether to exclude the background or not.
 	 */
 	@provide({ context: messagesNoBackground })
 	@property({ type: Boolean, reflect: true, attribute: 'no-background' })
-	public accessor noBackground = false;
+	public noBackground = false;
 
 	/**
 	 * Whether to use compact mode or not.
 	 */
 	@provide({ context: messagesCompactMode })
 	@property({ type: Boolean, reflect: true, attribute: 'compact-mode' })
-	public accessor compactMode = false;
+	public compactMode = false;
 
 	/**
 	 * The type of channel this should be, this will be displayed above the message and only applies if {@link DiscordMessages.channelName} is set.
 	 * Valid values are: `text`, `forum`, `locked`, `thread`, and `voice`.
 	 */
 	@property({ reflect: true, attribute: 'channel-type' })
-	public accessor channelType: 'forum' | 'locked' | 'text' | 'thread' | 'voice';
+	public channelType: 'forum' | 'locked' | 'text' | 'thread' | 'voice';
 
 	/**
 	 * The name of the channel, this will be displayed above the message and only applies if {@link DiscordMessages.channelType} is set.
 	 */
 
 	@property({ reflect: true, attribute: 'channel-name' })
-	public accessor channelName: string;
+	public channelName: string;
 
 	public override connectedCallback(): void {
 		super.connectedCallback();

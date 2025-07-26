@@ -102,7 +102,7 @@ export class DiscordThreadMessage extends LitElement implements LightTheme {
 	 * The id of the profile data to use.
 	 */
 	@property()
-	public accessor profile: string;
+	public profile: string;
 
 	/**
 	 * The message author's username.
@@ -110,56 +110,56 @@ export class DiscordThreadMessage extends LitElement implements LightTheme {
 	 * @defaultValue 'User'
 	 */
 	@property()
-	public accessor author = 'User';
+	public author = 'User';
 
 	/**
 	 * The message author's avatar. Can be an avatar shortcut, relative path, or external link.
 	 */
 	@property()
-	public accessor avatar: string;
+	public avatar: string;
 
 	/**
 	 * Whether the message author is a bot or not.
 	 * Only works if `server` is `false` or `undefined`.
 	 */
 	@property({ type: Boolean })
-	public accessor bot = false;
+	public bot = false;
 
 	/**
 	 * Whether the message author is a server crosspost webhook or not.
 	 * Only works if `bot` is `false` or `undefined`.
 	 */
 	@property({ type: Boolean })
-	public accessor server = false;
+	public server = false;
 
 	/**
 	 * Whether the bot is verified or not.
 	 * Only works if `bot` is `true`
 	 */
 	@property({ type: Boolean })
-	public accessor verified = false;
+	public verified = false;
 
 	/**
 	 * Whether the message has been edited or not.
 	 */
 	@property({ type: Boolean })
-	public accessor edited = false;
+	public edited = false;
 
 	/**
 	 * The message author's primary role color. Can be any [CSS color value](https://www.w3schools.com/cssref/css_colors_legal.asp).
 	 */
 	@property({ attribute: 'role-color' })
-	public accessor roleColor: string;
+	public roleColor: string;
 
 	/**
 	 * The relative timestamp of the message.
 	 */
 	@property({ attribute: 'relative-timestamp' })
-	public accessor relativeTimestamp = '1m ago';
+	public relativeTimestamp = '1m ago';
 
 	@consume({ context: messagesLightTheme })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	private resolveAvatar(avatar: string): string {
 		return avatars[avatar] ?? avatar ?? avatars.default;

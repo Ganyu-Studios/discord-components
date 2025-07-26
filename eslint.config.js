@@ -28,6 +28,7 @@ const config = [
 				}
 			},
 			rules: {
+				'linebreak-style': ['error', 'windows'],
 				// eslint-plugin-jsdoc (conflicts with eslint-plugin-tsdoc)
 				'jsdoc/no-undefined-types': 'off',
 
@@ -113,7 +114,10 @@ const config = [
 	// Add Lit rules
 	{
 		...eslintPluginLit['flat/recommended'],
-		files: ['packages/core/src/**/*.ts']
+		files: ['packages/core/src/**/*.ts'],
+		rules: {
+			'linebreak-style': ['error', 'windows']
+		}
 	},
 	// Add Lit a11y rules
 	{

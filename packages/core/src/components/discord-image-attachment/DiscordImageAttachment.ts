@@ -38,19 +38,19 @@ export class DiscordImageAttachment extends LitElement {
 	 * @remarks Should be a valid image URL, i.e. matching the regex `/\.(bmp|jpe?g|png|gif|webp|tiff)$/i`
 	 */
 	@property({ reflect: true, attribute: 'url' })
-	public accessor url: string;
+	public url: string;
 
 	/**
 	 * The height of the image in pixels
 	 */
 	@property({ type: Number, reflect: true, attribute: 'height' })
-	public accessor height: number;
+	public height: number;
 
 	/**
 	 * The width of the image in pixels
 	 */
 	@property({ type: Number, reflect: true, attribute: 'width' })
-	public accessor width: number;
+	public width: number;
 
 	/**
 	 * The alt text to show in case the image was unable to load
@@ -58,7 +58,7 @@ export class DiscordImageAttachment extends LitElement {
 	 * @defaultValue 'discord attachment'
 	 */
 	@property({ reflect: true, attribute: 'alt' })
-	public accessor alt = 'discord image attachment';
+	public alt = 'discord image attachment';
 
 	/**
 	 * Indicates that you intend to use a custom image element,
@@ -72,7 +72,7 @@ export class DiscordImageAttachment extends LitElement {
 	 * {@link DiscordImageAttachment.url | `url`}, and {@link DiscordImageAttachment.alt | `alt`} properties.
 	 */
 	@property({ type: Boolean, attribute: 'custom-image-element' })
-	public accessor customImageElement = false;
+	public customImageElement = false;
 
 	public componentWillRender() {
 		if (!this.customImageElement) {

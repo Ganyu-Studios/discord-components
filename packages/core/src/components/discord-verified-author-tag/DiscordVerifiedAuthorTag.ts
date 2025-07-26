@@ -49,14 +49,14 @@ export class DiscordVerifiedAuthorTag extends LitElement {
 	 * Whether this bot is verified by Discord. Only works if `bot` is `true`
 	 */
 	@property({ type: Boolean })
-	public accessor verified = false;
+	public verified = false;
 
 	/**
 	 * Whether to reverse the order of the author info for compact mode.
 	 */
 	@consume({ context: messagesCompactMode })
 	@property({ type: Boolean, reflect: true, attribute: 'compact-mode' })
-	public accessor compactMode = false;
+	public compactMode = false;
 
 	protected override render() {
 		return html`${when(this.verified, () => VerifiedTick())}App`;

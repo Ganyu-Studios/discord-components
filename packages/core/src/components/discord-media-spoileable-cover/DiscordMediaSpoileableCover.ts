@@ -1,8 +1,8 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import '../discord-custom-emoji/DiscordCustomEmoji.js';
 import { when } from 'lit/directives/when.js';
+import '../discord-custom-emoji/DiscordCustomEmoji.js';
 
 @customElement('discord-media-spoileable-cover')
 export class DiscordMediaSpoileableCover extends LitElement {
@@ -73,7 +73,7 @@ export class DiscordMediaSpoileableCover extends LitElement {
 	`;
 
 	@property({ type: Boolean, attribute: 'is-revealed', reflect: true })
-	public accessor isRevealed = false;
+	public isRevealed = false;
 
 	public handleReveal(_event: MouseEvent) {
 		this.isRevealed = true;

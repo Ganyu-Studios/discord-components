@@ -44,7 +44,7 @@ export class DiscordEmbedField extends LitElement implements LightTheme {
 	`;
 
 	@property({ reflect: true, attribute: 'field-title' })
-	public accessor fieldTitle!: string;
+	public fieldTitle!: string;
 
 	/**
 	 * An emoji that is prefixed to {@link DiscordEmbedField.fieldTitle | fieldTitle}.
@@ -57,13 +57,13 @@ export class DiscordEmbedField extends LitElement implements LightTheme {
 	 * work so we provide this as an alternative method.
 	 */
 	@property({ attribute: false })
-	public accessor embedFieldEmojisMap: { [key: string]: Emoji } = {};
+	public embedFieldEmojisMap: { [key: string]: Emoji } = {};
 
 	/**
 	 * Whether this field should be displayed inline or not.
 	 */
 	@property({ type: Boolean, reflect: true, attribute: 'inline' })
-	public accessor inline = false;
+	public inline = false;
 
 	/**
 	 * The index of this inline field
@@ -74,11 +74,11 @@ export class DiscordEmbedField extends LitElement implements LightTheme {
 	 * @defaultValue 1
 	 */
 	@property({ type: Number, reflect: true, attribute: 'inline-index' })
-	public accessor inlineIndex: number | undefined = undefined;
+	public inlineIndex: number | undefined = undefined;
 
 	@consume({ context: messagesLightTheme, subscribe: true })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	private readonly validInlineIndices = new Set([1, 2, 3]);
 

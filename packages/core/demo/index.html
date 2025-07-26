@@ -5,9 +5,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
 		<meta name="description" content="Sample for Discord Components using no particular framework" />
 		<title>No Framework Sample</title>
-		<link rel="stylesheet" href="./index.css" />
-		<script type="module" src="./index.js"></script>
-		<script type="module" src="../src/index.ts"></script>
+		<link rel="stylesheet" href="./index.scss" />
+		<script type="module" src="./index.ts"></script>
 	</head>
 
 	<body>
@@ -1410,6 +1409,17 @@
 						</discord-unordered-list>
 					</discord-message>
 				</discord-messages>
+
+				<h3 class="title">CodeBlock</h3>
+
+				<discord-embed>
+					<discord-code-block slot="description" language="typescript" code="const a = 1;"></discord-code-block>
+				</discord-embed>
+				<discord-embed light-theme>
+					<discord-code-block slot="description" language="typescript" code="const a = 1;"></discord-code-block>
+				</discord-embed>
+				<discord-code-block language="typescript" code="const a = 1;"></discord-code-block>
+				<discord-code-block language="typescript" code="const a = 1;" light-theme></discord-code-block>
 
 				<h3 class="title">Components V2</h3>
 

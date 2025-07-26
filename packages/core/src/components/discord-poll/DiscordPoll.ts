@@ -148,44 +148,44 @@ export class DiscordPoll extends LitElement {
 	`;
 
 	@property({ type: String, attribute: 'question', reflect: true })
-	public accessor question: string;
+	public question: string;
 
 	@property({ type: String, attribute: 'time-end', reflect: true })
-	public accessor timeEnd: string = '24h';
+	public timeEnd: string = '24h';
 
 	@provide({ context: pollEnded })
 	@property({ type: Boolean, attribute: 'ended', reflect: true })
-	public accessor pollEnded: boolean = false;
+	public pollEnded: boolean = false;
 
 	@provide({ context: multipleAnswersPoll })
 	@property({ type: Boolean, reflect: true, attribute: 'multiple-answers' })
-	public accessor multipleAnswers = false;
+	public multipleAnswers = false;
 
 	@provide({ context: pollVoted })
 	@property({ type: Boolean, reflect: true, attribute: 'voted' })
-	public accessor pollVoted = false;
+	public pollVoted = false;
 
 	@provide({ context: showResults })
 	@property({ type: Boolean, reflect: true, attribute: 'show-results' })
-	public accessor showResults = false;
+	public showResults = false;
 
 	/**
 	 * Whether to use compact mode or not.
 	 */
 	@consume({ context: messagesCompactMode })
 	@property({ type: Boolean, reflect: true, attribute: 'compact-mode' })
-	public accessor compactMode = false;
+	public compactMode = false;
 
 	/**
 	 * Whether to use light theme or not.
 	 */
 	@consume({ context: messagesLightTheme })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
-	public accessor selected: boolean = false;
+	public selected: boolean = false;
 
-	private accessor totVotes: number = 0;
+	private totVotes: number = 0;
 
 	public override connectedCallback() {
 		super.connectedCallback();

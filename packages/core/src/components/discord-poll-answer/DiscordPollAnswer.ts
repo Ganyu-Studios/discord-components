@@ -200,49 +200,49 @@ export class DiscordPollAnswer extends LitElement {
 	`;
 
 	@property({ type: String, attribute: 'emoji', reflect: true })
-	public accessor emoji: string;
+	public emoji: string;
 
 	@property({ type: String, attribute: 'answer', reflect: true })
-	public accessor answer: string;
+	public answer: string;
 
 	@property({ type: Number, attribute: 'votes', reflect: true })
-	public accessor votes: number = 0;
+	public votes: number = 0;
 
 	@property({ type: Boolean, attribute: 'selected', reflect: true })
-	public accessor selected: boolean = false;
+	public selected: boolean = false;
 
 	/**
 	 * Whether to use compact mode or not.
 	 */
 	@consume({ context: messagesCompactMode })
-	public accessor compactMode = false;
+	public compactMode = false;
 
 	@consume({ context: multipleAnswersPoll })
-	public accessor multipleAnswers = false;
+	public multipleAnswers = false;
 
 	@consume({ context: pollEnded })
-	public accessor pollEnded = false;
+	public pollEnded = false;
 
 	@consume({ context: pollVoted })
-	public accessor pollVoted = false;
+	public pollVoted = false;
 
 	@consume({ context: showResults })
-	public accessor showResult = false;
+	public showResult = false;
 
 	/**
 	 * Whether to use ligth theme or not.
 	 */
 	@consume({ context: messagesLightTheme })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
-	private accessor totalVotesPoll = 0;
+	private totalVotesPoll = 0;
 
-	private accessor percentageVoted: number;
+	private percentageVoted: number;
 
-	private accessor arrayAnswers: { answer: string; value: number }[] = [];
+	private arrayAnswers: { answer: string; value: number }[] = [];
 
-	private accessor winners: string[] = [];
+	private winners: string[] = [];
 
 	public override connectedCallback() {
 		super.connectedCallback();

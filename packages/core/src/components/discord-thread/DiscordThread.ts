@@ -88,17 +88,17 @@ export class DiscordThread extends LitElement implements LightTheme {
 	 * The name of the thread.
 	 */
 	@property()
-	public accessor name = 'Thread';
+	public name = 'Thread';
 
 	/**
 	 * The the text within the call to action text. (i.e. 'See Thread' or 'x Messages')
 	 */
 	@property()
-	public accessor cta = 'See Thread';
+	public cta = 'See Thread';
 
 	@consume({ context: messagesLightTheme })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	protected override render() {
 		return html`

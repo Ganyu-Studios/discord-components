@@ -60,28 +60,28 @@ export class DiscordStringSelectMenuOption extends LitElement implements LightTh
 	 * The emoji URL to use in the SelectMenu.
 	 */
 	@property({ reflect: true, attribute: 'emoji' })
-	public accessor emoji: string;
+	public emoji: string;
 
 	/**
 	 * The name of the emoji used in the SelectMenu.
 	 */
 	@property({ reflect: true, attribute: 'emoji-name' })
-	public accessor emojiName = 'emoji';
+	public emojiName = 'emoji';
 
 	/**
 	 * The label of the option
 	 */
 	@property({ attribute: 'label' })
-	public accessor label: string;
+	public label: string;
 
 	/**
 	 * The description of the option
 	 */
 	@property({ attribute: 'description' })
-	public accessor description: string;
+	public description: string;
 
 	@property({ reflect: false, noAccessor: true, attribute: false })
-	public accessor selectOption: (...args: unknown[]) => void;
+	public selectOption: (...args: unknown[]) => void;
 
 	public checkLabelIsProvided() {
 		if (!this.label) {
@@ -91,7 +91,7 @@ export class DiscordStringSelectMenuOption extends LitElement implements LightTh
 
 	@consume({ context: messagesLightTheme })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	protected override render() {
 		this.checkLabelIsProvided();

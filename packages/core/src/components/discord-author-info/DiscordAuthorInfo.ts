@@ -158,78 +158,78 @@ export class DiscordAuthorInfo extends LitElement {
 	 * The name of the author
 	 */
 	@property()
-	public accessor author: string | undefined = undefined;
+	public author: string | undefined = undefined;
 
 	/**
 	 * Whether this author is a bot. Only works if `server` and `officialApp` is `false` or `undefined`.
 	 */
 	@property({ type: Boolean })
-	public accessor bot = false;
+	public bot = false;
 
 	/**
 	 * Whether this author is a `server` crosspost webhook. Only works if `bot` and `officialApp` is `false` or `undefined`.
 	 */
 	@property({ type: Boolean })
-	public accessor server = false;
+	public server = false;
 
 	/**
 	 * Whether this author is a `official app` crosspost webhook. Only works if `bot` and `server` is `false` or `undefined`.
 	 */
 	@property({ type: Boolean, attribute: 'official-app' })
-	public accessor officialApp = false;
+	public officialApp = false;
 
 	/**
 	 * Whether this author is the original poster.
 	 */
 	@property({ type: Boolean })
-	public accessor op = false;
+	public op = false;
 
 	/**
 	 * The colour of the author, which comes from their highest role
 	 */
 	@property({ attribute: 'role-color' })
-	public accessor roleColor: string | undefined = undefined;
+	public roleColor: string | undefined = undefined;
 
 	/**
 	 * The role icon of the author, which comes from their highest role
 	 */
 	@property({ attribute: 'role-icon' })
-	public accessor roleIcon: string | undefined = undefined;
+	public roleIcon: string | undefined = undefined;
 
 	/**
 	 * The role name of the author, which comes from their highest role
 	 */
 	@property({ attribute: 'role-name' })
-	public accessor roleName: string | undefined = undefined;
+	public roleName: string | undefined = undefined;
 
 	/**
 	 * The clan icon of the author, which comes from the enabled clan tag
 	 */
 	@property({ attribute: 'clan-icon' })
-	public accessor clanIcon: string | undefined = undefined;
+	public clanIcon: string | undefined = undefined;
 
 	/**
 	 * The clan name of the author, which comes from the enabled clan tag
 	 */
 	@property({ attribute: 'clan-tag' })
-	public accessor clanTag: string | undefined = undefined;
+	public clanTag: string | undefined = undefined;
 
 	/**
 	 * Whether this bot is verified by Discord. Only works if `bot` is `true`
 	 */
 	@property({ type: Boolean })
-	public accessor verified = false;
+	public verified = false;
 
 	/**
 	 * Whether to reverse the order of the author info for compact mode.
 	 */
 	@consume({ context: messagesCompactMode })
 	@property({ type: Boolean, reflect: true, attribute: 'compact-mode' })
-	public accessor compactMode = false;
+	public compactMode = false;
 
 	@consume({ context: messagesLightTheme })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	protected override render() {
 		const clanIcon = getClanIcon(this.clanIcon);

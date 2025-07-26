@@ -12,31 +12,31 @@ export class DiscordMediaLifecycle extends LitElement {
 	protected volumeControlInputRef: Ref<HTMLInputElement> = createRef();
 
 	@state()
-	protected accessor currentPlaybackPosition = '0:00';
+	protected currentPlaybackPosition = '0:00';
 
 	@state()
-	protected accessor totalMediaDuration = '';
+	protected totalMediaDuration = '';
 
 	@state()
-	protected accessor isPlaying = false;
+	protected isPlaying = false;
 
 	@state()
-	private accessor raf: number | null = null;
+	private raf: number | null = null;
 
 	@state()
-	protected accessor isMuted = false;
+	protected isMuted = false;
 
 	/**
 	 * Volume is a fractional value between 0 and 1
 	 */
 	@state()
-	protected accessor currentVolume = 1;
+	protected currentVolume = 1;
 
 	@state()
-	protected accessor hasEnded = false;
+	protected hasEnded = false;
 
 	@state()
-	private accessor hasRunUpdate = false;
+	private hasRunUpdate = false;
 
 	protected calculateTime(secs: number) {
 		const minutes = Math.floor(secs / 60);

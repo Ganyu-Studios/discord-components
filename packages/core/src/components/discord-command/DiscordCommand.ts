@@ -101,7 +101,7 @@ export class DiscordCommand extends LitElement implements LightTheme {
 	 * The id of the profile data to use.
 	 */
 	@property({ attribute: 'profile' })
-	public accessor profile: string;
+	public profile: string;
 
 	/**
 	 * The message author's username.
@@ -109,115 +109,115 @@ export class DiscordCommand extends LitElement implements LightTheme {
 	 * @defaultValue 'User'
 	 */
 	@property({ attribute: 'author' })
-	public accessor author = 'User';
+	public author = 'User';
 
 	/**
 	 * The message author's avatar. Can be an avatar shortcut, relative path, or external link.
 	 */
 	@property({ attribute: 'avatar' })
-	public accessor avatar: string;
+	public avatar: string;
 
 	/**
 	 * The message author's primary role color.
 	 * Can be any [CSS color value](https://www.w3schools.com/cssref/css_colors_legal.asp).
 	 */
 	@property({ attribute: 'role-color' })
-	public accessor roleColor: string;
+	public roleColor: string;
 
 	/**
 	 * The name of the command invoked.
 	 */
 	@property({ attribute: 'command' })
-	public accessor command: string;
+	public command: string;
 
 	/**
 	 * The type of command
 	 */
 	@property({ attribute: 'type' })
-	public accessor type: 'message_command' | 'slash_command' | 'user_command' = 'slash_command';
+	public type: 'message_command' | 'slash_command' | 'user_command' = 'slash_command';
 
 	/**
 	 * The id of the profile data to use.
 	 */
 	@property({ attribute: 'context-user-profile' })
-	public accessor contextUserProfile: string;
+	public contextUserProfile: string;
 
 	/**
 	 * The name of user mentioned in context menu
 	 */
 	@property({ attribute: 'context-user-name' })
-	public accessor contextUserName: string = 'User';
+	public contextUserName: string = 'User';
 
 	/**
 	 * The image of user mentioned in context menu
 	 */
 	@property({ attribute: 'context-user-image' })
-	public accessor contextUserAvatar: string;
+	public contextUserAvatar: string;
 
 	/**
 	 * The role color of user mentioned in context menu
 	 */
 	@property({ attribute: 'context-user-role-color' })
-	public accessor contextUserRoleColor: string;
+	public contextUserRoleColor: string;
 
 	/**
 	 * If the message command user  are bot
 	 */
 	@property({ type: Boolean, attribute: 'context-user-bot' })
-	public accessor contextUserBot: boolean = false;
+	public contextUserBot: boolean = false;
 
 	/**
 	 * If the user bot are verified
 	 */
 	@property({ type: Boolean, attribute: 'context-user-bot-verified' })
-	public accessor contextUserBotVerified: boolean = false;
+	public contextUserBotVerified: boolean = false;
 
 	/**
 	 * Whether the referenced context message is from a response of a slash command.
 	 */
 	@property({ type: Boolean, attribute: 'context-command-reply' })
-	public accessor contextCommandReply: boolean = false;
+	public contextCommandReply: boolean = false;
 
 	/**
 	 * Whether the referenced context message contains attachments.
 	 */
 	@property({ type: Boolean, attribute: 'context-attachment-reply' })
-	public accessor contextAttachmentReply: boolean = false;
+	public contextAttachmentReply: boolean = false;
 
 	/**
 	 * The referenced message in message command
 	 */
 	@property({ type: String, attribute: 'context-message-reply' })
-	public accessor contextMessageReply: string;
+	public contextMessageReply: string;
 
 	/**
 	 * If the referenced messaga has deleted
 	 */
 	@property({ type: Boolean, attribute: 'context-message-deleted' })
-	public accessor contextMessageDeleted: boolean = false;
+	public contextMessageDeleted: boolean = false;
 
 	/**
 	 * If the context user is a application official of discord
 	 */
 	@property({ type: Boolean, attribute: 'context-user-application-official' })
-	public accessor contextUserOfficialApplication: boolean = false;
+	public contextUserOfficialApplication: boolean = false;
 
 	/**
 	 * If the context user is a server
 	 */
 	@property({ type: Boolean, attribute: 'context-user-server' })
-	public accessor contextUserServer: boolean = false;
+	public contextUserServer: boolean = false;
 
 	/**
 	 * Whether to use compact mode or not.
 	 */
 	@consume({ context: messagesCompactMode })
 	@property({ type: Boolean, reflect: true, attribute: 'compact-mode' })
-	public accessor compactMode = false;
+	public compactMode = false;
 
 	@consume({ context: messagesLightTheme })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	private readonly validCommandTypes = new Set(['user_command', 'message_command', 'slash_command']);
 

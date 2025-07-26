@@ -40,7 +40,7 @@ export class DiscordQuote extends LitElement implements LightTheme {
 
 	@consume({ context: messagesLightTheme, subscribe: true })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	protected override render() {
 		return html`

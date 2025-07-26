@@ -184,7 +184,7 @@ export class DiscordFileAttachment extends LitElement implements LightTheme {
 	 * ```
 	 */
 	@property()
-	public accessor name: string;
+	public name: string;
 
 	/**
 	 * The size of the file in bytes
@@ -197,7 +197,7 @@ export class DiscordFileAttachment extends LitElement implements LightTheme {
 	 * ```
 	 */
 	@property({ type: Number })
-	public accessor bytes: number;
+	public bytes: number;
 
 	/**
 	 * The unit of the file in a human-readable format
@@ -208,7 +208,7 @@ export class DiscordFileAttachment extends LitElement implements LightTheme {
 	 * ```
 	 */
 	@property({ attribute: 'bytes-unit' })
-	public accessor bytesUnit: string;
+	public bytesUnit: string;
 
 	/**
 	 * The URL to the file, this is passed to `<discord-link>`
@@ -219,35 +219,35 @@ export class DiscordFileAttachment extends LitElement implements LightTheme {
 	 * ```
 	 */
 	@property()
-	public accessor href: string;
+	public href: string;
 
 	/**
 	 * The `<a>` tag {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#rel | `rel`},
 	 * this is passed to `<discord-link>`
 	 */
 	@property()
-	public accessor rel: string;
+	public rel: string;
 
 	/**
 	 * The `<a>` tag {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target | `target`},
 	 * this is passed to `<discord-link>`
 	 */
 	@property()
-	public accessor target: '_blank' | '_parent' | '_self' | '_top';
+	public target: '_blank' | '_parent' | '_self' | '_top';
 
 	/**
 	 * The `<a>` tag {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#type | `type`},
 	 * this is passed to `<discord-link>`
 	 */
 	@property()
-	public accessor type: string;
+	public type: string;
 
 	@property({ type: Boolean, reflect: true })
-	public accessor spoiler = false;
+	public spoiler = false;
 
 	@consume({ context: messagesLightTheme, subscribe: true })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	protected override render() {
 		return html` <div class="discord-file-attachment-non-visual-media-item-container">

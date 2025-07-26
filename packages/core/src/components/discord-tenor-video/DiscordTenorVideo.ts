@@ -72,19 +72,19 @@ export class DiscordTenorVideo extends LitElement {
 	 * The URL for the video
 	 */
 	@property()
-	public accessor url: string;
+	public url: string;
 
 	/**
 	 * The height of the video in pixels
 	 */
 	@property({ type: Number })
-	public accessor height: number;
+	public height: number;
 
 	/**
 	 * The width of the video in pixels
 	 */
 	@property({ type: Number })
-	public accessor width: number;
+	public width: number;
 
 	protected override render() {
 		return html`

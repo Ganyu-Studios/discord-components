@@ -3,8 +3,11 @@ import sapphirePrettierConfig from '@sapphire/prettier-config';
 export default {
 	...sapphirePrettierConfig,
 	plugins: ['prettier-plugin-astro'],
+	endOfLine: 'crlf',
 	overrides: [
-		...sapphirePrettierConfig.overrides,
+		...sapphirePrettierConfig.overrides.map((set) => {
+			return { ...set, options: { ...set.options, endOfLine: 'crlf' } };
+		}),
 		{
 			files: ['*.md'],
 			options: {

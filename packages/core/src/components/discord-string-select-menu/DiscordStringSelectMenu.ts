@@ -120,17 +120,17 @@ export class DiscordStringSelectMenu extends LitElement implements LightTheme {
 	 * Whether to show the `discord-string-select-menu` as disabled.
 	 */
 	@property({ type: Boolean, attribute: 'disabled' })
-	public accessor disabled: boolean;
+	public disabled: boolean;
 
 	/**
 	 * The placeholder of the select-menu
 	 */
 	@property({ attribute: 'placeholder' })
-	public accessor placeholder: string = 'Make a selection';
+	public placeholder: string = 'Make a selection';
 
 	@consume({ context: messagesLightTheme })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	protected override render() {
 		return html`

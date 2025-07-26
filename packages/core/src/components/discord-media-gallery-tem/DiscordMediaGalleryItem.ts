@@ -50,16 +50,16 @@ export class DiscordMediaGalleryItem extends LitElement {
 	];
 
 	@property({ type: String })
-	public accessor media: string;
+	public media: string;
 
 	@property({ type: String })
-	public accessor description: string;
+	public description: string;
 
 	@property({ attribute: 'real-size' })
-	public accessor realSize: string;
+	public realSize: string;
 
 	@property({ type: Boolean })
-	public accessor spoiler = false;
+	public spoiler = false;
 
 	protected override render() {
 		return html`

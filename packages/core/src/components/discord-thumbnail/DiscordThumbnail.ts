@@ -22,13 +22,13 @@ export class DiscordThumbnail extends LitElement {
 	];
 
 	@property({ type: String })
-	public accessor media: string;
+	public media: string;
 
 	@property({ type: String })
-	public accessor description: string;
+	public description: string;
 
 	@property({ type: Boolean, reflect: true })
-	public accessor spoiler = false;
+	public spoiler = false;
 
 	protected override render() {
 		return html`

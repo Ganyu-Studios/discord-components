@@ -1,3 +1,5 @@
+import '../src/index.ts';
+
 globalThis.$discordMessage = {
 	profiles: {
 		marciel404: {

@@ -41,7 +41,7 @@ export class DiscordHeader extends LitElement {
 	 * If a number outside of this range is provided, an error is thrown.
 	 */
 	@property({ type: Number, reflect: true })
-	public accessor level: 1 | 2 | 3 = 1;
+	public level: 1 | 2 | 3 = 1;
 
 	public ensureLevelIsNumber(): void {
 		if (this.level && !Number.isNaN(this.level)) {

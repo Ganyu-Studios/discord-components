@@ -134,7 +134,7 @@ export class DiscordAudioAttachment extends DiscordMediaLifecycle implements Lig
 	 * ```
 	 */
 	@property()
-	public accessor href: string;
+	public href: string;
 
 	/**
 	 * The name of the audio file
@@ -142,7 +142,7 @@ export class DiscordAudioAttachment extends DiscordMediaLifecycle implements Lig
 	 * @remarks Spaces will be replaced with underscores and any non-alphanumeric characters will be removed
 	 */
 	@property()
-	public accessor name: string | undefined;
+	public name: string | undefined;
 
 	/**
 	 * The size of the audio file in bytes
@@ -155,7 +155,7 @@ export class DiscordAudioAttachment extends DiscordMediaLifecycle implements Lig
 	 * ```
 	 */
 	@property({ type: Number })
-	public accessor bytes: number;
+	public bytes: number;
 
 	/**
 	 * The unit of the audio file in a human-readable format
@@ -166,11 +166,11 @@ export class DiscordAudioAttachment extends DiscordMediaLifecycle implements Lig
 	 * ```
 	 */
 	@property({ attribute: 'bytes-unit' })
-	public accessor bytesUnit: string;
+	public bytesUnit: string;
 
 	@consume({ context: messagesLightTheme, subscribe: true })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	protected override render() {
 		const parsedName = this.name?.replaceAll(/\s/g, '_')?.replaceAll(/[^\w-]/g, '');

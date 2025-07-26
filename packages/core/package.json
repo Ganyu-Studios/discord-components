@@ -134,7 +134,7 @@
 		"build:ts": "tsc -b src",
 		"watch": "tsc -b src --watch",
 		"analyze": "cem analyze --litelement",
-		"start": "wds",
+		"start": "vite",
 		"build": "pnpm build:ts && pnpm analyze --exclude dist",
 		"prepack": "pnpm build",
 		"lint": "eslint src test --ext .ts",
@@ -144,14 +144,15 @@
 	},
 	"dependencies": {
 		"@lit/context": "^1.1.6",
+		"highlight.js": "^11.11.1",
 		"lit": "^3.3.1"
 	},
 	"devDependencies": {
+		"vite": "^7.0.6",
 		"@custom-elements-manifest/analyzer": "^0.10.4",
 		"@favware/cliff-jumper": "^6.0.0",
-		"@web/dev-server": "^0.4.6",
-		"@web/dev-server-esbuild": "^1.0.4",
 		"concurrently": "^9.2.0",
+		"sass-embedded": "^1.89.2",
 		"ts-lit-plugin": "^2.0.2",
 		"typescript": "^5.8.3"
 	},

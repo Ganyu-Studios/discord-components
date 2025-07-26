@@ -19,7 +19,7 @@ export class DiscordSection extends LitElement {
 	`;
 
 	@provide({ context: discordSectionWithButton })
-	public accessor hasButton = false;
+	public hasButton = false;
 
 	protected override updated(): void {
 		const hasButton = Boolean(this?.querySelector('discord-button'));

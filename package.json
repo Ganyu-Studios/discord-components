@@ -5,9 +5,9 @@
 	"scripts": {
 		"prepack": "pnpm inject && pnpm build",
 		"print": "chalk yellow italic bold",
-		"clean": "pnpm print 'cleaning build code' && rimraf packages/core/dist packages/react/dist",
-		"lint": "pnpm print 'linting' && eslint packages/ --fix",
-		"format": "pnpm print 'formatting' && prettier --log-level=warn --write .",
+		"clean": "pnpm print \"cleaning build code\" && rimraf packages/core/dist packages/react/dist",
+		"lint": "pnpm print \"linting\" && eslint packages/ --fix",
+		"format": "pnpm print \"formatting\" && prettier --log-level=warn --write .",
 		"inject": "run-s \"inject-*\" && prettier --write --log-level=warn \"./**/README.md\" \"./**/package.json\"",
 		"inject-readme-markdown": "node scripts/inject-readme-markdown.mjs",
 		"inject-package-exports": "node scripts/update-exports-and-side-effects.mjs",
@@ -15,11 +15,11 @@
 		"inject-react-index-exports": "node scripts/update-react-index-exports.mjs",
 		"start": "pnpm --filter discord-components-core start",
 		"build": "pnpm clean && pnpm build:core && pnpm build:react && pnpm lint && pnpm format",
-		"build:core": "pnpm print 'building core' && pnpm --filter discord-components-core build",
-		"build:react": "pnpm print 'building react' && pnpm --filter discord-components-react build",
-		"build:react-render": "pnpm print 'building react' && pnpm --filter discord-components-react-render build",
+		"build:core": "pnpm print \"building core\" && pnpm --filter discord-components-core build",
+		"build:react": "pnpm print \"building react\" && pnpm --filter discord-components-react build",
+		"build:react-render": "pnpm print \"building react-render\" && pnpm --filter discord-components-react-render build",
 		"build:documentation": "pnpm --filter documentation build",
-		"publish:react-render": "cd packages/react-render && pnpm npm publish"
+		"publish:react-render": "pnpm inject & cd packages/react-render && pnpm npm publish"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^19.8.1",

@@ -121,32 +121,32 @@ export class DiscordButton extends LitElement {
 	 * The emoji URL to use in the button.
 	 */
 	@property({ reflect: true, attribute: 'emoji' })
-	public accessor emoji: string;
+	public emoji: string;
 
 	/**
 	 * The name of the emoji used in the button.
 	 */
 	@property({ reflect: true, attribute: 'emoji-name' })
-	public accessor emojiName = 'emoji';
+	public emojiName = 'emoji';
 
 	/**
 	 * The URL for the button. Setting this will force the button type to be `secondary`.
 	 */
 	@property({ reflect: true, attribute: 'url' })
-	public accessor url: string;
+	public url: string;
 
 	/**
 	 * Whether to show the button as disabled.
 	 */
 	@property({ type: Boolean, reflect: true, attribute: 'disabled' })
-	public accessor disabled = false;
+	public disabled = false;
 
 	/**
 	 * The type of button this is, this will change the color of the button.
 	 * Valid values: `primary`, `secondary`, `success`, `destructive`.
 	 */
 	@property({ reflect: true, attribute: 'type' })
-	public accessor type: 'destructive' | 'primary' | 'secondary' | 'success' = 'secondary';
+	public type: 'destructive' | 'primary' | 'secondary' | 'success' = 'secondary';
 
 	/**
 	 * An `id` of a modal that should be opened when this button is clicked. This should match the `modal-id` of a `discord-modal` element.
@@ -157,15 +157,15 @@ export class DiscordButton extends LitElement {
 	 * - If {@link DiscordButton.disabled} is set this will be ignored.
 	 */
 	@property({ reflect: true, attribute: 'modal-id' })
-	public accessor modalId: string;
+	public modalId: string;
 
 	@property({ type: Boolean, reflect: true, attribute: 'small' })
-	public accessor small = false;
+	public small = false;
 
 	private readonly validButtonTypes = new Set(['primary', 'secondary', 'success', 'destructive']);
 
 	@consume({ context: discordContainerContext })
-	public accessor isInContainer = false;
+	public isInContainer = false;
 
 	public checkType() {
 		if (this.type) {

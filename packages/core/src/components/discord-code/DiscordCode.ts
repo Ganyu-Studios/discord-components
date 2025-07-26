@@ -79,17 +79,17 @@ export class DiscordCode extends LitElement implements LightTheme {
 	 * Whether this code block is a multi-line code block
 	 */
 	@property({ type: Boolean, reflect: true })
-	public accessor multiline = false;
+	public multiline = false;
 
 	@consume({ context: messagesLightTheme, subscribe: true })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	/**
 	 * Whether this code block exists within a `discord-embed` component.
 	 */
 	@property({ type: Boolean, reflect: true })
-	public accessor embed = false;
+	public embed = false;
 
 	protected override render() {
 		if (this.multiline) {

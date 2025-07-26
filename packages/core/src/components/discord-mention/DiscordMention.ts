@@ -89,7 +89,7 @@ export class DiscordMention extends LitElement implements LightTheme {
 	 * Whether this entire message block should be highlighted (to emulate the "logged in user" being pinged).
 	 */
 	@property({ type: Boolean, reflect: true })
-	public accessor highlight = false;
+	public highlight = false;
 
 	/**
 	 * The type of mention this should be. This will prepend the proper prefix character.
@@ -107,7 +107,7 @@ export class DiscordMention extends LitElement implements LightTheme {
 	 * - `'customize-community'`
 	 */
 	@property({ reflect: true })
-	public accessor type:
+	public type:
 		| 'channel'
 		| 'channels-and-roles'
 		| 'customize-community'
@@ -121,7 +121,7 @@ export class DiscordMention extends LitElement implements LightTheme {
 		| 'voice' = 'user';
 
 	@property({ reflect: true })
-	public accessor color: string;
+	public color: string;
 
 	public setHoverColor = () => {
 		if (this.color) {
@@ -137,7 +137,7 @@ export class DiscordMention extends LitElement implements LightTheme {
 
 	@consume({ context: messagesLightTheme, subscribe: true })
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
-	public accessor lightTheme = false;
+	public lightTheme = false;
 
 	public override connectedCallback(): void {
 		super.connectedCallback();

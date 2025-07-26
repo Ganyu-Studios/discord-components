@@ -28,10 +28,10 @@ export class DiscordOrderedList extends LitElement {
 	 * @defaultValue 1
 	 */
 	@property({ type: Number, reflect: true })
-	public accessor start = 1;
+	public start = 1;
 
 	@state()
-	private accessor startLength = 1;
+	private startLength = 1;
 
 	public checkChildren() {
 		const allChildrenAreListItems = Array.from(this.children).every((child) => {

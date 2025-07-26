@@ -44,13 +44,13 @@ export class DiscordCustomEmoji extends LitElement {
 	 * The name of the emoji
 	 */
 	@property()
-	public accessor name: string;
+	public name: string;
 
 	/**
 	 * The emoji URL to use in the message.
 	 */
 	@property()
-	public accessor url: string;
+	public url: string;
 
 	/**
 	 * A map of emoji names and their data {@link DiscordCustomEmoji.name | name}.
@@ -63,14 +63,14 @@ export class DiscordCustomEmoji extends LitElement {
 	 * work so we provide this as an alternative method.
 	 */
 	@property({ attribute: false })
-	public accessor customEmojisMap: { [key: string]: Emoji } = {};
+	public customEmojisMap: { [key: string]: Emoji } = {};
 
 	/**
 	 * Determines whether or not the emoji is used in an embed, or a message.
 	 * If it is used in an embed, the sizing is adjusted accordingly.
 	 */
 	@property({ type: Boolean, attribute: 'embed-emoji' })
-	public accessor embedEmoji: boolean;
+	public embedEmoji: boolean;
 
 	/**
 	 * Determines whether or not the emoji is of "jumbo size",
@@ -78,7 +78,7 @@ export class DiscordCustomEmoji extends LitElement {
 	 * up to a maximum of 30 emojis.
 	 */
 	@property({ type: Boolean, attribute: 'jumbo' })
-	public accessor jumbo: boolean;
+	public jumbo: boolean;
 
 	public override willUpdate() {
 		if (!this.url && Boolean(this.name)) {

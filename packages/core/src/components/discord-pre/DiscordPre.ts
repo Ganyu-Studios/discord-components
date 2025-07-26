@@ -27,7 +27,7 @@ export class DiscordPre extends LitElement {
 	`;
 
 	@property({ type: Boolean, reflect: true })
-	public accessor embed = false;
+	public embed = false;
 
 	protected override render() {
 		return html`<pre><slot></slot

@@ -34,9 +34,10 @@
 	},
 	"devDependencies": {
 		"@lit/react": "^1.0.8",
-		"lit": "^3.3.1",
 		"@types/react": "^19.1.8",
 		"colorette": "^2.0.20",
+		"esbuild-plugin-minify-html-literals": "^2.0.1",
+		"lit": "^3.3.1",
 		"rimraf": "^6.0.1",
 		"tsup": "^8.5.0",
 		"typescript": "^5.8.3"
