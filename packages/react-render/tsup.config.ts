@@ -1,4 +1,4 @@
-import { minifyHTMLLiteralsPlugin } from 'esbuild-plugin-minify-html-literals';
+import { rmdir } from 'node:fs';
 import { defineConfig, type Options } from 'tsup';
 import { dependencies } from './package.json';
 
@@ -17,6 +17,8 @@ const baseOptions: Options = {
 	}
 };
 
+rmdir('dist/core-bundle', { recursive: true }, () => {});
+
 export default [
 	defineConfig({
 		...baseOptions,
@@ -28,18 +30,6 @@ export default [
 		...baseOptions,
 		outDir: 'dist/esm',
 		format: 'esm',
-		outExtension: () => ({ js: '.mjs' })
-	}),
-	defineConfig({
-		...baseOptions,
-		entry: ['src/core.bundle.ts'],
-		outDir: 'dist/core',
-		bundle: true,
-		platform: 'browser',
-		minify: true,
-		noExternal: ['@penwin/discord-components-core'],
-		format: 'esm',
-		esbuildPlugins: [minifyHTMLLiteralsPlugin()],
 		outExtension: () => ({ js: '.mjs' })
 	})
 ];
