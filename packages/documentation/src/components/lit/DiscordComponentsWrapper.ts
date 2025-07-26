@@ -1,4 +1,4 @@
-import '@pengu/discord-components-core';
+import '@penwin/discord-components-core';
 
 import { LitElement, css, html } from 'lit';
 

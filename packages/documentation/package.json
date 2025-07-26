@@ -24,8 +24,8 @@
 		"typedoc-plugin-markdown": "4.6.4"
 	},
 	"devDependencies": {
-		"@pengu/discord-components-core": "workspace:^",
-		"@pengu/discord-components-react": "workspace:^",
+		"@penwin/discord-components-core": "workspace:^",
+		"@penwin/discord-components-react": "workspace:^",
 		"@types/react": "19.1.8",
 		"@types/react-dom": "^19.1.6",
 		"react-dom": "^19.1.0",

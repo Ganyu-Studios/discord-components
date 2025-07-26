@@ -1,5 +1,6 @@
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 
+const reactRenderIndexTsPath = new URL('../packages/react-render/src/index.ts', import.meta.url);
 const reactIndexTsPath = new URL('../packages/react/src/index.ts', import.meta.url);
 let reactIndexTs = await readFile(reactIndexTsPath, 'utf-8');
 
@@ -39,3 +40,4 @@ if (startIndex !== -1 && endIndex !== -1) {
 }
 
 await writeFile(reactIndexTsPath, reactIndexTs);
+await writeFile(reactRenderIndexTsPath, reactIndexTs);

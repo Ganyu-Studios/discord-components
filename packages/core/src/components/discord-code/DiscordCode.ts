@@ -1,7 +1,6 @@
 import { consume } from '@lit/context';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { classMap } from 'lit/directives/class-map.js';
 import type { LightTheme } from '../../types.js';
 import { messagesLightTheme } from '../discord-messages/DiscordMessages.js';
 
@@ -95,11 +94,7 @@ export class DiscordCode extends LitElement implements LightTheme {
 	protected override render() {
 		if (this.multiline) {
 			return html`<discord-pre ?embed=${this.embed}
-				><code
-					class=${classMap({
-						'is-in-embed': this.isInEmbed
-					})}
-					><slot></slot></code
+				><code><slot></slot></code
 			></discord-pre>`;
 		}
 

@@ -1,0 +1,7 @@
+CHANGELOG.md
+dist/
+coverage/
+node_modules/
+.yarn/
+*.png
+custom-elements.json
