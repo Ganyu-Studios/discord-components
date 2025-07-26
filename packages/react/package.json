@@ -1,76 +1,76 @@
 {
-	"name": "@pengu/discord-components-react",
-	"version": "4.0.2",
-	"description": "React bindings for @skyra/discord-components-core",
-	"author": "@skyra",
-	"license": "MIT",
-	"main": "dist/cjs/index.cjs",
-	"module": "dist/esm/index.mjs",
-	"typings": "dist/cjs/index.d.cts",
-	"type": "module",
-	"exports": {
-		"import": {
-			"types": "./dist/esm/index.d.mts",
-			"default": "./dist/esm/index.mjs"
-		},
-		"require": {
-			"types": "./dist/cjs/index.d.cts",
-			"default": "./dist/cjs/index.cjs"
-		}
-	},
-	"sideEffects": [
-		"./dist/cjs/index.cjs",
-		"./dist/esm/index.mjs"
-	],
-	"homepage": "https://github.com/skyra-project/discord-components/tree/main/packages/react#readme",
-	"scripts": {
-		"build": "tsup && yarn build:rename-esm-index",
-		"build:rename-esm-index": "node scripts/rename-esm-index.mjs",
-		"prepack": "yarn build"
-	},
-	"dependencies": {
-		"@lit/react": "^1.0.8",
-		"@pengu/discord-components-core": "workspace:^",
-		"react": "^19.1.0"
-	},
-	"devDependencies": {
-		"@types/react": "^19.1.8",
-		"colorette": "^2.0.20",
-		"rimraf": "^6.0.1",
-		"tsup": "^8.5.0",
-		"typescript": "^5.8.3"
-	},
-	"peerDependencies": {
-		"react": "16.8.x || 17.x || 18.x || 19.x",
-		"react-dom": "16.8.x || 17.x || 18.x || 19.x"
-	},
-	"files": [
-		"dist/",
-		"CHANGELOG.md"
-	],
-	"engines": {
-		"node": ">=v18"
-	},
-	"publishConfig": {
-		"access": "public"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/skyra-project/discord-components.git"
-	},
-	"bugs": {
-		"url": "https://github.com/skyra-project/discord-components/issues"
-	},
-	"keywords": [
-		"skyra",
-		"typescript",
-		"ts",
-		"yarn",
-		"discord",
-		"bot",
-		"components",
-		"webcomponents",
-		"lit",
-		"react"
-	]
+  "name": "@pengu/discord-components-react",
+  "version": "4.0.2",
+  "description": "React bindings for @skyra/discord-components-core",
+  "author": "@skyra",
+  "license": "MIT",
+  "main": "dist/cjs/index.cjs",
+  "module": "dist/esm/index.mjs",
+  "typings": "dist/cjs/index.d.cts",
+  "type": "module",
+  "exports": {
+    "import": {
+      "types": "./dist/esm/index.d.mts",
+      "default": "./dist/esm/index.mjs"
+    },
+    "require": {
+      "types": "./dist/cjs/index.d.cts",
+      "default": "./dist/cjs/index.cjs"
+    }
+  },
+  "sideEffects": [
+    "./dist/cjs/index.cjs",
+    "./dist/esm/index.mjs"
+  ],
+  "homepage": "https://github.com/skyra-project/discord-components/tree/main/packages/react#readme",
+  "scripts": {
+    "build": "tsup && pnpm build:rename-esm-index",
+    "build:rename-esm-index": "node scripts/rename-esm-index.mjs",
+    "prepack": "pnpm build"
+  },
+  "dependencies": {
+    "@lit/react": "^1.0.8",
+    "@pengu/discord-components-core": "workspace:^",
+    "react": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.8",
+    "colorette": "^2.0.20",
+    "rimraf": "^6.0.1",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "react": "16.8.x || 17.x || 18.x || 19.x",
+    "react-dom": "16.8.x || 17.x || 18.x || 19.x"
+  },
+  "files": [
+    "dist/",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=v18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skyra-project/discord-components.git"
+  },
+  "bugs": {
+    "url": "https://github.com/skyra-project/discord-components/issues"
+  },
+  "keywords": [
+    "skyra",
+    "typescript",
+    "ts",
+    "yarn",
+    "discord",
+    "bot",
+    "components",
+    "webcomponents",
+    "lit",
+    "react"
+  ]
 }
