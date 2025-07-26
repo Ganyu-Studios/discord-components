@@ -78,7 +78,7 @@ export class DiscordMessage extends LitElement implements LightTheme {
 			width: 2px;
 		}
 
-		:host([highlight][light-theme]) {
+		:host([highlight]) {
 			background-color: rgba(250, 166, 26, 0.1);
 		}
 

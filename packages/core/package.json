@@ -67,7 +67,9 @@
 		"./discord-section-components.js": "./dist/components/discord-section-components/DiscordSectionComponents.js",
 		"./discord-text-display.js": "./dist/components/discord-text-display/DiscordTextDisplay.js",
 		"./discord-separator.js": "./dist/components/discord-separator/DiscordSeparator.js",
-		"./discord-thumbnail.js": "./dist/components/discord-thumbnail/DiscordThumbnail.js"
+		"./discord-thumbnail.js": "./dist/components/discord-thumbnail/DiscordThumbnail.js",
+		"./discord-code-block.js": "./dist/bundle/discord-code-block.js",
+		"./styles/*": "./dist/bundle/styles/*"
 	},
 	"sideEffects": [
 		"./dist/index.js",
@@ -127,15 +129,28 @@
 		"./dist/components/discord-section-components/DiscordSectionComponents.js",
 		"./dist/components/discord-text-display/DiscordTextDisplay.js",
 		"./dist/components/discord-separator/DiscordSeparator.js",
-		"./dist/components/discord-thumbnail/DiscordThumbnail.js"
+		"./dist/components/discord-thumbnail/DiscordThumbnail.js",
+		"./dist/components/discord-media-gallery-tem/DiscordMediaGalleryItem.js",
+		"./dist/components/discord-media-gallery/DiscordMediaGallery.js",
+		"./dist/components/discord-media-spoileable-cover/DiscordMediaSpoileableCover.js",
+		"./dist/components/discord-components-column/DiscordComponentsColumn.js",
+		"./dist/components/discord-container/DiscordContainer.js",
+		"./dist/components/discord-section/DiscordSection.js",
+		"./dist/components/discord-section-components/DiscordSectionComponents.js",
+		"./dist/components/discord-text-display/DiscordTextDisplay.js",
+		"./dist/components/discord-separator/DiscordSeparator.js",
+		"./dist/components/discord-thumbnail/DiscordThumbnail.js",
+		"./dist/bundle/discord-code-block.js",
+		"./dist/bundle/styles/*"
 	],
 	"homepage": "https://github.com/skyra-project/discord-components/tree/main/packages/core#readme",
 	"scripts": {
-		"build:ts": "tsc -b src",
+		"build:ts": "tsc -b src && pnpm move-styles",
 		"watch": "tsc -b src --watch",
 		"analyze": "cem analyze --litelement",
 		"start": "vite",
 		"build": "pnpm build:ts && pnpm analyze --exclude dist",
+		"build:bundle": "tsup",
 		"prepack": "pnpm build",
 		"lint": "eslint src test --ext .ts",
 		"format": "prettier . --write --ignore-path ../../.prettierignore",
@@ -148,13 +163,15 @@
 		"lit": "^3.3.1"
 	},
 	"devDependencies": {
-		"vite": "^7.0.6",
 		"@custom-elements-manifest/analyzer": "^0.10.4",
 		"@favware/cliff-jumper": "^6.0.0",
 		"concurrently": "^9.2.0",
+		"esbuild-sass-plugin": "^3.3.1",
 		"sass-embedded": "^1.89.2",
 		"ts-lit-plugin": "^2.0.2",
-		"typescript": "^5.8.3"
+		"tsup": "^8.5.0",
+		"typescript": "^5.8.3",
+		"vite": "^7.0.6"
 	},
 	"files": [
 		"dist/",
