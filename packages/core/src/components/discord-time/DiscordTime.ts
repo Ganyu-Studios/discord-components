@@ -4,7 +4,7 @@
  * https://github.com/ItzDerock/discord-components/tree/main/packages/core/src/components/discord-time/
  */
 import { css, html, LitElement, type PropertyValues } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 
 const DATE_TYPE_FORMATS = {
 	t: { timeStyle: 'short' },
@@ -17,14 +17,16 @@ const DATE_TYPE_FORMATS = {
 } as const;
 
 const RELATIVE_DATE_CONVERSION = {
-	second: 1_000,
-	minute: 60_000,
-	hour: 3_600_000,
-	day: 86_400_000,
-	week: 604_800_000,
-	month: 2_419_200_000,
-	year: 29_030_400_000
+	second: [1_000],
+	minute: [60_000],
+	hour: [3_600_000],
+	day: [86_400_000],
+	week: [604_800_000, 0.5],
+	month: [2_419_200_000, 0.6],
+	year: [29_030_400_000, 0.7]
 } as const;
+
+const MAX_NEXT_UPDATE_DELAY = 2_147_483_647; // 2 ^ 31 - 1 milliseconds (about 24 days)
 
 const ENTRIES_RELATIVE_DATE_CONVERSION = Object.entries(RELATIVE_DATE_CONVERSION);
 const formatter = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' });
@@ -46,12 +48,15 @@ export class DiscordTime extends LitElement {
 	@property({ type: Number, reflect: true })
 	public timestamp: number;
 
+	@property({ type: Number, reflect: true })
+	public baseNow?: number;
+
 	@property({ type: String, reflect: true })
 	public format: keyof typeof DATE_TYPE_FORMATS = 't';
 
 	private timeout?: number;
 
-	@property({ type: String, attribute: false })
+	@state()
 	private resultTime?: string;
 
 	/**
@@ -79,7 +84,7 @@ export class DiscordTime extends LitElement {
 	private getRelativeTime(timestamp: number): [string, number] {
 		const time = timestamp * 1_000;
 		const date = new Date(time);
-		const now = Date.now();
+		const now = this.baseNow ?? Date.now();
 		const diff = now - date.getTime();
 		const absDiff = Math.abs(diff);
 
@@ -89,11 +94,13 @@ export class DiscordTime extends LitElement {
 
 		let unitTarget: keyof typeof RELATIVE_DATE_CONVERSION = 'second';
 		let unitValueTarget = 1_000;
+		let roundProportion: number | undefined;
 
-		for (const [unit, value] of ENTRIES_RELATIVE_DATE_CONVERSION) {
+		for (const [unit, [value, rProportion]] of ENTRIES_RELATIVE_DATE_CONVERSION) {
 			if (absDiff > value) {
 				unitTarget = unit as keyof typeof RELATIVE_DATE_CONVERSION;
 				unitValueTarget = value;
+				roundProportion = rProportion;
 				continue;
 			}
 
@@ -103,10 +110,13 @@ export class DiscordTime extends LitElement {
 		const rawUnitValue = diff / unitValueTarget;
 		const absUnitValue = Math.abs(rawUnitValue);
 		const absFloored = Math.floor(absUnitValue);
-		const rounded = diff < 0 ? Math.ceil(rawUnitValue) : Math.floor(rawUnitValue);
 		const unitValueDecimals = absUnitValue - absFloored;
+		const rounded =
+			(diff < 0 ? Math.ceil(rawUnitValue) : Math.floor(rawUnitValue)) +
+			(roundProportion ? (unitValueDecimals >= roundProportion ? (diff < 0 ? -1 : 1) : 0) : 0);
+
 		const proportion = diff < 0 ? unitValueDecimals : 1 - unitValueDecimals;
-		const nextUpdateIn = proportion * unitValueTarget;
+		const nextUpdateIn = Math.min(proportion * unitValueTarget, MAX_NEXT_UPDATE_DELAY);
 
 		return [formatter.format(-rounded, unitTarget), nextUpdateIn];
 	}
