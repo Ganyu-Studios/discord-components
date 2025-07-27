@@ -30,7 +30,7 @@ export const DiscordMediaAttachmentStyles = css`
 		align-items: center;
 		margin-top: 4px;
 		background-color: hsl(0 calc(1 * 0%) 0% / 0.6);
-		border-radius: 3px;
+		border-radius: 8px;
 	}
 
 	.discord-media-attachment-video-button {

@@ -60,8 +60,8 @@ export class DiscordAudioAttachment extends DiscordMediaLifecycle implements Lig
 			}
 
 			.discord-audio-attachment-wrapper-audio {
-				background-color: #282828;
-				border-color: #202020;
+				background-color: color-mix(in oklab, hsl(231.429 calc(1 * 6.542%) 20.98% /1) 100%, #000 0%);
+				border-color: color-mix(in oklab, hsl(240 calc(1 * 6.494%) 15.098% /1) 100%, #000 0%);
 				border-radius: 8px;
 				border-style: solid;
 				border-width: 1px;

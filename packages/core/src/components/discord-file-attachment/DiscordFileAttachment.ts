@@ -19,7 +19,7 @@ export class DiscordFileAttachment extends LitElement implements LightTheme {
 	public static override readonly styles = [
 		css`
 			:host {
-				display: grid;
+				display: inline-grid;
 				height: -moz-fit-content;
 				height: fit-content;
 				grid-auto-flow: row;
@@ -28,12 +28,11 @@ export class DiscordFileAttachment extends LitElement implements LightTheme {
 				text-indent: 0;
 				min-height: 0;
 				min-width: 0;
-				padding-top: 0.125rem;
-				padding-bottom: 0.125rem;
 				position: relative;
 				border-radius: 8px;
 				--shadow-color: hsl(none 0% 0%/0.14);
 				box-shadow: 0 1px 4px 0 var(--shadow-color);
+				margin-top: var(--media-item-container-margin-top, 8px);
 			}
 
 			:host([light-theme]) {
@@ -78,7 +77,6 @@ export class DiscordFileAttachment extends LitElement implements LightTheme {
 			}
 
 			.discord-file-attachment-non-visual-media-item-container {
-				margin-top: var(--media-item-container-margin-top, 8px);
 				max-width: 100%;
 				display: flex;
 				flex-direction: column;

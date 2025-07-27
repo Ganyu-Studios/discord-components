@@ -17,12 +17,50 @@ export const DiscordVolumeControlStyles = css`
 		margin-bottom: 4px;
 		margin-left: -4px;
 		position: absolute;
-		bottom: calc(100% + 16px);
-		left: -78px;
-		right: 0;
-		height: 50px;
+		bottom: calc(100% + 32px);
+		right: -26px;
 		opacity: var(--volume-slider-opacity);
 		-webkit-app-region: no-drag;
+		z-index: 20;
+
+		.discord-media-attachment-volume-vertical {
+			height: auto;
+			width: auto;
+			padding: 3px;
+			border-radius: 8px;
+			overflow: hidden;
+			background-color: #141417;
+
+			input[type='range'] {
+				-webkit-appearance: none;
+				-moz-appearance: none;
+				appearance: none;
+				border-radius: 8px;
+				background: hsl(240 calc(1 * 4.762%) 79.412% / 0.3);
+				border-radius: 3px;
+				overflow: hidden;
+
+				&::-webkit-slider-thumb {
+					-webkit-appearance: none;
+					appearance: none;
+					border-radius: 50%;
+					width: 6px;
+					height: 6px;
+					background-color: hsl(234.935 calc(1 * 85.556%) 64.706%);
+					box-shadow: -407px 0 0 404px hsl(234.935 calc(1 * 85.556%) 64.706%);
+				}
+
+				&::-moz-range-thumb {
+					-webkit-appearance: none;
+					appearance: none;
+					border-radius: 50%;
+					width: 6px;
+					height: 6px;
+					background-color: hsl(234.935 calc(1 * 85.556%) 64.706%);
+					box-shadow: -407px 0 0 404px hsl(234.935 calc(1 * 85.556%) 64.706%);
+				}
+			}
+		}
 	}
 
 	.discord-media-attachment-volume-vertical {
@@ -30,8 +68,6 @@ export const DiscordVolumeControlStyles = css`
 		align-items: center;
 		transform-origin: top;
 		transform: rotate(270deg);
-		height: 54px;
-		width: 140px;
 	}
 
 	.discord-media-attachment-button {
@@ -87,40 +123,5 @@ export const DiscordVolumeControlStyles = css`
 		height: 6px;
 		background-color: hsl(210 calc(1 * 9.3%) 78.8% / 0.3);
 		width: 88px;
-	}
-
-	.discord-media-attachment-volume-slider:hover {
-		box-shadow: 0 1px 1px hsl(0 calc(1 * 0%) 0% / 0.3);
-	}
-
-	.discord-media-attachment-volume-slider::before {
-		background-color: hsl(210 calc(1 * 9.3%) 78.8%/0.3);
-		left: 0px;
-		border-radius: 3px 0 0 3px;
-		content: '';
-		position: absolute;
-		top: 0;
-		height: 6px;
-		width: 100%;
-		z-index: 3;
-	}
-
-	input[type='range'].discord-media-attachment-volume-slider::-webkit-slider-runnable-track {
-		background-color: hsl(210 calc(1 * 9.3%) 78.8%/0.3);
-		height: 2.47264%;
-		width: 100%;
-		cursor: grab;
-		border-radius: 8px;
-	}
-
-	input[type='range'].discord-media-attachment-volume-slider::-webkit-slider-thumb {
-		position: relative;
-		bottom: 8px;
-		z-index: 4;
-	}
-
-	input[type='range'].discord-media-attachment-volume-slider:active::-webkit-slider-thumb {
-		transform: scale(1.2);
-		filter: brightness(85%);
 	}
 `;
