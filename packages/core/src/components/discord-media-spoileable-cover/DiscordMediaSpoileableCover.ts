@@ -1,5 +1,5 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
-import { css, html, LitElement } from 'lit';
+import { css, html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { when } from 'lit/directives/when.js';
 import '../discord-custom-emoji/DiscordCustomEmoji.js';
@@ -41,36 +41,42 @@ export class DiscordMediaSpoileableCover extends LitElement {
 		}
 	`;
 
-	public static hostStyles = css`
-		:host:has(discord-media-spoileable-cover:not([is-revealed])) {
-			position: relative;
-			--bg: color-mix(in oklab, hsl(233.333 calc(1 * 3.529%) 50% /1) 100%, #000 0%);
-			background-color: var(--bg);
+	public static createWrapperStyles(wrapper: ':host' | (string & {})) {
+		const wrapperHover = unsafeCSS(wrapper === ':host' ? ':host(:hover)' : `${wrapper}:hover`);
 
-			discord-media-spoileable-cover + * {
-				filter: blur(44px);
+		return css`
+			${unsafeCSS(wrapper)}:has(discord-media-spoileable-cover:not([is-revealed])) {
+				position: relative;
+				--bg: color-mix(in oklab, hsl(233.333 calc(1 * 3.529%) 50% /1) 100%, #000 0%);
+				background-color: var(--bg);
+
+				discord-media-spoileable-cover + * {
+					filter: blur(44px);
+				}
 			}
-		}
 
-		:host:has(discord-media-spoileable-cover[light-theme='true']:not([is-revealed])) {
-			--bg: color-mix(in oklab, hsl(233.333 calc(1 * 4.225%) 58.235% /1) 100%, #000 0%);
-			discord-media-spoileable-cover + * {
-				opacity: 0;
+			${unsafeCSS(wrapper)}:has(discord-media-spoileable-cover[light-theme='true']:not([is-revealed])) {
+				--bg: color-mix(in oklab, hsl(233.333 calc(1 * 4.225%) 58.235% /1) 100%, #000 0%);
+				discord-media-spoileable-cover + * {
+					opacity: 0;
+				}
 			}
-		}
 
-		:host(:hover):has(discord-media-spoileable-cover:not([is-revealed])) {
-			--bg: color-mix(in oklab, hsl(232.5 calc(1 * 4.167%) 62.353% /1) 100%, #000 0%);
+			${wrapperHover}:has(discord-media-spoileable-cover:not([is-revealed])) {
+				--bg: color-mix(in oklab, hsl(232.5 calc(1 * 4.167%) 62.353% /1) 100%, #000 0%);
 
-			discord-media-spoileable-cover {
-				--span-bg: hsl(0 calc(1 * 0%) 0% /0.8784313725490196);
+				discord-media-spoileable-cover {
+					--span-bg: hsl(0 calc(1 * 0%) 0% /0.8784313725490196);
+				}
 			}
-		}
 
-		:host(:hover):has(discord-media-spoileable-cover[light-theme='true']:not([is-revealed])) {
-			--bg: color-mix(in oklab, hsl(234 calc(1 * 4.274%) 45.882% /1) 100%, #000 0%);
-		}
-	`;
+			${wrapperHover}:has(discord-media-spoileable-cover[light-theme='true']:not([is-revealed])) {
+				--bg: color-mix(in oklab, hsl(234 calc(1 * 4.274%) 45.882% /1) 100%, #000 0%);
+			}
+		`;
+	}
+
+	public static hostStyles = DiscordMediaSpoileableCover.createWrapperStyles(':host');
 
 	@property({ type: Boolean, attribute: 'is-revealed', reflect: true })
 	public isRevealed = false;

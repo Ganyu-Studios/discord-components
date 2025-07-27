@@ -327,7 +327,7 @@ export class DiscordVideoAttachment extends DiscordMediaLifecycle implements Lig
 									<source src=${ifDefined(this.href)} />
 								</video>
 								<div class="discord-video-attachment-video-controls">
-									<div class="discord-media-attachment-controls" style="transform: translateY(0%)">
+									<div class="discord-media-attachment-controls no-background" style="transform: translateY(0%)">
 										<div
 											class="discord-media-attachment-video-button"
 											tabindex="0"

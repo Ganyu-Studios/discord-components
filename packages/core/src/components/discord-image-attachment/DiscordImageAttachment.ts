@@ -3,34 +3,45 @@ import { customElement, property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { when } from 'lit/directives/when.js';
+import type { LightTheme } from '../../types.js';
 import { validateImageExtension } from '../../util.js';
+import { DiscordMediaSpoileableCover } from '../discord-media-spoileable-cover/DiscordMediaSpoileableCover.js';
 
 @customElement('discord-image-attachment')
-export class DiscordImageAttachment extends LitElement {
+export class DiscordImageAttachment extends LitElement implements LightTheme {
 	/**
 	 * @internal
 	 */
-	public static override readonly styles = css`
-		:host {
-			display: block;
-			position: relative;
-			-webkit-user-select: text;
-			-moz-user-select: text;
-			-ms-user-select: text;
-			user-select: text;
-			overflow: hidden;
-			border-radius: 3px;
-		}
+	public static override readonly styles = [
+		css`
+			:host {
+				display: block;
+				position: relative;
+				-webkit-user-select: text;
+				-moz-user-select: text;
+				-ms-user-select: text;
+				user-select: text;
+				overflow: hidden;
+				border-radius: 3px;
+			}
 
-		.discord-image-attachment {
-			color: #dcddde;
-			display: flex;
-			font-size: 13px;
-			line-height: 150%;
-			margin-bottom: 8px;
-			margin-top: 8px;
-		}
-	`;
+			.discord-image-attachment {
+				color: #dcddde;
+				display: flex;
+				font-size: 13px;
+				line-height: 150%;
+				margin-bottom: 8px;
+				margin-top: 8px;
+			}
+
+			.discord-image-wrapper {
+				position: relative;
+				overflow: hidden;
+				border-radius: 3px;
+			}
+		`,
+		DiscordMediaSpoileableCover.createWrapperStyles('.discord-image-wrapper')
+	];
 
 	/**
 	 * The URL for the image attachment
@@ -80,10 +91,17 @@ export class DiscordImageAttachment extends LitElement {
 		}
 	}
 
+	@property({ type: Boolean, reflect: true })
+	public spoiler = false;
+
+	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
+	public lightTheme = false;
+
 	protected override render() {
 		return html`
 			<div class="discord-image-attachment">
 				<div class="discord-image-wrapper" style="${styleMap({ height: `${this.height}px`, width: `${this.width}px` })}">
+					${DiscordMediaSpoileableCover.inject(this.spoiler, this.lightTheme)}
 					${when(
 						this.customImageElement,
 						() => html`<slot></slot>`,

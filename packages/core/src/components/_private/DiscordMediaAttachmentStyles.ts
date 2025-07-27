@@ -87,6 +87,27 @@ export const DiscordMediaAttachmentStyles = css`
 		display: flex;
 	}
 
+	.discord-button-download-attachment {
+		overflow: hidden;
+		background-color: color-mix(in oklab, hsl(232.5 calc(1 * 6.897%) 22.745% /1) 100%, #000 0%);
+		outline: 1px solid color-mix(in oklab, hsl(231.429 calc(1 * 6.542%) 20.98% /1) 100%, #000 0%);
+	}
+
+	:host([light-theme]) .discord-button-download-attachment {
+		outline-color: #fbfbfb;
+		background-color: #fbfbfb;
+		.discord-link-download-attachment {
+			color: #5f606a;
+		}
+		&:hover {
+			outline-color: #e4e4e4 !important;
+			background-color: #e4e4e4;
+			.discord-link-download-attachment {
+				color: #2e2f34;
+			}
+		}
+	}
+
 	.discord-icon-download {
 		padding: 6px;
 	}

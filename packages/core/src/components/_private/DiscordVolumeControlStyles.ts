@@ -18,10 +18,9 @@ export const DiscordVolumeControlStyles = css`
 		margin-left: -4px;
 		position: absolute;
 		bottom: calc(100% + 32px);
-		right: -26px;
+		right: -25px;
 		opacity: var(--volume-slider-opacity);
 		-webkit-app-region: no-drag;
-		z-index: 20;
 
 		.discord-media-attachment-volume-vertical {
 			height: auto;
@@ -60,6 +59,12 @@ export const DiscordVolumeControlStyles = css`
 					box-shadow: -407px 0 0 404px hsl(234.935 calc(1 * 85.556%) 64.706%);
 				}
 			}
+		}
+	}
+
+	:host([light-theme]) {
+		.discord-media-attachment-volume-vertical {
+			background-color: #515151;
 		}
 	}
 

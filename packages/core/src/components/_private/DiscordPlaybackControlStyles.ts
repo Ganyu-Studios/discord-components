@@ -25,6 +25,16 @@ export const DiscordPlaybackControlStyles = css`
 		background-color: hsl(210 calc(1 * 9.3%) 78.8% / 0.3);
 	}
 
+	:host([light-theme]) {
+		.discord-media-attachment-controls {
+			background-color: hsl(0 calc(1 * 0%) 0% /0.4);
+		}
+	}
+
+	.discord-media-attachment-controls.no-background {
+		background-color: transparent !important;
+	}
+
 	.discord-media-attachment-playback-control:hover {
 		box-shadow: 0 1px 1px hsl(0 calc(1 * 0%) 0% / 0.3);
 	}
@@ -46,7 +56,16 @@ export const DiscordPlaybackControlStyles = css`
 		appearance: none;
 	}
 
-	input[type='range'].discord-media-attachment-playback-control::-webkit-slider-runnable-track,
+	input[type='range'].discord-media-attachment-playback-control::-webkit-slider-runnable-track {
+		width: 2.47264%;
+		height: 100%;
+		cursor: pointer;
+		opacity: 1;
+		border-radius: 3px;
+		background: linear-gradient(to right, hsla(0, 0%, 100%, 0.25) var(--buffered-width), transparent var(--buffered-width))
+			hsl(240 calc(1 * 4.762%) 79.412% / 0.3);
+	}
+
 	input[type='range'].discord-media-attachment-playback-control::-moz-range-track {
 		width: 2.47264%;
 		height: 100%;
@@ -77,9 +96,9 @@ export const DiscordPlaybackControlStyles = css`
 		position: relative;
 		cursor: pointer;
 		border-radius: 100%;
-		width: 9px;
-		height: 9px;
-		line-height: 9px;
+		width: 8px;
+		height: 8px;
+		line-height: 8px;
 		text-align: center;
 		font-weight: 600;
 		font-size: 12px;
@@ -93,7 +112,7 @@ export const DiscordPlaybackControlStyles = css`
 		box-sizing: content-box;
 		background-color: hsl(234.935 calc(1 * 85.556%) 64.706% /1);
 		z-index: 4;
-		scale: 0;
+		margin: -1px 0 0 0;
 	}
 	input[type='range'].discord-media-attachment-playback-control::-moz-range-thumb {
 		position: relative;
@@ -115,15 +134,15 @@ export const DiscordPlaybackControlStyles = css`
 		box-sizing: content-box;
 		background-color: hsl(234.935 calc(1 * 85.556%) 64.706% /1);
 		z-index: 4;
-		scale: 0;
+		margin: -1px 0 0 0;
 	}
 
 	input[type='range'].discord-media-attachment-playback-control:hover::-webkit-slider-thumb {
-		scale: 1;
+		scale: 1.2;
 		filter: brightness(85%);
 	}
 	input[type='range'].discord-media-attachment-playback-control:hover::-moz-range-thumb {
-		scale: 1;
+		scale: 1.2;
 		filter: brightness(85%);
 	}
 
