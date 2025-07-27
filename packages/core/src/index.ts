@@ -56,6 +56,7 @@ export { DiscordThreadMessage } from './components/discord-thread-message/Discor
 export { DiscordThread } from './components/discord-thread/DiscordThread.js';
 export { DiscordThumbnail } from './components/discord-thumbnail/DiscordThumbnail.js';
 export { DiscordTime } from './components/discord-time/DiscordTime.js';
+export { DiscordTranscriptHeader } from './components/discord-transcript-header/DiscordTranscriptHeader.js';
 export { DiscordUnderlined } from './components/discord-underlined/DiscordUnderlined.js';
 export { DiscordUnorderedList } from './components/discord-unordered-list/DiscordUnorderedList.js';
 export { DiscordVerifiedAuthorTag } from './components/discord-verified-author-tag/DiscordVerifiedAuthorTag.js';

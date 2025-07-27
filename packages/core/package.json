@@ -69,6 +69,7 @@
 		"./discord-separator.js": "./dist/components/discord-separator/DiscordSeparator.js",
 		"./discord-thumbnail.js": "./dist/components/discord-thumbnail/DiscordThumbnail.js",
 		"./discord-code-block.js": "./dist/bundle/discord-code-block.js",
+		"./discord-transcript-header.js": "./dist/bundle/discord-transcript-header.js",
 		"./styles/*": "./dist/bundle/styles/*"
 	},
 	"sideEffects": [
@@ -140,7 +141,8 @@
 		"./dist/components/discord-text-display/DiscordTextDisplay.js",
 		"./dist/components/discord-separator/DiscordSeparator.js",
 		"./dist/components/discord-thumbnail/DiscordThumbnail.js",
-		"./dist/bundle/discord-code-block.js",
+		"./dist/components/discord-code-block.js",
+		"./dist/components/discord-transcript-header.js",
 		"./dist/bundle/styles/*"
 	],
 	"homepage": "https://github.com/skyra-project/discord-components/tree/main/packages/core#readme",
