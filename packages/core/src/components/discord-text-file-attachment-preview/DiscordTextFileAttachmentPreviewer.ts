@@ -109,13 +109,15 @@ export class DiscordTextFileAttachmentPreviewer extends LitElement implements Li
 		this.currentSearch = typedEventTarget.value.toLowerCase();
 	}
 
-	private clearSearch() {
+	private clearSearch(event: MouseEvent) {
 		if (this.inputRef.value) this.inputRef.value.value = '';
 		this.currentSearch = '';
+		event.stopPropagation();
 	}
 
 	private selectLanguage(language: string) {
 		this.language = language;
+		this.hideSelector();
 	}
 
 	public inputRef = createRef<HTMLInputElement>();
@@ -128,7 +130,14 @@ export class DiscordTextFileAttachmentPreviewer extends LitElement implements Li
 	private isLanguageSelectorVisible = false;
 
 	public showSelector() {
+		this.currentSearch = '';
 		this.isLanguageSelectorVisible = true;
+	}
+
+	public hideSelector() {
+		this.isLanguageSelectorVisible = false;
+		this.currentSearch = '';
+		this.removeHandleClickOutside();
 	}
 
 	private popper: ReturnType<typeof createPopper> | null = null;
@@ -157,8 +166,7 @@ export class DiscordTextFileAttachmentPreviewer extends LitElement implements Li
 		const languageSelectorContainer = this.languageSelectorContainer.value;
 
 		if (!languageSelectorContainer) {
-			this.isLanguageSelectorVisible = false;
-			this.removeHandleClickOutside();
+			this.hideSelector();
 			return;
 		}
 
@@ -170,8 +178,7 @@ export class DiscordTextFileAttachmentPreviewer extends LitElement implements Li
 			target = target.parentElement;
 		}
 
-		this.isLanguageSelectorVisible = false;
-		this.removeHandleClickOutside();
+		this.hideSelector();
 	}
 
 	public override updated(changed: PropertyValues): void {
@@ -216,7 +223,7 @@ export class DiscordTextFileAttachmentPreviewer extends LitElement implements Li
 						() => null
 					)}
 				</span>
-				<button class="discord-button-download-attachment">
+				<button class="discord-button-download-attachment" tabindex="-1">
 					<a
 						class="discord-link-download-attachment"
 						aria-label="Download"
@@ -238,7 +245,7 @@ export class DiscordTextFileAttachmentPreviewer extends LitElement implements Li
 					this.isLanguageSelectorVisible,
 					() => html`
 						<div class="language-selector" ${ref(this.languageSelectorContainer)}>
-							<label class="language-selector-container">
+							<label class="language-selector-input-container">
 								<input
 									type="text"
 									placeholder="Search language"
@@ -249,10 +256,10 @@ export class DiscordTextFileAttachmentPreviewer extends LitElement implements Li
 								${when(
 									this.currentSearch.length > 0,
 									() => html`<button class="cancel-search" @click=${this.clearSearch}>${AttachmentLanguageSearchXSvg()}</button>`,
-									() => html`<button class="search-button">${AttachmentLanguageSearchSvg()}</button>`
+									() => html`<button tabindex="-1" class="search-button">${AttachmentLanguageSearchSvg()}</button>`
 								)}
 							</label>
-							<ul>
+							<ul tabindex="-1">
 								${allLanguages.map((language) => {
 									if (this.currentSearch && !language.toLowerCase().includes(this.currentSearch)) return null;
 									filteredLanguages++;
@@ -262,6 +269,7 @@ export class DiscordTextFileAttachmentPreviewer extends LitElement implements Li
 												'language-selector-item': true,
 												selected: this.language === language
 											})}
+											tabindex="-1"
 											@click=${() => this.selectLanguage(language)}
 										>
 											${language}

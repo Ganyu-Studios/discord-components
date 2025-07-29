@@ -52,7 +52,7 @@ export { DiscordSubscript } from './components/discord-subscript/DiscordSubscrip
 export { DiscordSystemMessage } from './components/discord-system-message/DiscordSystemMessage.js';
 export { DiscordTenorVideo } from './components/discord-tenor-video/DiscordTenorVideo.js';
 export { DiscordTextDisplay } from './components/discord-text-display/DiscordTextDisplay.js';
-export { DiscordTextFileAttachmentPreviewer as DiscordFileAttachmentPreview } from './components/discord-text-file-attachment-preview/DiscordTextFileAttachmentPreview.js';
+export { DiscordTextFileAttachmentPreviewer as DiscordFileAttachmentPreview } from './components/discord-text-file-attachment-preview/DiscordTextFileAttachmentPreviewer.js';
 export { DiscordThreadMessage } from './components/discord-thread-message/DiscordThreadMessage.js';
 export { DiscordThread } from './components/discord-thread/DiscordThread.js';
 export { DiscordThumbnail } from './components/discord-thumbnail/DiscordThumbnail.js';
