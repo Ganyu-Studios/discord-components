@@ -61,6 +61,7 @@ export { DiscordUnderlined } from './components/discord-underlined/DiscordUnderl
 export { DiscordUnorderedList } from './components/discord-unordered-list/DiscordUnorderedList.js';
 export { DiscordVerifiedAuthorTag } from './components/discord-verified-author-tag/DiscordVerifiedAuthorTag.js';
 export { DiscordVideoAttachment } from './components/discord-video-attachment/DiscordVideoAttachment.js';
+export { DiscordVoiceNote } from './components/discord-voice-message/DiscordVoiceMessage.js';
 
 /* EXPORTS END */
 export { getConfig, setConfig } from './config.js';

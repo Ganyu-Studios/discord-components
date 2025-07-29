@@ -14,7 +14,7 @@ export default [
 		platform: 'browser',
 		minify: true,
 		external: [],
-		noExternal: ['lit', '@lit/context', 'highlight.js'],
+		noExternal: ['lit', '@lit/context', 'highlight.js', 'wavesurfer.js'],
 		format: 'esm',
 		esbuildPlugins: [sassPlugin()],
 		outExtension: () => ({ js: '.mjs' })

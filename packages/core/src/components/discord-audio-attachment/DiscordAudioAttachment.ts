@@ -252,32 +252,14 @@ export class DiscordAudioAttachment extends DiscordMediaLifecycle implements Lig
 									/>
 								</div>
 							</div>
-							<div class="discord-media-attachment-flex">
+							<div class="discord-media-attachment-flex discord-volume-container">
 								<div class="discord-media-attachment-flex-container">
-									<div ${ref(this.volumeControlRef)} class="discord-media-attachment-button-slider">
-										<div
-											class="discord-media-attachment-volume-vertical"
-											@mouseenter=${this.handleVolumeVerticalEnter}
-											@mouseleave=${this.handleVolumeVerticalLeave}
-										>
-											<input
-												${ref(this.volumeControlInputRef)}
-												type="range"
-												class="discord-media-attachment-volume-slider"
-												@input=${this.handleVolumeSliderInput}
-												max="100"
-												value="100"
-											/>
-										</div>
-									</div>
 									<button
 										aria-label="Control volume"
 										type="button"
 										class="discord-media-attachment-button"
 										@focus=${this.handleVolumeVerticalFocus}
 										@blur=${this.handleVolumeVerticalBlur}
-										@mouseover=${this.handleVolumeVerticalEnter}
-										@mouseout=${this.handleVolumeVerticalLeave}
 										@click=${this.handleClickMuteIcon}
 									>
 										<div class="discord-media-attachment-button-content">
@@ -299,6 +281,18 @@ export class DiscordAudioAttachment extends DiscordMediaLifecycle implements Lig
 											)}
 										</div>
 									</button>
+									<div ${ref(this.volumeControlRef)} class="discord-media-attachment-button-slider">
+										<div class="discord-media-attachment-volume-vertical">
+											<input
+												${ref(this.volumeControlInputRef)}
+												type="range"
+												class="discord-media-attachment-volume-slider"
+												@input=${this.handleVolumeSliderInput}
+												max="100"
+												value="100"
+											/>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>

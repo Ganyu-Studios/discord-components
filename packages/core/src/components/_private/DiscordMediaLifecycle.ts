@@ -1,6 +1,7 @@
 import { LitElement, type PropertyValueMap } from 'lit';
 import { state } from 'lit/decorators.js';
 import { createRef, type Ref } from 'lit/directives/ref.js';
+import type WaveSurfer from 'wavesurfer.js';
 
 export class DiscordMediaLifecycle extends LitElement {
 	protected mediaComponentRef: Ref<HTMLAudioElement | HTMLVideoElement> = createRef();
@@ -13,6 +14,9 @@ export class DiscordMediaLifecycle extends LitElement {
 
 	@state()
 	protected currentPlaybackPosition = '0:00';
+
+	@state()
+	protected leftPlaybackPosition = '0:00';
 
 	@state()
 	protected totalMediaDuration = '';
@@ -42,12 +46,19 @@ export class DiscordMediaLifecycle extends LitElement {
 		const minutes = Math.floor(secs / 60);
 		const seconds = Math.floor(secs % 60);
 		const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+		// console.table({ returnedSeconds, minutes });
 		return `${minutes}:${returnedSeconds}`;
 	}
 
 	protected displayMediaDuration() {
 		if (this.mediaComponentRef.value) {
 			this.totalMediaDuration = this.calculateTime(this.mediaComponentRef.value.duration);
+		}
+	}
+
+	protected displayLeftPlaybackPosition(bufferedAmount: number) {
+		if (this.mediaComponentRef.value && this.seekSliderRef.value) {
+			this.leftPlaybackPosition = this.calculateTime(this.mediaComponentRef.value.duration - bufferedAmount);
 		}
 	}
 
@@ -67,11 +78,14 @@ export class DiscordMediaLifecycle extends LitElement {
 		}
 	}
 
+	protected wavesurfer?: WaveSurfer | null = null;
+
 	protected whilePlaying = () => {
 		if (this.mediaComponentRef.value && this.seekSliderRef.value) {
 			this.seekSliderRef.value.value = Math.floor(this.mediaComponentRef.value.currentTime).toString();
 			const bufferedAmount = Number(this.seekSliderRef.value.value);
-			this.currentPlaybackPosition = this.calculateTime(bufferedAmount);
+			this.currentPlaybackPosition = this.calculateTime(this.mediaComponentRef.value.currentTime);
+			this.displayLeftPlaybackPosition(this.mediaComponentRef.value.currentTime);
 			this.style.setProperty('--seek-before-width', `${(bufferedAmount / Number(this.seekSliderRef.value.max)) * 100}%`);
 			this.raf = requestAnimationFrame(this.whilePlaying);
 		}
@@ -113,12 +127,15 @@ export class DiscordMediaLifecycle extends LitElement {
 
 	protected handleClickMuteIcon() {
 		if (this.mediaComponentRef.value) {
+			const input = this.volumeControlInputRef.value;
 			if (this.isMuted) {
 				this.mediaComponentRef.value.muted = false;
+				if (input) input.value = (this.currentVolume * 100).toString();
 				this.isMuted = false;
 			} else {
 				this.mediaComponentRef.value.muted = true;
 				this.isMuted = true;
+				if (input) input.value = '0';
 			}
 		}
 	}
@@ -148,6 +165,9 @@ export class DiscordMediaLifecycle extends LitElement {
 		const typedEventTarget = event.target as HTMLInputElement;
 		const { value } = typedEventTarget;
 
+		this.isMuted = false;
+		if (this.mediaComponentRef.value) this.mediaComponentRef.value.muted = false;
+
 		if (this.mediaComponentRef.value) {
 			const newVolume = Number(value) / 100;
 
@@ -156,25 +176,11 @@ export class DiscordMediaLifecycle extends LitElement {
 		}
 	}
 
-	protected handleVolumeVerticalEnter() {
-		if (this.volumeControlRef.value) {
-			this.style.setProperty('--volume-slider-opacity', '1');
-		}
-	}
-
-	protected handleVolumeVerticalLeave() {
-		if (this.volumeControlRef.value) {
-			this.style.setProperty('--volume-slider-opacity', '0');
-		}
-	}
-
 	protected handleVolumeVerticalFocus() {
-		this.handleVolumeVerticalEnter();
 		this.addEventListener('keydown', this.handleVolumeControlKeyboard);
 	}
 
 	protected handleVolumeVerticalBlur() {
-		this.handleVolumeVerticalLeave();
 		this.removeEventListener('keydown', this.handleVolumeControlKeyboard);
 	}
 
