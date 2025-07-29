@@ -50,6 +50,216 @@ discord-code-block[light-theme] .discord-code-block-pre {
 	border: var(--border, 1px solid color-mix(in oklab, hsl(240 calc(1 * 4%) 60.784% /0.2) 100%, hsl(0 0% 0% /0.2) 0%));
 }
 
+discord-text-file-attachment-previewer {
+	margin: 8px 0;
+	display: flex;
+	flex-direction: column;
+	max-width: 80%;
+	border-radius: 8px;
+	--border-color: color-mix(in oklab, hsl(240 calc(1 * 4%) 60.784% /0.12156862745098039) 100%, hsl(0 0% 0% /0.12156862745098039) 0%);
+	border: 1px solid var(--border-color);
+	.discord-code-block-pre {
+		margin-bottom: 0px;
+		padding: 16px;
+		code {
+			white-space: pre;
+		}
+		background-color: transparent;
+		border: none;
+		overflow: auto;
+
+		&::-webkit-scrollbar {
+			width: 4px;
+			height: 4px;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			background: #1f1f23;
+			border-radius: 8px;
+		}
+	}
+
+	.file-metadata {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		padding: 0px 16px;
+		min-height: 40px;
+		border-top: 1px solid var(--border-color);
+		gap: 4px;
+
+		color: color-mix(in oklab, hsl(220 calc(1 * 4.918%) 88.039% /1) 100%, #000 0%);
+		background: color-mix(in oklab, hsl(232.5 calc(1 * 6.557%) 23.922% /1) 100%, #000 0%);
+
+		button {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: transparent;
+			border: none;
+			padding: 0px;
+			color: color-mix(in oklab, hsl(228 calc(1 * 4.425%) 77.843% /1) 100%, #000 0%);
+			cursor: pointer;
+			a {
+				color: color-mix(in oklab, hsl(228 calc(1 * 4.425%) 77.843% /1) 100%, #000 0%);
+			}
+
+			&:hover,
+			&:hover a {
+				color: color-mix(in oklab, hsl(0 calc(1 * 0%) 100% /1) 100%, #000 0%);
+			}
+
+			svg {
+				width: 24px;
+				height: 24px;
+			}
+		}
+
+		font-size: 0.875rem;
+
+		.file-metadata-name {
+			display: inline-block;
+			flex: 0 1 auto;
+			overflow: hidden;
+			text-align: right;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			color: color-mix(in oklab, hsl(228 calc(1 * 4.425%) 77.843% /1) 100%, #000 0%);
+			&:hover {
+				color: color-mix(in oklab, hsl(0 calc(1 * 0%) 100% /1) 100%, #000 0%);
+			}
+		}
+
+		.file-metadata-size {
+			color: color-mix(in oklab, hsl(234.545 calc(1 * 6.509%) 33.137% /1) 100%, #000 0%);
+			padding-left: 2px;
+			text-align: right;
+
+			&:hover {
+				color: color-mix(in oklab, hsl(0 calc(1 * 0%) 100% /1) 100%, #000 0%);
+			}
+		}
+
+		.language-selector {
+			display: flex;
+			flex-direction: column;
+			width: 192px;
+			height: 296px;
+			background-color: color-mix(in oklab, hsl(232.5 calc(1 * 6.557%) 23.922% /1) 100%, #000 0%);
+			box-shadow: 0 8px 16px hsl(0 calc(1 * 0%) 0% /0.24);
+			padding: 8px 8px 4px;
+			border-radius: 4px;
+			margin-top: 4px;
+			font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+			font-size: 16px;
+			gap: 8px;
+			animation: discord-text-file-attachment-previewer-language-selector-appear 0.08s ease-out;
+
+			.language-selector-container {
+				display: flex;
+				gap: 2px;
+				padding: 10px 12px;
+				border-radius: 8px;
+				border: 1px solid color-mix(in oklab, hsl(240 calc(1 * 4%) 60.784% /0.2) 100%, hsl(0 0% 0% /0.2) 0%);
+				background-color: color-mix(in oklab, hsl(0 calc(1 * 0%) 0% /0.2) 100%, hsl(0 0% 0% /0.2) 0%);
+				box-sizing: border-box;
+				&:has(input:focus) {
+					border: 1px solid color-mix(in oklab, hsl(213.934 calc(1 * 85.915%) 72.157% /1) 100%, #000 0%);
+				}
+
+				input {
+					width: 0%;
+					flex: 1;
+					background: transparent;
+					border: none;
+					outline: none;
+					color: color-mix(in oklab, hsl(220 calc(1 * 4.918%) 88.039% /1) 100%, #000 0%);
+					line-height: 20px;
+					padding: 0px;
+					margin: 0px;
+				}
+
+				svg {
+					width: 16px;
+					height: 16px;
+				}
+
+				.search-button {
+					pointer-events: none;
+				}
+			}
+			ul {
+				padding: 0px;
+				margin: 0px;
+				li {
+					list-style: none;
+					display: block;
+				}
+				overflow: auto;
+
+				&::-webkit-scrollbar {
+					width: 0px;
+					height: 0px;
+				}
+			}
+
+			.language-selector-item {
+				width: 100%;
+				display: flex;
+				justify-content: flex-start;
+				align-items: center;
+				border-radius: 4px;
+				color: color-mix(in oklab, hsl(228 calc(1 * 4.425%) 77.843% /1) 100%, #000 0%);
+				cursor: pointer;
+				display: flex;
+				font-weight: 500;
+				margin-bottom: 4px;
+				outline: none;
+				padding: 10px 8px;
+				font-size: 16px;
+
+				.selected {
+					background-color: hsl(240 calc(1 * 4%) 60.784% /0.2);
+				}
+
+				&:hover {
+					background-color: hsl(240 calc(1 * 4%) 60.784% /0.0784313725490196);
+					color: color-mix(in oklab, hsl(0 calc(1 * 0%) 100% /1) 100%, #000 0%);
+				}
+			}
+
+			.no-results {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				padding: 20px;
+				gap: 12px;
+				h3 {
+					margin: 0px;
+					font-size: 16px;
+				}
+				p {
+					text-align: center;
+					margin: 0px;
+					line-height: 1.25;
+					font-weight: 400;
+					color: color-mix(in oklab, hsl(231.429 calc(1 * 4.459%) 69.216% /1) 100%, #000 0%);
+				}
+			}
+		}
+	}
+}
+
+@keyframes discord-text-file-attachment-previewer-language-selector-appear {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
 .discord-code-block-pre--multiline {
 	display: block;
 	margin-bottom: 0.5rem;

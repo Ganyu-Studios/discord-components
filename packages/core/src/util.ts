@@ -1,5 +1,5 @@
 import { getConfig, icons } from './config.js';
-import type { Emoji, DiscordTimestamp } from './types.js';
+import type { DiscordTimestamp, Emoji } from './types.js';
 
 export class DiscordComponentsError extends Error {
 	public constructor(message: string) {
@@ -69,3 +69,17 @@ export function getClanIcon(clanIcon: string | undefined): object | string | und
 
 	return icons.get(clanIcon) ?? clanIcon;
 }
+
+export interface LitMemoResult<T> {
+	dependencies: unknown[];
+	value: T;
+}
+
+export const litMemo = <R>(render: () => R, dependencies: unknown[] = [], old: LitMemoResult<R> | undefined = undefined): LitMemoResult<R> => {
+	if (old?.dependencies.every((dep, index) => dep === dependencies[index])) return old;
+
+	return {
+		value: render(),
+		dependencies
+	};
+};
