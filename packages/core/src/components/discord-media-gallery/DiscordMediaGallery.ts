@@ -1,9 +1,13 @@
-import { css, html, LitElement } from 'lit';
+import { createContext, provide } from '@lit/context';
+import { css, html, LitElement, type PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { choose } from 'lit/directives/choose.js';
 import '../discord-custom-emoji/DiscordCustomEmoji.js';
+import type { MediaItem } from '../discord-media-fullscreen-previewer/DiscordMediaFullscreenPreviewer.js';
 
 const withWrapper = (val: unknown) => html`<div class="discord-media-gallery-wrapper">${val}</div>`;
+
+export const mediaItemsContext = createContext<MediaItem[]>(Symbol('media-items-list'));
 
 @customElement('discord-media-gallery')
 export class DiscordMediaGallery extends LitElement {
@@ -93,19 +97,29 @@ export class DiscordMediaGallery extends LitElement {
 	@property({ type: Number, attribute: false })
 	public size = 0;
 
-	protected override updated() {
+	@provide({ context: mediaItemsContext })
+	public mediaItems: MediaItem[];
+
+	protected override updated(changed: PropertyValues) {
+		if (changed.has('mediaItems') || (changed.has('size') && changed.get('size') !== undefined)) return;
+
 		const items = this.querySelectorAll('discord-media-gallery-item');
 
 		if (this.size === items.length) return;
 		this.size = items.length;
 
+		const mediaItems: MediaItem[] = [];
+
 		for (const [idx, item] of items.entries()) {
 			item.setAttribute('slot', `image-${idx + 1}`);
+			mediaItems.push({ href: item.getAttribute('media')! });
 		}
+
+		this.mediaItems = mediaItems;
 	}
 
 	protected override render() {
-		return choose(
+		const base = choose(
 			this.size,
 			[
 				[1, () => html` <slot name="image-1" class="discord-media-gallery-unique-display-grid"></slot> `],
@@ -278,6 +292,11 @@ export class DiscordMediaGallery extends LitElement {
 			],
 			() => html`<discord-header>Invalid Media Gallery, items must be in 1-10 range.</discord-header>`
 		);
+
+		return html`
+			${base}
+			<discord-media-fullscreen-previewer></discord-media-fullscreen-previewer>
+		`;
 	}
 }
 

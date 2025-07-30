@@ -1,4 +1,4 @@
-import { consume } from '@lit/context';
+import { consume, createContext, provide } from '@lit/context';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
@@ -11,6 +11,9 @@ import '../discord-author-info/DiscordAuthorInfo.js';
 import type { DiscordMention } from '../discord-mention/DiscordMention.js';
 import { messagesCompactMode, messagesLightTheme, messagesNoBackground } from '../discord-messages/DiscordMessages.js';
 import Ephemeral from '../svgs/Ephemeral.js';
+
+export const messageProfile = createContext<Profile | undefined>(Symbol('message-profile'));
+export const messageTimestamp = createContext<DiscordTimestamp | undefined>(Symbol('message-timestamp'));
 
 @customElement('discord-message')
 export class DiscordMessage extends LitElement implements LightTheme {
@@ -369,6 +372,7 @@ export class DiscordMessage extends LitElement implements LightTheme {
 	 *
 	 * if {@link DiscordMessage.messageBodyOnly} is `true`, this will be shown in the gutter before the message on hover.
 	 */
+	@provide({ context: messageTimestamp })
 	@property({
 		type: String,
 		converter: (value) => handleTimestamp(value, false, false),
@@ -424,6 +428,9 @@ export class DiscordMessage extends LitElement implements LightTheme {
 		}
 	}
 
+	@provide({ context: messageProfile })
+	public resolvedProfile?: Profile;
+
 	protected override render() {
 		const defaultData: Profile = {
 			author: this.author,
@@ -441,6 +448,8 @@ export class DiscordMessage extends LitElement implements LightTheme {
 
 		const profileData: Profile = ((this.profile !== undefined && Reflect.get(profiles, this.profile)) as Profile) || {};
 		const profile: Profile = { ...defaultData, ...profileData, avatar: this.resolveAvatar(profileData.avatar ?? this.avatar) };
+
+		this.resolvedProfile = profile;
 
 		const computedTimestamp = handleTimestamp(this.timestamp, this.compactMode, this.twentyFour) ?? undefined;
 

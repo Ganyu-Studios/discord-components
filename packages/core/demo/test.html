@@ -6,62 +6,33 @@
 		<meta name="description" content="Sample for Discord Components using no particular framework" />
 		<title>No Framework Sample</title>
 		<link rel="stylesheet" href="./index.scss" />
+		<script type="module" src="./profiles.ts"></script>
 		<script type="module" src="./index.ts"></script>
 	</head>
 
 	<body>
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-
 		<discord-messages>
-			<discord-message>
-				<discord-text-file-attachment-previewer
-					href="example.html"
-					name="example.txt"
-					bytes="1024"
-					bytes-unit="KB"
-					language="html"
-					content="<div>Hello World</div><div>Hello World</div><div>Hello World</div><div>Hello World</div>"
-				>
-				</discord-text-file-attachment-previewer>
+			<discord-message profile="skyra">
+				<discord-media-gallery>
+					<discord-media-gallery-item
+						media="https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg"
+						description="An aerial."
+					></discord-media-gallery-item>
+					<discord-media-gallery-item
+						media="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzroysUtf6H8XgVoObvggxlZI8dZA0uqJGDg&s"
+						description="An aerial."
+					></discord-media-gallery-item>
+					<discord-media-gallery-item
+						media="https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg"
+						description="An aerial."
+						spoiler
+					></discord-media-gallery-item>
+					<discord-media-gallery-item
+						media="https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg"
+						description="An aerial."
+					></discord-media-gallery-item>
+				</discord-media-gallery>
 			</discord-message>
 		</discord-messages>
-
-		<discord-messages light-theme>
-			<discord-message>
-				<discord-text-file-attachment-previewer
-					href="example.html"
-					name="example.txt"
-					bytes="1024"
-					bytes-unit="KB"
-					language="html"
-					content="<div>Hello World</div><div>Hello World</div><div>Hello World</div><div>Hello World</div>"
-				>
-				</discord-text-file-attachment-previewer>
-			</discord-message>
-		</discord-messages>
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
 	</body>
 </html>

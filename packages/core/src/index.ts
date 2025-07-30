@@ -27,6 +27,7 @@ export { DiscordInvite } from './components/discord-invite/DiscordInvite.js';
 export { DiscordItalic } from './components/discord-italic/DiscordItalic.js';
 export { DiscordLink } from './components/discord-link/DiscordLink.js';
 export { DiscordListItem } from './components/discord-list-item/DiscordListItem.js';
+export { DiscordMediaFullscreenPreviewer } from './components/discord-media-fullscreen-previewer/DiscordMediaFullscreenPreviewer.js';
 export { DiscordMediaGalleryItem } from './components/discord-media-gallery-tem/DiscordMediaGalleryItem.js';
 export { DiscordMediaGallery } from './components/discord-media-gallery/DiscordMediaGallery.js';
 export { DiscordMediaSpoileableCover } from './components/discord-media-spoileable-cover/DiscordMediaSpoileableCover.js';
