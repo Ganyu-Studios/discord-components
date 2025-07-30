@@ -154,7 +154,7 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 				display: grid;
 				grid-template-columns: auto 1fr auto;
 				grid-template-rows: 1fr;
-				gap: 4px;
+				gap: 12px;
 
 				.button-container {
 					display: flex;
@@ -225,13 +225,35 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 
 				main {
 					overflow: hidden;
-					.current-media-container {
+
+					.current-media-container:has(img.current-image-preview) {
+						width: var(--img-width, unset);
+						height: var(--img-height, unset);
 						scale: var(--scale);
+
 						position: fixed;
 						left: 50%;
 						top: 50%;
 						transform-origin: center center;
-						translate: calc(var(--x, 0%) - 50%) calc(var(--y, 0%) - 50%);
+
+						--target-width: calc(var(--img-width, unset) * var(--scale));
+						--target-height: calc(var(--img-height, unset) * var(--scale));
+
+						--x-screen-disbord: calc((var(--target-width) - 100vw) / 2);
+						--y-screen-disbord: calc((var(--target-height) - 100vh) / 2);
+
+						--target-x: -50%;
+						--target-y: -50%;
+
+						translate: var(--target-x, 0%) var(--target-y, 0%);
+
+						&.can-be-x-draggable {
+							--target-x: calc(clamp(calc(var(--x-screen-disbord) * -1), var(--x, 0%), var(--x-screen-disbord)) - 50%);
+						}
+
+						&.can-be-y-draggable {
+							--target-y: calc(clamp(calc(var(--y-screen-disbord) * -1), var(--y, 0%), var(--y-screen-disbord)) - 50%);
+						}
 					}
 				}
 			}
@@ -253,6 +275,11 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 		}
 	`;
 
+	public constructor() {
+		super();
+		this.handleWindowResize = this.handleWindowResize.bind(this);
+	}
+
 	@state()
 	public isZoomed = false;
 
@@ -268,16 +295,14 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 
 	private __scale = 1;
 
-	private __canBeDraggable = false;
-
 	private clampPosition(val: number) {
-		const maxValue = this.__scale * 25;
+		const maxValue = 6.25 * this.__scale ** 2;
 		return clamp(val, -maxValue, maxValue);
 	}
 
 	private imageRef = createRef<HTMLImageElement>();
 
-	private calcScaleAndCanBeDraggable() {
+	private calcScale() {
 		if (!this.imageRef.value) return 1;
 
 		const rect = this.imageRef.value.getBoundingClientRect();
@@ -290,24 +315,49 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 		const areaProportion = targetArea / screenArea;
 		const scale = clamp(roundBySteps(areaProportion * 8, 2), 2, 4);
 
-		const targetWidth = rect.width * scale;
-		const targetHeight = rect.height * scale;
-
-		const canBeDraggable = targetWidth > screenWidth || targetHeight > screenHeight;
-
 		this.__scale = scale;
-		this.__canBeDraggable = canBeDraggable;
 
 		return this.__scale;
 	}
 
+	private __canBeXDraggable = false;
+
+	private __canBeYDraggable = false;
+
+	private get __canBeDraggable() {
+		return this.__canBeXDraggable || this.__canBeYDraggable;
+	}
+
+	private calcCanBeDraggable() {
+		if (!this.isZoomed) return;
+		if (!this.imageRef.value) return;
+
+		const target = this.imageRef.value;
+
+		this.__canBeXDraggable = target.clientWidth * this.__scale > window.innerWidth;
+		this.__canBeYDraggable = target.clientHeight * this.__scale > window.innerHeight;
+
+		if (this.__canBeXDraggable) target.parentElement?.classList.add('can-be-x-draggable');
+		else target.parentElement?.classList.remove('can-be-x-draggable');
+
+		if (this.__canBeYDraggable) target.parentElement?.classList.add('can-be-y-draggable');
+		else target.parentElement?.classList.remove('can-be-y-draggable');
+	}
+
 	private zoomIn() {
 		if (this.isZoomed || !this.imageRef.value) return;
-		this.calcScaleAndCanBeDraggable();
+		this.calcScale();
+		this.calcCanBeDraggable();
+		const target = this.imageRef.value;
 
-		this.imageRef.value.parentElement?.style.setProperty('--scale', `${this.__scale}`);
-		this.imageRef.value.parentElement?.style.setProperty('--x', `0%`);
-		this.imageRef.value.parentElement?.style.setProperty('--y', `0%`);
+		const currentWidth = target.clientWidth;
+		const currentHeight = target.clientHeight;
+
+		target.parentElement?.style.setProperty('--img-width', `${currentWidth}px`);
+		target.parentElement?.style.setProperty('--img-height', `${currentHeight}px`);
+		target.parentElement?.style.setProperty('--scale', `${this.__scale}`);
+		target.parentElement?.style.setProperty('--x', `0%`);
+		target.parentElement?.style.setProperty('--y', `0%`);
 
 		this.__currentXTranslatePercent = 0;
 		this.__currentYTranslatePercent = 0;
@@ -315,6 +365,10 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 		this.__draggCurrentYTranslatePercent = 0;
 
 		this.isZoomed = true;
+	}
+
+	private handleWindowResize() {
+		this.calcCanBeDraggable();
 	}
 
 	public handleImageClick(event: MouseEvent) {
@@ -327,6 +381,7 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 				return;
 			}
 
+			window.removeEventListener('resize', this.handleWindowResize);
 			this.isZoomed = false;
 			return;
 		}
@@ -335,10 +390,13 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 		const percentX = (event.offsetX / target.clientWidth) * 100;
 		const percentY = (event.offsetY / target.clientHeight) * 100;
 
-		this.calcScaleAndCanBeDraggable();
+		const currentWidth = target.clientWidth;
+		const currentHeight = target.clientHeight;
 
-		const x = this.__canBeDraggable ? this.clampPosition((50 - percentX) * this.__scale) : 0;
-		const y = this.__canBeDraggable ? this.clampPosition((50 - percentY) * this.__scale) : 0;
+		this.calcScale();
+
+		const x = this.__canBeXDraggable ? this.clampPosition((50 - percentX) * this.__scale) : 0;
+		const y = this.__canBeYDraggable ? this.clampPosition((50 - percentY) * this.__scale) : 0;
 
 		this.__currentXTranslatePercent = x;
 		this.__currentYTranslatePercent = y;
@@ -348,8 +406,13 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 		target.parentElement?.style.setProperty('--x', `${x}%`);
 		target.parentElement?.style.setProperty('--y', `${y}%`);
 		target.parentElement?.style.setProperty('--scale', `${this.__scale}`);
+		target.parentElement?.style.setProperty('--img-width', `${currentWidth}px`);
+		target.parentElement?.style.setProperty('--img-height', `${currentHeight}px`);
 
 		this.isZoomed = true;
+		this.calcCanBeDraggable();
+
+		window.addEventListener('resize', this.handleWindowResize);
 	}
 
 	public handleImageMouseMove(event: MouseEvent) {
@@ -365,11 +428,11 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 		const target = event.target as HTMLElement;
 		const rect = target.getBoundingClientRect();
 
-		const xPercent = (diffX / rect.width) * 100 * 2;
-		const yPercent = (diffY / rect.height) * 100 * 2;
+		const xPercent = (diffX / rect.width) * 100 * this.__scale;
+		const yPercent = (diffY / rect.height) * 100 * this.__scale;
 
-		const x = this.clampPosition(this.__currentXTranslatePercent + xPercent);
-		const y = this.clampPosition(this.__currentYTranslatePercent + yPercent);
+		const x = this.__canBeXDraggable ? this.clampPosition(this.__currentXTranslatePercent + xPercent) : 0;
+		const y = this.__canBeYDraggable ? this.clampPosition(this.__currentYTranslatePercent + yPercent) : 0;
 
 		this.__draggCurrentXTranslatePercent = x;
 		this.__draggCurrentYTranslatePercent = y;
@@ -382,6 +445,8 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 
 	public handleImageMouseDown(event: MouseEvent) {
 		if (event.buttons !== 1) return;
+		this.__currentXTranslatePercent = this.__draggCurrentXTranslatePercent;
+		this.__currentYTranslatePercent = this.__draggCurrentYTranslatePercent;
 		this.downEvent = this.isZoomed ? event : undefined;
 	}
 
@@ -405,8 +470,8 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 
 		const isHorizontalScroll = notHasDeltaX && event.shiftKey;
 
-		const y = this.clampPosition(this.__currentYTranslatePercent + (isHorizontalScroll ? 0 : percentY));
-		const x = this.clampPosition(this.__currentXTranslatePercent + (isHorizontalScroll ? percentY : percentX));
+		const y = this.__canBeYDraggable ? this.clampPosition(this.__currentYTranslatePercent + (isHorizontalScroll ? 0 : percentY)) : 0;
+		const x = this.__canBeYDraggable ? this.clampPosition(this.__currentXTranslatePercent + (isHorizontalScroll ? percentY : percentX)) : 0;
 
 		this.__draggCurrentYTranslatePercent = y;
 		this.__currentYTranslatePercent = y;
@@ -417,6 +482,11 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 		const target = event.target as HTMLElement;
 		target.parentElement?.style.setProperty('--y', `${y}%`);
 		target.parentElement?.style.setProperty('--x', `${x}%`);
+	}
+
+	public override disconnectedCallback() {
+		super.disconnectedCallback();
+		window.removeEventListener('resize', this.handleWindowResize);
 	}
 
 	@consume({ context: messagesLightTheme, subscribe: true })
@@ -598,7 +668,8 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 								@click=${this.handleImageClick}
 								draggable="false"
 								src=${currentSlot.href}
-								alt="media"
+								alt=${currentSlot.href}
+								class="current-image-preview"
 							/>`
 						)}
 					</div>
