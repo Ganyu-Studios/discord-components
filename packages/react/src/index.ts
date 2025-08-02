@@ -10,6 +10,7 @@ export const DiscordAuthorInfo = createReactComponent('discord-author-info', Rea
 export const DiscordBold = createReactComponent('discord-bold', ReactComponents.DiscordBold);
 export const DiscordButton = createReactComponent('discord-button', ReactComponents.DiscordButton);
 export const DiscordCode = createReactComponent('discord-code', ReactComponents.DiscordCode);
+export const DiscordCodeBlock = createReactComponent('discord-code-block', ReactComponents.DiscordCodeBlock);
 export const DiscordCommand = createReactComponent('discord-command', ReactComponents.DiscordCommand);
 export const DiscordComponentsColumn = createReactComponent('discord-components-column', ReactComponents.DiscordComponentsColumn);
 export const DiscordContainer = createReactComponent('discord-container', ReactComponents.DiscordContainer);
@@ -20,6 +21,7 @@ export const DiscordEmbedField = createReactComponent('discord-embed-field', Rea
 export const DiscordEmbedFields = createReactComponent('discord-embed-fields', ReactComponents.DiscordEmbedFields);
 export const DiscordEmbedFooter = createReactComponent('discord-embed-footer', ReactComponents.DiscordEmbedFooter);
 export const DiscordFileAttachment = createReactComponent('discord-file-attachment', ReactComponents.DiscordFileAttachment);
+export const DiscordForwardedMessage = createReactComponent('discord-forwarded-message', ReactComponents.DiscordForwardedMessage);
 export const DiscordHeader = createReactComponent('discord-header', ReactComponents.DiscordHeader);
 export const DiscordImageAttachment = createReactComponent('discord-image-attachment', ReactComponents.DiscordImageAttachment);
 export const DiscordInputText = createReactComponent('discord-input-text', ReactComponents.DiscordInputText);
@@ -27,6 +29,10 @@ export const DiscordInvite = createReactComponent('discord-invite', ReactCompone
 export const DiscordItalic = createReactComponent('discord-italic', ReactComponents.DiscordItalic);
 export const DiscordLink = createReactComponent('discord-link', ReactComponents.DiscordLink);
 export const DiscordListItem = createReactComponent('discord-list-item', ReactComponents.DiscordListItem);
+export const DiscordMediaFullscreenPreviewer = createReactComponent(
+	'discord-media-fullscreen-previewer',
+	ReactComponents.DiscordMediaFullscreenPreviewer
+);
 export const DiscordMediaGallery = createReactComponent('discord-media-gallery', ReactComponents.DiscordMediaGallery);
 export const DiscordMediaGalleryItem = createReactComponent('discord-media-gallery-tem', ReactComponents.DiscordMediaGalleryItem);
 export const DiscordMediaSpoileableCover = createReactComponent('discord-media-spoileable-cover', ReactComponents.DiscordMediaSpoileableCover);
@@ -52,14 +58,20 @@ export const DiscordSubscript = createReactComponent('discord-subscript', ReactC
 export const DiscordSystemMessage = createReactComponent('discord-system-message', ReactComponents.DiscordSystemMessage);
 export const DiscordTenorVideo = createReactComponent('discord-tenor-video', ReactComponents.DiscordTenorVideo);
 export const DiscordTextDisplay = createReactComponent('discord-text-display', ReactComponents.DiscordTextDisplay);
+export const DiscordTextFileAttachmentPreviewer = createReactComponent(
+	'discord-text-file-attachment-preview',
+	ReactComponents.DiscordTextFileAttachmentPreviewer
+);
 export const DiscordThread = createReactComponent('discord-thread', ReactComponents.DiscordThread);
 export const DiscordThreadMessage = createReactComponent('discord-thread-message', ReactComponents.DiscordThreadMessage);
 export const DiscordThumbnail = createReactComponent('discord-thumbnail', ReactComponents.DiscordThumbnail);
 export const DiscordTime = createReactComponent('discord-time', ReactComponents.DiscordTime);
+export const DiscordTranscriptHeader = createReactComponent('discord-transcript-header', ReactComponents.DiscordTranscriptHeader);
 export const DiscordUnderlined = createReactComponent('discord-underlined', ReactComponents.DiscordUnderlined);
 export const DiscordUnorderedList = createReactComponent('discord-unordered-list', ReactComponents.DiscordUnorderedList);
 export const DiscordVerifiedAuthorTag = createReactComponent('discord-verified-author-tag', ReactComponents.DiscordVerifiedAuthorTag);
 export const DiscordVideoAttachment = createReactComponent('discord-video-attachment', ReactComponents.DiscordVideoAttachment);
+export const DiscordVoiceMessage = createReactComponent('discord-voice-message', ReactComponents.DiscordVoiceMessage);
 
 /* IMPORTS END */
 

@@ -9,11 +9,11 @@ import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { when } from 'lit/directives/when.js';
 import type { DiscordTimestamp, LightTheme, Profile } from '../../types.js';
 import '../discord-custom-emoji/DiscordCustomEmoji.js';
+import { isInMediaFullScreenPreviewer, type CloseFullScreenEventDetail } from '../_private/mediaGalleryFullScreenContext.js';
 import { mediaItemsContext } from '../discord-media-gallery/DiscordMediaGallery.js';
 import { DiscordMediaGalleryItem } from '../discord-media-gallery-tem/DiscordMediaGalleryItem.js';
 import { messageProfile, messageTimestamp } from '../discord-message/DiscordMessage.js';
 import { messagesLightTheme } from '../discord-messages/DiscordMessages.js';
-import { isInMediaFullScreenPreviewer, type CloseFullScreenEventDetail } from './context.js';
 
 export interface MediaItem {
 	href: string;

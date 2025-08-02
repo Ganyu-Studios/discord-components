@@ -25,7 +25,7 @@ const clamp = (value: number, min: number, max: number) => Math.min(Math.max(val
 const speedContext = createContext<number>(Symbol('discord-voice-message-speed'));
 
 @customElement('discord-voice-message')
-export class DiscordVoiceNote extends DiscordMediaLifecycle implements LightTheme {
+export class DiscordVoiceMessage extends DiscordMediaLifecycle implements LightTheme {
 	/**
 	 * @internal
 	 */
@@ -460,6 +460,6 @@ export class DiscordVoiceNote extends DiscordMediaLifecycle implements LightThem
 
 declare global {
 	interface HTMLElementTagNameMap {
-		'discord-voice-message': DiscordVoiceNote;
+		'discord-voice-message': DiscordVoiceMessage;
 	}
 }

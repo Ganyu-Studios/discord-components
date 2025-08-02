@@ -12,7 +12,7 @@ import { DiscordMediaLifecycle } from '../_private/DiscordMediaLifecycle.js';
 import { DiscordPlaybackControlStyles } from '../_private/DiscordPlaybackControlStyles.js';
 import { DiscordVolumeControlStyles } from '../_private/DiscordVolumeControlStyles.js';
 import '../discord-link/DiscordLink.js';
-import { isInMediaFullScreenPreviewer } from '../discord-media-fullscreen-previewer/context.js';
+import { isInMediaFullScreenPreviewer } from '../_private/mediaGalleryFullScreenContext.js';
 import { messagesLightTheme } from '../discord-messages/DiscordMessages.js';
 import AttachmentDownloadButton from '../svgs/AttachmentDownloadButton.js';
 import MediaPauseIcon from '../svgs/MediaPauseIcon.js';

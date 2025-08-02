@@ -3,8 +3,8 @@ import { css, html, LitElement, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { choose } from 'lit/directives/choose.js';
 import '../discord-custom-emoji/DiscordCustomEmoji.js';
+import { type CloseFullScreenEventDetail, type OpenInFullScreenEventDetail } from '../_private/mediaGalleryFullScreenContext.js';
 import type { MediaItem } from '../discord-media-fullscreen-previewer/DiscordMediaFullscreenPreviewer.js';
-import { type CloseFullScreenEventDetail, type OpenInFullScreenEventDetail } from '../discord-media-fullscreen-previewer/context.js';
 
 const withWrapper = (val: unknown) => html`<div class="discord-media-gallery-wrapper">${val}</div>`;
 
