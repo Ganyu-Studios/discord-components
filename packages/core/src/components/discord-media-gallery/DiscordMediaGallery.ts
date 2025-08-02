@@ -1,9 +1,10 @@
 import { createContext, provide } from '@lit/context';
 import { css, html, LitElement, type PropertyValues } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { choose } from 'lit/directives/choose.js';
 import '../discord-custom-emoji/DiscordCustomEmoji.js';
 import type { MediaItem } from '../discord-media-fullscreen-previewer/DiscordMediaFullscreenPreviewer.js';
+import { type CloseFullScreenEventDetail, type OpenInFullScreenEventDetail } from '../discord-media-fullscreen-previewer/context.js';
 
 const withWrapper = (val: unknown) => html`<div class="discord-media-gallery-wrapper">${val}</div>`;
 
@@ -23,6 +24,10 @@ export class DiscordMediaGallery extends LitElement {
 			width: min(100%, 600px);
 			align-items: stretch;
 			justify-content: stretch;
+		}
+
+		.event-container {
+			display: contents;
 		}
 
 		.discord-media-gallery-vertical-grid {
@@ -94,11 +99,32 @@ export class DiscordMediaGallery extends LitElement {
 		}
 	`;
 
+	public constructor() {
+		super();
+		this.setFullScreenSlotTarget = this.setFullScreenSlotTarget.bind(this);
+	}
+
 	@property({ type: Number, attribute: false })
 	public size = 0;
 
 	@provide({ context: mediaItemsContext })
 	public mediaItems: MediaItem[];
+
+	@state()
+	public currentSlot = 0;
+
+	@state()
+	public isOpen = false;
+
+	public setFullScreenSlotTarget(event: CustomEvent<OpenInFullScreenEventDetail>) {
+		this.currentSlot = event.detail.slot;
+		this.isOpen = true;
+	}
+
+	private handleCloseFullScreen(_: CustomEvent<CloseFullScreenEventDetail>) {
+		this.isOpen = false;
+		this.currentSlot = 0;
+	}
 
 	protected override updated(changed: PropertyValues) {
 		if (changed.has('mediaItems') || (changed.has('size') && changed.get('size') !== undefined)) return;
@@ -111,8 +137,10 @@ export class DiscordMediaGallery extends LitElement {
 		const mediaItems: MediaItem[] = [];
 
 		for (const [idx, item] of items.entries()) {
-			item.setAttribute('slot', `image-${idx + 1}`);
-			mediaItems.push({ href: item.getAttribute('media')! });
+			item.setAttribute('slot', `media-${idx + 1}`);
+			const href = item.getAttribute('media');
+			if (!href) continue;
+			mediaItems.push({ href, mimeType: item.getAttribute('mime-type') });
 		}
 
 		this.mediaItems = mediaItems;
@@ -122,15 +150,15 @@ export class DiscordMediaGallery extends LitElement {
 		const base = choose(
 			this.size,
 			[
-				[1, () => html` <slot name="image-1" class="discord-media-gallery-unique-display-grid"></slot> `],
+				[1, () => html` <slot name="media-1" class="discord-media-gallery-unique-display-grid"></slot> `],
 				[
 					2,
 					() =>
 						withWrapper(html`
 							<div class="discord-media-gallery-second-display-grid">
 								<div class="discord-media-gallery-display-top">
-									<slot name="image-1"></slot>
-									<slot name="image-2"></slot>
+									<slot name="media-1"></slot>
+									<slot name="media-2"></slot>
 								</div>
 							</div>
 						`)
@@ -141,11 +169,11 @@ export class DiscordMediaGallery extends LitElement {
 						withWrapper(html`
 							<div class="discord-media-gallery-three-display-grid">
 								<div class="flex-2">
-									<slot name="image-1"></slot>
+									<slot name="media-1"></slot>
 								</div>
 								<div class="discord-media-gallery-vertical-grid">
-									<slot name="image-2"></slot>
-									<slot name="image-3"></slot>
+									<slot name="media-2"></slot>
+									<slot name="media-3"></slot>
 								</div>
 							</div>
 						`)
@@ -155,10 +183,10 @@ export class DiscordMediaGallery extends LitElement {
 					() =>
 						withWrapper(html`
 							<div class="discord-media-gallery-four-display-grid">
-								<slot name="image-1"></slot>
-								<slot name="image-2"></slot>
-								<slot name="image-3"></slot>
-								<slot name="image-4"></slot>
+								<slot name="media-1"></slot>
+								<slot name="media-2"></slot>
+								<slot name="media-3"></slot>
+								<slot name="media-4"></slot>
 							</div>
 						`)
 				],
@@ -168,13 +196,13 @@ export class DiscordMediaGallery extends LitElement {
 						withWrapper(html`
 							<div class="discord-media-gallery-five-display-grid">
 								<div class="discord-media-gallery-display-top">
-									<slot name="image-1"></slot>
-									<slot name="image-2"></slot>
+									<slot name="media-1"></slot>
+									<slot name="media-2"></slot>
 								</div>
 								<div class="discord-media-gallery-three-horizontal-mosaics">
-									<slot name="image-3"></slot>
-									<slot name="image-4"></slot>
-									<slot name="image-5"></slot>
+									<slot name="media-3"></slot>
+									<slot name="media-4"></slot>
+									<slot name="media-5"></slot>
 								</div>
 							</div>
 						`)
@@ -185,14 +213,14 @@ export class DiscordMediaGallery extends LitElement {
 						withWrapper(html`
 							<div class="discord-media-gallery-six-display-grid">
 								<div class="discord-media-gallery-three-horizontal-mosaics">
-									<slot name="image-1"></slot>
-									<slot name="image-2"></slot>
-									<slot name="image-3"></slot>
+									<slot name="media-1"></slot>
+									<slot name="media-2"></slot>
+									<slot name="media-3"></slot>
 								</div>
 								<div class="discord-media-gallery-three-horizontal-mosaics">
-									<slot name="image-4"></slot>
-									<slot name="image-5"></slot>
-									<slot name="image-6"></slot>
+									<slot name="media-4"></slot>
+									<slot name="media-5"></slot>
+									<slot name="media-6"></slot>
 								</div>
 							</div>
 						`)
@@ -203,17 +231,17 @@ export class DiscordMediaGallery extends LitElement {
 						withWrapper(html`
 							<div class="discord-media-gallery-seven-display-grid">
 								<div class="discord-media-gallery-display-top">
-									<slot name="image-1"></slot>
+									<slot name="media-1"></slot>
 								</div>
 								<div class="discord-media-gallery-three-horizontal-mosaics">
-									<slot name="image-2"></slot>
-									<slot name="image-3"></slot>
-									<slot name="image-4"></slot>
+									<slot name="media-2"></slot>
+									<slot name="media-3"></slot>
+									<slot name="media-4"></slot>
 								</div>
 								<div class="discord-media-gallery-three-horizontal-mosaics">
-									<slot name="image-5"></slot>
-									<slot name="image-6"></slot>
-									<slot name="image-7"></slot>
+									<slot name="media-5"></slot>
+									<slot name="media-6"></slot>
+									<slot name="media-7"></slot>
 								</div>
 							</div>
 						`)
@@ -224,18 +252,18 @@ export class DiscordMediaGallery extends LitElement {
 						withWrapper(html`
 							<div class="discord-media-gallery-eight-display-grid">
 								<div class="discord-media-gallery-display-top">
-									<slot name="image-1"></slot>
-									<slot name="image-2"></slot>
+									<slot name="media-1"></slot>
+									<slot name="media-2"></slot>
 								</div>
 								<div class="discord-media-gallery-three-horizontal-mosaics">
-									<slot name="image-3"></slot>
-									<slot name="image-4"></slot>
-									<slot name="image-5"></slot>
+									<slot name="media-3"></slot>
+									<slot name="media-4"></slot>
+									<slot name="media-5"></slot>
 								</div>
 								<div class="discord-media-gallery-three-horizontal-mosaics">
-									<slot name="image-6"></slot>
-									<slot name="image-7"></slot>
-									<slot name="image-8"></slot>
+									<slot name="media-6"></slot>
+									<slot name="media-7"></slot>
+									<slot name="media-8"></slot>
 								</div>
 							</div>
 						`)
@@ -246,19 +274,19 @@ export class DiscordMediaGallery extends LitElement {
 						withWrapper(html`
 							<div class="discord-media-gallery-nine-display-grid">
 								<div class="discord-media-gallery-three-horizontal-mosaics">
-									<slot name="image-1"></slot>
-									<slot name="image-2"></slot>
-									<slot name="image-3"></slot>
+									<slot name="media-1"></slot>
+									<slot name="media-2"></slot>
+									<slot name="media-3"></slot>
 								</div>
 								<div class="discord-media-gallery-three-horizontal-mosaics">
-									<slot name="image-4"></slot>
-									<slot name="image-5"></slot>
-									<slot name="image-6"></slot>
+									<slot name="media-4"></slot>
+									<slot name="media-5"></slot>
+									<slot name="media-6"></slot>
 								</div>
 								<div class="discord-media-gallery-three-horizontal-mosaics">
-									<slot name="image-7"></slot>
-									<slot name="image-8"></slot>
-									<slot name="image-9"></slot>
+									<slot name="media-7"></slot>
+									<slot name="media-8"></slot>
+									<slot name="media-9"></slot>
 								</div>
 							</div>
 						`)
@@ -269,22 +297,22 @@ export class DiscordMediaGallery extends LitElement {
 						withWrapper(html`
 							<div class="discord-media-gallery-ten-display-grid">
 								<div class="discord-media-gallery-display-top">
-									<slot name="image-1"></slot>
+									<slot name="media-1"></slot>
 								</div>
 								<div class="discord-media-gallery-three-horizontal-mosaics">
-									<slot name="image-2"></slot>
-									<slot name="image-3"></slot>
-									<slot name="image-4"></slot>
+									<slot name="media-2"></slot>
+									<slot name="media-3"></slot>
+									<slot name="media-4"></slot>
 								</div>
 								<div class="discord-media-gallery-three-horizontal-mosaics">
-									<slot name="image-5"></slot>
-									<slot name="image-6"></slot>
-									<slot name="image-7"></slot>
+									<slot name="media-5"></slot>
+									<slot name="media-6"></slot>
+									<slot name="media-7"></slot>
 								</div>
 								<div class="discord-media-gallery-three-horizontal-mosaics">
-									<slot name="image-8"></slot>
-									<slot name="image-9"></slot>
-									<slot name="image-10"></slot>
+									<slot name="media-8"></slot>
+									<slot name="media-9"></slot>
+									<slot name="media-10"></slot>
 								</div>
 							</div>
 						`)
@@ -294,8 +322,12 @@ export class DiscordMediaGallery extends LitElement {
 		);
 
 		return html`
-			${base}
-			<discord-media-fullscreen-previewer></discord-media-fullscreen-previewer>
+			<div @open-in-full-screen=${this.setFullScreenSlotTarget}>${base}</div>
+			<discord-media-fullscreen-previewer
+				@close-full-screen=${this.handleCloseFullScreen}
+				.currentSlot=${this.currentSlot}
+				.isOpen=${this.isOpen}
+			></discord-media-fullscreen-previewer>
 		`;
 	}
 }

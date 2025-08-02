@@ -1,7 +1,14 @@
+/* eslint-disable lit-a11y/click-events-have-key-events */
+import { consume } from '@lit/context';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { when } from 'lit/directives/when.js';
 import '../discord-custom-emoji/DiscordCustomEmoji.js';
+import { type MediaItem } from '../discord-media-fullscreen-previewer/DiscordMediaFullscreenPreviewer.js';
+import { type OpenInFullScreenEventDetail } from '../discord-media-fullscreen-previewer/context.js';
+import { mediaItemsContext } from '../discord-media-gallery/DiscordMediaGallery.js';
 import { DiscordMediaSpoileableCover } from '../discord-media-spoileable-cover/DiscordMediaSpoileableCover.js';
+import MediaPlayIcon from '../svgs/MediaPlayIcon.js';
 
 @customElement('discord-media-gallery-item')
 export class DiscordMediaGalleryItem extends LitElement {
@@ -24,12 +31,39 @@ export class DiscordMediaGalleryItem extends LitElement {
 				--img-max-width: unset;
 				--img-max-height: unset;
 
-				img {
+				img,
+				video {
 					width: var(--img-width);
 					height: var(--img-height);
 					max-width: var(--img-max-width);
 					max-height: var(--img-max-height);
 					object-fit: cover;
+					cursor: pointer;
+				}
+
+				.discord-media-gallery-video-container {
+					max-width: 100%;
+					max-height: 100%;
+					position: relative;
+					cursor: pointer;
+
+					.discord-media-attachment-control-icon {
+						position: absolute;
+						top: 50%;
+						left: 50%;
+						width: 24px;
+						height: 24px;
+						background-color: hsl(0 calc(1 * 0%) 0% /1);
+						color: hsl(0 calc(1 * 0%) 100% /1);
+						padding: 12px;
+						border-radius: 50%;
+						transform: translate(-50%, -50%);
+						opacity: 0.6;
+						transition: opacity 0.25s;
+						&:hover {
+							opacity: 0.8;
+						}
+					}
 				}
 			}
 
@@ -38,7 +72,9 @@ export class DiscordMediaGalleryItem extends LitElement {
 				height: unset;
 				border-radius: 8px;
 				max-width: min(100%, 600px);
-				img {
+
+				img,
+				video {
 					width: auto;
 					height: auto;
 					max-width: 100%;
@@ -52,6 +88,9 @@ export class DiscordMediaGalleryItem extends LitElement {
 	@property({ type: String })
 	public media: string;
 
+	@property({ type: String, attribute: 'mime-type' })
+	public mimeType?: string;
+
 	@property({ type: String })
 	public description: string;
 
@@ -61,10 +100,69 @@ export class DiscordMediaGalleryItem extends LitElement {
 	@property({ type: Boolean })
 	public spoiler = false;
 
+	public static discordSupportedVideoExtensions = new Set(['mp4', 'webm', 'mov', 'avi', 'mkv', 'wmv', 'flv']);
+
+	public static discordSupportedVideoMimeTypes = new Set([
+		'video/mp4',
+		'video/webm',
+		'video/quicktime',
+		'video/x-msvideo',
+		'video/x-ms-wmv',
+		'video/x-flv'
+	]);
+
+	public static isVideo(url: string, mimeType?: string | null) {
+		if (mimeType && DiscordMediaGalleryItem.discordSupportedVideoMimeTypes.has(mimeType)) return true;
+		const extension = url.split('.').pop() as string;
+		return DiscordMediaGalleryItem.discordSupportedVideoExtensions.has(extension);
+	}
+
+	@consume({ context: mediaItemsContext, subscribe: true })
+	public mediaItems: MediaItem[];
+
+	public openInFullScreen() {
+		const slot = this.getAttribute('slot');
+		if (!slot) return;
+		const position = slot.split('-')[1];
+		if (!position) return;
+		const numberPosition = Number(position);
+		if (Number.isNaN(numberPosition)) return;
+
+		const event = new CustomEvent<OpenInFullScreenEventDetail>('open-in-full-screen', {
+			detail: {
+				slot: numberPosition - 1
+			},
+			bubbles: true
+		});
+
+		this.dispatchEvent(event);
+	}
+
 	protected override render() {
+		const isVideo = DiscordMediaGalleryItem.isVideo(this.media);
+
+		const isOnlyOne = this.mediaItems.length === 1;
+
+		if (isOnlyOne && isVideo) {
+			return html`<discord-video-attachment
+				href=${this.media}
+				spoiler=${this.spoiler}
+				description=${this.description}
+			></discord-video-attachment>`;
+		}
+
 		return html`
 			${DiscordMediaSpoileableCover.inject(this.spoiler)}
-			<img src=${this.media} alt=${this.description} />
+			${when(
+				isVideo,
+				() => html`
+					<div class="discord-media-gallery-video-container">
+						<video src=${this.media} alt=${this.description ?? this.media} @click=${this.openInFullScreen}></video>
+						${MediaPlayIcon({ class: 'discord-media-attachment-control-icon' })}
+					</div>
+				`,
+				() => html`<img src=${this.media} alt=${this.description ?? this.media} @click=${this.openInFullScreen} /> `
+			)}
 		`;
 	}
 }

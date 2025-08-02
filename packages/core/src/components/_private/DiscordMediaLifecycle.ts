@@ -100,7 +100,7 @@ export class DiscordMediaLifecycle extends LitElement {
 		}
 	}
 
-	protected handleClickPlayPauseIcon = () => {
+	protected handleClickPlayPauseIcon() {
 		if (this.mediaComponentRef.value) {
 			if (this.hasEnded) this.hasEnded = false;
 
@@ -114,7 +114,7 @@ export class DiscordMediaLifecycle extends LitElement {
 				this.isPlaying = true;
 			}
 		}
-	};
+	}
 
 	protected handleSpaceToPlayPause = (event: KeyboardEvent) => {
 		if (event.code === 'Space') {

@@ -1,6 +1,7 @@
+/* eslint-disable lit-a11y/click-events-have-key-events */
 import { consume } from '@lit/context';
 import { css, html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
@@ -11,6 +12,7 @@ import { DiscordMediaLifecycle } from '../_private/DiscordMediaLifecycle.js';
 import { DiscordPlaybackControlStyles } from '../_private/DiscordPlaybackControlStyles.js';
 import { DiscordVolumeControlStyles } from '../_private/DiscordVolumeControlStyles.js';
 import '../discord-link/DiscordLink.js';
+import { isInMediaFullScreenPreviewer } from '../discord-media-fullscreen-previewer/context.js';
 import { messagesLightTheme } from '../discord-messages/DiscordMessages.js';
 import AttachmentDownloadButton from '../svgs/AttachmentDownloadButton.js';
 import MediaPauseIcon from '../svgs/MediaPauseIcon.js';
@@ -19,7 +21,7 @@ import MediaRestartIcon from '../svgs/MediaRestartIcon.js';
 import MediaVolumeAbove50PercentIcon from '../svgs/MediaVolumeAbove50PercentIcon.js';
 import MediaVolumeBelow50PercentIcon from '../svgs/MediaVolumeBelow50PercentIcon.js';
 import AudioVideoVolumeMutedIcon from '../svgs/MediaVolumeMutedIcon.js';
-import VideoFullScreenIcon from '../svgs/VideoFullScreenIcon.js';
+import VideoFullScreenIcon, { VideoExitFullScreenIcon } from '../svgs/VideoFullScreenIcon.js';
 import VideoPausePopIcon from '../svgs/VideoPausePopIcon.js';
 
 @customElement('discord-video-attachment')
@@ -54,6 +56,29 @@ export class DiscordVideoAttachment extends DiscordMediaLifecycle implements Lig
 			:host .discord-button-download-attachment {
 				top: 5px !important;
 				right: 8px !important;
+			}
+
+			:host([is-in-media-full-screen-previewer]) {
+				max-width: 100%;
+				max-height: 100%;
+
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				.discord-video-attachment-one-by-one-grid {
+					margin: 0;
+					max-height: inherit;
+				}
+
+				.discord-video-attachment-image-wrapper {
+					width: unset;
+					height: unset;
+				}
+
+				.discord-button-download-attachment {
+					display: none !important;
+				}
 			}
 
 			.discord-video-attachment-one-by-one-grid {
@@ -130,13 +155,42 @@ export class DiscordVideoAttachment extends DiscordMediaLifecycle implements Lig
 				position: absolute;
 				left: 0;
 				right: 0;
-				bottom: -10px;
+				bottom: -80px;
 				padding-bottom: 10px;
 				width: 100%;
 				display: flex;
 				align-items: center;
 				background-color: hsl(0 calc(1 * 0%) 0% / 0.6);
 				height: 32px;
+				transition: bottom 0.25s ease-out;
+			}
+
+			.play-overlay-container {
+				position: absolute;
+				inset: 0;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				z-index: 10;
+				cursor: pointer;
+
+				.discord-media-attachment-control-icon {
+					width: 24px;
+					height: 24px;
+					background-color: hsl(0 calc(1 * 0%) 0% /1);
+					color: hsl(0 calc(1 * 0%) 100% /1);
+					padding: 12px;
+					border-radius: 50%;
+					opacity: 0.6;
+					transition: opacity 0.25s;
+					&:hover {
+						opacity: 0.8;
+					}
+				}
+			}
+
+			.discord-video-attachment-one-by-one-grid:hover .discord-video-attachment-video-controls {
+				bottom: -10px;
 			}
 
 			.discord-video-attachment-video-button {
@@ -248,6 +302,13 @@ export class DiscordVideoAttachment extends DiscordMediaLifecycle implements Lig
 			.discord-video-attachment-overlay-content-hidden {
 				animation: playPausePopIconKeyframes 0.2s ease-in-out infinite;
 			}
+
+			.discord-video-attachment-video-controls.isFullScreen {
+				bottom: -80px !important;
+				&.showControlsInFullScreen {
+					bottom: -10px !important;
+				}
+			}
 		`
 	];
 
@@ -279,10 +340,49 @@ export class DiscordVideoAttachment extends DiscordMediaLifecycle implements Lig
 
 	private playPausePopAnimationContainerRef: Ref<HTMLDivElement> = createRef();
 
+	@consume({ context: isInMediaFullScreenPreviewer, subscribe: true })
+	@property({ type: Boolean, reflect: true, attribute: 'is-in-media-full-screen-previewer' })
+	public isInMediaFullScreenPreviewer = false;
+
+	private fullScreenContainerRef: Ref<HTMLDivElement> = createRef();
+
 	private async handleFullScreenClicked() {
-		if (this.mediaComponentRef.value) {
-			await this.mediaComponentRef.value.requestFullscreen();
+		if (this.shadowRoot?.fullscreenElement) {
+			await document.exitFullscreen();
+			return;
 		}
+
+		if (this.fullScreenContainerRef.value) {
+			await this.fullScreenContainerRef.value.requestFullscreen();
+		}
+	}
+
+	@state()
+	private isFullScreen = false;
+
+	@state()
+	private showControlsInFullScreen = false;
+
+	private __mouseMoveInFullScreenTimeout: number | undefined;
+
+	private handleFullScreenChange() {
+		this.isFullScreen = Boolean(this.shadowRoot?.fullscreenElement);
+	}
+
+	private handleMouseMoveInFullScreen() {
+		if (!this.isFullScreen) return (this.showControlsInFullScreen = false);
+		window.clearTimeout(this.__mouseMoveInFullScreenTimeout);
+		this.showControlsInFullScreen = true;
+		this.__mouseMoveInFullScreenTimeout = window.setTimeout(() => {
+			this.showControlsInFullScreen = false;
+			this.__mouseMoveInFullScreenTimeout = undefined;
+		}, 2_000);
+		return true;
+	}
+
+	public override disconnectedCallback() {
+		super.disconnectedCallback();
+		window.clearTimeout(this.__mouseMoveInFullScreenTimeout);
 	}
 
 	private handleHasStartedPlayingOrHasPaused() {
@@ -297,12 +397,37 @@ export class DiscordVideoAttachment extends DiscordMediaLifecycle implements Lig
 		}, 200);
 	}
 
+	@state()
+	private isClickedPlayOverlay = false;
+
+	private handleClickPlayOverlay() {
+		this.isClickedPlayOverlay = true;
+		this.handleClickPlayPauseIcon();
+	}
+
+	protected override handleClickPlayPauseIcon() {
+		super.handleClickPlayPauseIcon();
+		if (this.isFullScreen && !this.__mouseMoveInFullScreenTimeout) this.handleMouseMoveInFullScreen();
+	}
+
 	protected override render() {
 		return html`<div class="discord-media-attachment-non-visual-media-item-container">
+			${when(
+				!this.isClickedPlayOverlay && !this.isInMediaFullScreenPreviewer,
+				() =>
+					html`<div class="play-overlay-container" @click=${this.handleClickPlayOverlay}>
+						${MediaPlayIcon({ class: 'discord-media-attachment-control-icon' })}
+					</div>`
+			)}
 			<div class="discord-video-attachment-one-by-one-grid">
 				<div class="discord-media-attachment-mosaic-item-media">
 					<div class="discord-video-attachment-image-wrapper">
-						<div class="discord-video-attachment-loading-overlay">
+						<div
+							class="discord-video-attachment-loading-overlay"
+							${ref(this.fullScreenContainerRef)}
+							@fullscreenchange=${this.handleFullScreenChange}
+							@mousemove=${this.handleMouseMoveInFullScreen}
+						>
 							<div
 								class=${classMap({
 									'discord-video-attachment-wrapper': true,
@@ -326,7 +451,13 @@ export class DiscordVideoAttachment extends DiscordMediaLifecycle implements Lig
 								>
 									<source src=${ifDefined(this.href)} />
 								</video>
-								<div class="discord-video-attachment-video-controls">
+								<div
+									class=${classMap({
+										'discord-video-attachment-video-controls': true,
+										isFullScreen: this.isFullScreen,
+										showControlsInFullScreen: this.showControlsInFullScreen || this.hasEnded
+									})}
+								>
 									<div class="discord-media-attachment-controls no-background" style="transform: translateY(0%)">
 										<div
 											class="discord-media-attachment-video-button"
@@ -425,7 +556,11 @@ export class DiscordVideoAttachment extends DiscordMediaLifecycle implements Lig
 												@click=${this.handleFullScreenClicked}
 											>
 												<div class="discord-media-attachment-button-content">
-													${VideoFullScreenIcon({ class: 'discord-media-attachment-button-control-icon' })}
+													${when(
+														this.isFullScreen,
+														() => VideoExitFullScreenIcon({ class: 'discord-media-attachment-button-control-icon' }),
+														() => VideoFullScreenIcon({ class: 'discord-media-attachment-button-control-icon' })
+													)}
 												</div>
 											</button>
 										</div>

@@ -1,20 +1,23 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
-import { consume } from '@lit/context';
+import { consume, provide } from '@lit/context';
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { keyed } from 'lit/directives/keyed.js';
-import { createRef, ref } from 'lit/directives/ref.js';
+import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { when } from 'lit/directives/when.js';
 import type { DiscordTimestamp, LightTheme, Profile } from '../../types.js';
 import '../discord-custom-emoji/DiscordCustomEmoji.js';
 import { mediaItemsContext } from '../discord-media-gallery/DiscordMediaGallery.js';
+import { DiscordMediaGalleryItem } from '../discord-media-gallery-tem/DiscordMediaGalleryItem.js';
 import { messageProfile, messageTimestamp } from '../discord-message/DiscordMessage.js';
 import { messagesLightTheme } from '../discord-messages/DiscordMessages.js';
+import { isInMediaFullScreenPreviewer, type CloseFullScreenEventDetail } from './context.js';
 
 export interface MediaItem {
 	href: string;
+	mimeType?: string | null;
 }
 
 const clamp = (val: number, min: number, max: number) => Math.max(min, Math.min(max, val));
@@ -53,6 +56,16 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 			--button-hover-background-color: #2b2c30;
 			--button-hover-color: color-mix(in oklab, hsl(240 calc(1 * 5.66%) 89.608% /1) 100%, #000 0%);
 
+			&.closing {
+				opacity: 0;
+				transition: opacity 0.25s ease-out;
+				pointer-events: none;
+
+				* {
+					pointer-events: none;
+				}
+			}
+
 			discord-media-gallery-item {
 				height: 100%;
 			}
@@ -63,8 +76,10 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 				justify-content: space-between;
 				align-items: center;
 				gap: 8px;
+				pointer-events: none;
 
 				.author-info {
+					pointer-events: auto;
 					display: flex;
 					align-items: center;
 					gap: 12px;
@@ -91,6 +106,7 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 				}
 
 				.media-actions {
+					pointer-events: auto;
 					display: flex;
 					gap: 8px;
 
@@ -155,6 +171,11 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 				grid-template-columns: auto 1fr auto;
 				grid-template-rows: 1fr;
 				gap: 12px;
+				pointer-events: none;
+
+				button {
+					pointer-events: auto;
+				}
 
 				.button-container {
 					display: flex;
@@ -167,14 +188,25 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 					justify-content: center;
 					align-items: center;
 					overflow: hidden;
+					pointer-events: none;
+
 					img {
 						max-height: 100%;
 						max-width: 100%;
 						display: block;
 						object-fit: contain;
 						animation: fade-in 0.25s ease-out;
+						cursor: zoom-in;
 					}
-					cursor: zoom-in;
+
+					discord-video-attachment {
+						animation: fade-in 0.25s ease-out;
+					}
+
+					img,
+					discord-video-attachment {
+						pointer-events: auto;
+					}
 				}
 			}
 
@@ -182,7 +214,9 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 				display: flex;
 				justify-content: center;
 				align-items: center;
+				pointer-events: none;
 				.items-navigation-container {
+					pointer-events: auto;
 					display: flex;
 					height: 40px;
 					gap: 2px;
@@ -206,7 +240,8 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 							opacity: 1;
 						}
 
-						img {
+						img,
+						video {
 							width: 100%;
 							height: 100%;
 							object-fit: cover;
@@ -220,7 +255,7 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 				header :where(.author-info, .group-buttons-container),
 				main button {
 					opacity: 0;
-					pointer-events: none;
+					pointer-events: none !important;
 				}
 
 				main {
@@ -254,7 +289,7 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 							--target-y: calc(clamp(calc(var(--y-screen-overflow) * -1), var(--y, 0%), var(--y-screen-overflow)) - 50%);
 						}
 
-						img:hover {
+						img {
 							cursor: zoom-out;
 						}
 					}
@@ -265,6 +300,18 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 			header :where(.author-info, .group-buttons-container),
 			main button {
 				transition: opacity 100ms ease-in-out;
+			}
+
+			&.isOnlyOne {
+				main .btn {
+					opacity: 0;
+					pointer-events: none !important;
+				}
+
+				nav {
+					opacity: 0;
+					pointer-events: none !important;
+				}
 			}
 		}
 
@@ -282,6 +329,9 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 		super();
 		this.handleWindowResize = this.handleWindowResize.bind(this);
 	}
+
+	@provide({ context: isInMediaFullScreenPreviewer })
+	public isInMediaFullScreenPreviewer = true;
 
 	@state()
 	public isZoomed = false;
@@ -518,6 +568,7 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 	public override disconnectedCallback() {
 		super.disconnectedCallback();
 		window.removeEventListener('resize', this.handleWindowResize);
+		window.clearTimeout(this.__closeTimeout);
 	}
 
 	@consume({ context: messagesLightTheme, subscribe: true })
@@ -528,14 +579,17 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 	@state()
 	public mediaItems: MediaItem[];
 
-	@state()
-	public currentSlot = 0;
-
 	@consume({ context: messageProfile, subscribe: true })
 	public profile: Profile | undefined;
 
 	@consume({ context: messageTimestamp, subscribe: true })
 	public timestamp: DiscordTimestamp | undefined;
+
+	@state()
+	public currentSlot = 0;
+
+	@state()
+	public isOpen = false;
 
 	public nextSlot() {
 		const next = this.currentSlot + 1;
@@ -545,6 +599,7 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 		}
 
 		this.currentSlot = next;
+		this.isZoomed = false;
 	}
 
 	public prevSlot() {
@@ -556,21 +611,72 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 		}
 
 		this.currentSlot = prev;
+		this.isZoomed = false;
 	}
 
 	public setCurrentSlot(slot: number) {
 		this.currentSlot = slot;
 	}
 
+	private handleContainerKeyUp(event: KeyboardEvent) {
+		if (event.key === 'ArrowLeft') {
+			this.prevSlot();
+		} else if (event.key === 'ArrowRight') {
+			this.nextSlot();
+		}
+	}
+
+	private containerRef: Ref<HTMLDivElement> = createRef();
+
+	private isCurrentlyClosing = false;
+
+	public close() {
+		if (!this.isOpen || this.isCurrentlyClosing) return;
+		this.isCurrentlyClosing = true;
+		const container = this.containerRef.value;
+		container?.classList.add('closing');
+		this.__closeTimeout = window.setTimeout(() => {
+			this.isOpen = false;
+			this.isZoomed = false;
+
+			const event = new CustomEvent<CloseFullScreenEventDetail>('close-full-screen', {
+				detail: {
+					closed: true
+				}
+			});
+
+			this.dispatchEvent(event);
+			this.isCurrentlyClosing = false;
+		}, 250);
+	}
+
+	private __closeTimeout: number | undefined;
+
+	private handleContainerClick(event: MouseEvent) {
+		const container = this.containerRef.value;
+		if (!container || event.target !== container) return;
+		this.close();
+	}
+
 	protected override render() {
-		const currentSlot = this.mediaItems[Math.max(0, Math.min(this.mediaItems.length - 1, this.currentSlot))];
+		if (!this.isOpen) return null;
+
+		const currentSlot = this.mediaItems[clamp(this.currentSlot, 0, this.mediaItems.length - 1)];
+		const isVideo = DiscordMediaGalleryItem.isVideo(currentSlot.href);
+
+		const isOnlyOne = this.mediaItems.length === 1;
 
 		return html`
 			<div
 				class=${classMap({
 					'media-fullscreen-previewer': true,
-					zoomed: this.isZoomed
+					zoomed: this.isZoomed,
+					isOnlyOne
 				})}
+				${ref(this.containerRef)}
+				tabindex="-1"
+				@click=${this.handleContainerClick}
+				@keyup=${this.handleContainerKeyUp}
 			>
 				<header>
 					<div class="author-info">
@@ -599,30 +705,34 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 					</div>
 					<div class="media-actions">
 						<div class="group-buttons-container">
-							<button class="btn" @click=${this.zoomIn}>
-								<svg
-									aria-hidden="true"
-									role="img"
-									xmlns="http://www.w3.org/2000/svg"
-									width="16"
-									height="16"
-									fill="none"
-									viewBox="0 0 24 24"
-								>
-									<path
-										fill="currentColor"
-										fill-rule="evenodd"
-										d="M15.62 17.03a9 9 0 1 1 1.41-1.41l4.68 4.67a1 1 0 0 1-1.42 1.42l-4.67-4.68ZM17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
-										clip-rule="evenodd"
-										class=""
-									></path>
-									<path
-										fill="currentColor"
-										d="M11 7a1 1 0 1 0-2 0v2H7a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0v-2h2a1 1 0 1 0 0-2h-2V7Z"
-										class=""
-									></path>
-								</svg>
-							</button>
+							${when(
+								!isVideo,
+								() =>
+									html`<button class="btn" @click=${this.zoomIn}>
+										<svg
+											aria-hidden="true"
+											role="img"
+											xmlns="http://www.w3.org/2000/svg"
+											width="16"
+											height="16"
+											fill="none"
+											viewBox="0 0 24 24"
+										>
+											<path
+												fill="currentColor"
+												fill-rule="evenodd"
+												d="M15.62 17.03a9 9 0 1 1 1.41-1.41l4.68 4.67a1 1 0 0 1-1.42 1.42l-4.67-4.68ZM17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+												clip-rule="evenodd"
+												class=""
+											></path>
+											<path
+												fill="currentColor"
+												d="M11 7a1 1 0 1 0-2 0v2H7a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0v-2h2a1 1 0 1 0 0-2h-2V7Z"
+												class=""
+											></path>
+										</svg>
+									</button>`
+							)}
 							<button class="btn">
 								<a href=${currentSlot.href} target="_blank">
 									<svg
@@ -648,7 +758,7 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 								</a>
 							</button>
 						</div>
-						<button class="btn">
+						<button class="btn" @click=${this.close}>
 							<svg
 								aria-hidden="true"
 								role="img"
@@ -690,18 +800,26 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 					<div class="current-media-container">
 						${keyed(
 							currentSlot.href,
-							html`<img
-								${ref(this.imageRef)}
-								@wheel=${this.handleImageWheel}
-								@mousemove=${this.handleImageMouseMove}
-								@mouseup=${this.handleImageMouseUp}
-								@mousedown=${this.handleImageMouseDown}
-								@click=${this.handleImageClick}
-								draggable="false"
-								src=${currentSlot.href}
-								alt=${currentSlot.href}
-								class="current-image-preview"
-							/>`
+							when(
+								isVideo,
+								() =>
+									html`<discord-video-attachment
+										href="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm"
+									></discord-video-attachment>`,
+								() =>
+									html`<img
+										${ref(this.imageRef)}
+										@wheel=${this.handleImageWheel}
+										@mousemove=${this.handleImageMouseMove}
+										@mouseup=${this.handleImageMouseUp}
+										@mousedown=${this.handleImageMouseDown}
+										@click=${this.handleImageClick}
+										draggable="false"
+										src=${currentSlot.href}
+										alt=${currentSlot.href}
+										class="current-image-preview"
+									/>`
+							)
 						)}
 					</div>
 					<div class="button-container">
@@ -726,12 +844,16 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 				</main>
 				<nav>
 					<div class="items-navigation-container">
-						${this.mediaItems.map(
-							(item, idx) =>
-								html`<button @click=${() => this.setCurrentSlot(idx)} class=${classMap({ selected: this.currentSlot === idx })}>
-									<img src=${item.href} alt="media" />
-								</button>`
-						)}
+						${this.mediaItems.map((item, idx) => {
+							const isVideo = DiscordMediaGalleryItem.isVideo(item.href, item.mimeType);
+							return html`<button @click=${() => this.setCurrentSlot(idx)} class=${classMap({ selected: this.currentSlot === idx })}>
+								${when(
+									isVideo,
+									() => html`<video src=${item.href} alt=${item.href}></video>`,
+									() => html`<img src=${item.href} alt=${item.href} />`
+								)}
+							</button>`;
+						})}
 					</div>
 				</nav>
 			</div>
