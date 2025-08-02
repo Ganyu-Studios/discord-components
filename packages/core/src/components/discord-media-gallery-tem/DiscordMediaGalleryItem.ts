@@ -22,7 +22,6 @@ export class DiscordMediaGalleryItem extends LitElement {
 				flex: auto;
 				height: 100%;
 				width: 100%;
-				border-radius: 2px;
 				overflow: hidden;
 				position: relative;
 
@@ -33,6 +32,7 @@ export class DiscordMediaGalleryItem extends LitElement {
 
 				img,
 				video {
+					border-radius: 2px;
 					width: var(--img-width);
 					height: var(--img-height);
 					max-width: var(--img-max-width);
@@ -148,6 +148,7 @@ export class DiscordMediaGalleryItem extends LitElement {
 				href=${this.media}
 				spoiler=${this.spoiler}
 				description=${this.description}
+				class="no-top-margin"
 			></discord-video-attachment>`;
 		}
 

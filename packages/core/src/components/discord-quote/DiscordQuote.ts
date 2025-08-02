@@ -15,7 +15,7 @@ export class DiscordQuote extends LitElement implements LightTheme {
 		}
 
 		.discord-quote-divider {
-			background-color: #4f545c;
+			background-color: var(--quote-divider-background-color, #4f545c);
 			border-radius: 4px;
 			font-size: 0.9em;
 			font-style: normal;
@@ -26,7 +26,7 @@ export class DiscordQuote extends LitElement implements LightTheme {
 		}
 
 		:host([light-theme]) .discord-quote-divider {
-			background-color: #c4c9ce;
+			--quote-divider-background-color: #c4c9ce;
 		}
 
 		blockquote {

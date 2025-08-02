@@ -14,6 +14,12 @@ export const DiscordMediaAttachmentStyles = css`
 		position: relative;
 	}
 
+	:host(.no-top-margin) {
+		.discord-media-attachment-non-visual-media-item-container {
+			margin-top: 0px !important;
+		}
+	}
+
 	.discord-media-attachment-mosaic-item-media {
 		border-radius: 2px;
 		display: flex;

@@ -25,6 +25,10 @@ export class DiscordMediaGallery extends LitElement {
 			align-items: stretch;
 			justify-content: stretch;
 		}
+		:host {
+			width: fit-content;
+			height: fit-content;
+		}
 
 		.event-container {
 			display: contents;
@@ -96,6 +100,10 @@ export class DiscordMediaGallery extends LitElement {
 
 		.flex-2 {
 			flex: 2;
+		}
+
+		.open-in-fullscreen-container {
+			display: grid;
 		}
 	`;
 
@@ -322,7 +330,7 @@ export class DiscordMediaGallery extends LitElement {
 		);
 
 		return html`
-			<div @open-in-full-screen=${this.setFullScreenSlotTarget}>${base}</div>
+			<div @open-in-full-screen=${this.setFullScreenSlotTarget} class="open-in-fullscreen-container">${base}</div>
 			<discord-media-fullscreen-previewer
 				@close-full-screen=${this.handleCloseFullScreen}
 				.currentSlot=${this.currentSlot}
