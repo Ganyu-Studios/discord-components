@@ -20,6 +20,7 @@ export class DiscordTranscriptHeader extends LitElement {
 			padding: 0.5rem;
 			gap: 0.5rem;
 			border-bottom: 1px solid rgba(79, 84, 92, 0.48);
+			padding-bottom: 1rem !important;
 		}
 
 		.discord-header-icon {

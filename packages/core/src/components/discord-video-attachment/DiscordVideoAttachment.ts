@@ -59,9 +59,6 @@ export class DiscordVideoAttachment extends DiscordMediaLifecycle implements Lig
 			}
 
 			:host([is-in-media-full-screen-previewer]) {
-				max-width: 100%;
-				max-height: 100%;
-
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -78,6 +75,20 @@ export class DiscordVideoAttachment extends DiscordMediaLifecycle implements Lig
 
 				.discord-button-download-attachment {
 					display: none !important;
+				}
+				.discord-video-attachment-video-container {
+					object-fit: contain;
+				}
+
+				.discord-video-attachment-loading-overlay {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+
+				.discord-video-attachment-wrapper {
+					width: unset;
+					height: unset;
 				}
 			}
 
@@ -112,11 +123,11 @@ export class DiscordVideoAttachment extends DiscordMediaLifecycle implements Lig
 				border-radius: 3px;
 			}
 
-			.discord-video-attachment-loading-overlay {
+			/* .discord-video-attachment-loading-overlay {
 				aspect-ratio: 1.74603 / 1;
 				width: 100%;
 				height: 100%;
-			}
+			} */
 
 			.discord-video-attachment-wrapper {
 				height: 100%;

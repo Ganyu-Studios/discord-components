@@ -5,7 +5,9 @@ import { classMap } from 'lit/directives/class-map.js';
 import { when } from 'lit/directives/when.js';
 import { DiscordComponentsError } from '../../util.js';
 import { discordContainerContext } from '../discord-container/DiscordContainer.js';
+import { forwardedMessageContext } from '../discord-forwarded-message/DiscordForwardedMessage.js';
 import LaunchIcon from '../svgs/LaunchIcon.js';
+import PremiumIcon from '../svgs/PremiumIcon.js';
 
 @customElement('discord-button')
 export class DiscordButton extends LitElement {
@@ -115,6 +117,10 @@ export class DiscordButton extends LitElement {
 			display: flex;
 			align-items: center;
 		}
+
+		.discord-button-premium {
+			margin-right: 4px;
+		}
 	`;
 
 	/**
@@ -146,7 +152,7 @@ export class DiscordButton extends LitElement {
 	 * Valid values: `primary`, `secondary`, `success`, `destructive`.
 	 */
 	@property({ reflect: true, attribute: 'type' })
-	public type: 'destructive' | 'primary' | 'secondary' | 'success' = 'secondary';
+	public type: 'destructive' | 'premium' | 'primary' | 'secondary' | 'success' = 'secondary';
 
 	/**
 	 * An `id` of a modal that should be opened when this button is clicked. This should match the `modal-id` of a `discord-modal` element.
@@ -162,10 +168,13 @@ export class DiscordButton extends LitElement {
 	@property({ type: Boolean, reflect: true, attribute: 'small' })
 	public small = false;
 
-	private readonly validButtonTypes = new Set(['primary', 'secondary', 'success', 'destructive']);
+	private readonly validButtonTypes = new Set(['primary', 'secondary', 'success', 'destructive', 'premium']);
 
 	@consume({ context: discordContainerContext })
 	public isInContainer = false;
+
+	@consume({ context: forwardedMessageContext })
+	public isInForwardedMessage = false;
 
 	public checkType() {
 		if (this.type) {
@@ -212,9 +221,12 @@ export class DiscordButton extends LitElement {
 
 		const isActiveLinkButton = this.url && !this.disabled;
 
+		const isPremium = this.type === 'premium';
+
 		const content = html`
 			<div class="discord-button-content">
 				${when(this.emoji, () => html`<img src=${this.emoji} alt=${this.emojiName} draggable="true" class="emoji" />`)}
+				${when(isPremium, () => PremiumIcon())}
 				<span>
 					<slot></slot>
 				</span>
@@ -238,12 +250,13 @@ export class DiscordButton extends LitElement {
 
 		return html`<button
 			class=${classMap({
-				[this.type]: true,
-				disabled: this.disabled,
+				[isPremium ? 'primary' : this.type]: true,
+				disabled: (isPremium && this.isInForwardedMessage) || this.disabled,
 				hoverable: !this.disabled,
-				'is-in-container': this.isInContainer
+				'is-in-container': this.isInContainer,
+				isPremium
 			})}
-			@click=${this.handleButtonClick}
+			@click=${isPremium ? undefined : this.handleButtonClick}
 		>
 			${content}
 		</button>`;

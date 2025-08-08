@@ -30,7 +30,7 @@ export { DiscordLink } from './components/discord-link/DiscordLink.js';
 export { DiscordListItem } from './components/discord-list-item/DiscordListItem.js';
 export { DiscordMediaFullscreenPreviewer } from './components/discord-media-fullscreen-previewer/DiscordMediaFullscreenPreviewer.js';
 export { DiscordMediaGallery } from './components/discord-media-gallery/DiscordMediaGallery.js';
-export { DiscordMediaGalleryItem } from './components/discord-media-gallery-tem/DiscordMediaGalleryItem.js';
+export { DiscordMediaGalleryItem } from './components/discord-media-gallery-item/DiscordMediaGalleryItem.js';
 export { DiscordMediaSpoileableCover } from './components/discord-media-spoileable-cover/DiscordMediaSpoileableCover.js';
 export { DiscordMention } from './components/discord-mention/DiscordMention.js';
 export { DiscordMessage } from './components/discord-message/DiscordMessage.js';
@@ -54,7 +54,7 @@ export { DiscordSubscript } from './components/discord-subscript/DiscordSubscrip
 export { DiscordSystemMessage } from './components/discord-system-message/DiscordSystemMessage.js';
 export { DiscordTenorVideo } from './components/discord-tenor-video/DiscordTenorVideo.js';
 export { DiscordTextDisplay } from './components/discord-text-display/DiscordTextDisplay.js';
-export { DiscordTextFileAttachmentPreviewer } from './components/discord-text-file-attachment-preview/DiscordTextFileAttachmentPreviewer.js';
+export { DiscordTextFileAttachmentPreviewer } from './components/discord-text-file-attachment-previewer/DiscordTextFileAttachmentPreviewer.js';
 export { DiscordThread } from './components/discord-thread/DiscordThread.js';
 export { DiscordThreadMessage } from './components/discord-thread-message/DiscordThreadMessage.js';
 export { DiscordThumbnail } from './components/discord-thumbnail/DiscordThumbnail.js';

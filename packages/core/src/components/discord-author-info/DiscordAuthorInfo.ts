@@ -270,7 +270,7 @@ export class DiscordAuthorInfo extends LitElement {
 			this.clanIcon && this.clanTag && this.clanTag?.length > 0,
 			() => html`
 				<span class="discord-clan-tag">
-					${clanIcon === 'string'
+					${typeof clanIcon === 'string'
 						? html`<img srcset=${ifDefined(clanIcon)} alt=${ifDefined(slicedClanTag)} width="12" height="12" draggable="false" />`
 						: clanIcon}
 					<span>${slicedClanTag}</span>

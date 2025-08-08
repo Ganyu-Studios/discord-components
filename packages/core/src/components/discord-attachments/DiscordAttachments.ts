@@ -8,9 +8,9 @@ export class DiscordAttachments extends LitElement {
 	 */
 	public static override readonly styles = css`
 		:host {
-			display: grid;
-			grid-auto-flow: row;
-			grid-row-gap: 0.25rem;
+			display: flex;
+			flex-direction: column;
+			row-gap: 0.25rem;
 			text-indent: 0;
 			min-height: 0;
 			min-width: 0;

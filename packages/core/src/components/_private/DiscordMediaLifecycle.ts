@@ -43,10 +43,10 @@ export class DiscordMediaLifecycle extends LitElement {
 	private hasRunUpdate = false;
 
 	protected calculateTime(secs: number) {
-		const minutes = Math.floor(secs / 60);
-		const seconds = Math.floor(secs % 60);
+		const roundedSecs = Math.ceil(secs);
+		const minutes = Math.floor(roundedSecs / 60);
+		const seconds = Math.floor(roundedSecs % 60);
 		const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
-		// console.table({ returnedSeconds, minutes });
 		return `${minutes}:${returnedSeconds}`;
 	}
 

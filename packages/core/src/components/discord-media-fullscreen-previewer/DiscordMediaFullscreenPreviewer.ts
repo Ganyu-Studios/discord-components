@@ -7,11 +7,11 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { keyed } from 'lit/directives/keyed.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { when } from 'lit/directives/when.js';
-import type { DiscordTimestamp, LightTheme, Profile } from '../../types.js';
-import '../discord-custom-emoji/DiscordCustomEmoji.js';
+import type { LightTheme, Profile } from '../../types.js';
 import { isInMediaFullScreenPreviewer, type CloseFullScreenEventDetail } from '../_private/mediaGalleryFullScreenContext.js';
+import '../discord-custom-emoji/DiscordCustomEmoji.js';
 import { mediaItemsContext } from '../discord-media-gallery/DiscordMediaGallery.js';
-import { DiscordMediaGalleryItem } from '../discord-media-gallery-tem/DiscordMediaGalleryItem.js';
+import { DiscordMediaGalleryItem } from '../discord-media-gallery-item/DiscordMediaGalleryItem.js';
 import { messageProfile, messageTimestamp } from '../discord-message/DiscordMessage.js';
 import { messagesLightTheme } from '../discord-messages/DiscordMessages.js';
 
@@ -583,7 +583,7 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 	public profile: Profile | undefined;
 
 	@consume({ context: messageTimestamp, subscribe: true })
-	public timestamp: DiscordTimestamp | undefined;
+	public timestamp: string | undefined;
 
 	@state()
 	public currentSlot = 0;
@@ -623,6 +623,8 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 			this.prevSlot();
 		} else if (event.key === 'ArrowRight') {
 			this.nextSlot();
+		} else if (event.key === 'Escape') {
+			this.close();
 		}
 	}
 
@@ -662,7 +664,7 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 		if (!this.isOpen) return null;
 
 		const currentSlot = this.mediaItems[clamp(this.currentSlot, 0, this.mediaItems.length - 1)];
-		const isVideo = DiscordMediaGalleryItem.isVideo(currentSlot.href);
+		const isVideo = DiscordMediaGalleryItem.isVideo(currentSlot.href, currentSlot.mimeType);
 
 		const isOnlyOne = this.mediaItems.length === 1;
 
@@ -802,10 +804,7 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 							currentSlot.href,
 							when(
 								isVideo,
-								() =>
-									html`<discord-video-attachment
-										href="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm"
-									></discord-video-attachment>`,
+								() => html`<discord-video-attachment href=${currentSlot.href}></discord-video-attachment>`,
 								() =>
 									html`<img
 										${ref(this.imageRef)}

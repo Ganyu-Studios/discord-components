@@ -5,6 +5,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { ref } from 'lit/directives/ref.js';
 import { when } from 'lit/directives/when.js';
+import { inflate } from 'pako';
 import WaveSurfer from 'wavesurfer.js';
 import type { LightTheme } from '../../types.js';
 import { DiscordMediaAttachmentStyles } from '../_private/DiscordMediaAttachmentStyles.js';
@@ -230,13 +231,52 @@ export class DiscordVoiceMessage extends DiscordMediaLifecycle implements LightT
 		return this.mediaComponentRef.value.duration;
 	}
 
-	private patchWidthAndDuration(duration?: number) {
-		const mins = (duration ?? this.getDuration()) / 60;
+	private patchWidthAndDuration(durationSecs?: number) {
+		const dur = durationSecs ?? this.getDuration();
+		const mins = dur / 60;
 		const raw = 140 * Math.round(mins);
-		const width = clamp(raw, 240, 480);
+		const width = clamp(raw, 250, 480);
 		this.audioAttachmentWrapperAudio?.style.setProperty('--target-width', `${width}px`);
 		this.displayLeftPlaybackPosition(0);
 	}
+
+	private createBufferFromBase64(base64: string) {
+		const binaryString = atob(base64);
+		const len = binaryString.length;
+		const bytes = new Uint8Array(len);
+
+		for (let index = 0; index < len; index++) {
+			bytes[index] = binaryString.codePointAt(index)!;
+		}
+
+		return bytes;
+	}
+
+	private createPeaksFromRawDiscordWaveform(base64: string) {
+		const compressed = this.createBufferFromBase64(base64);
+		let decompressed: Uint8Array<ArrayBufferLike>;
+		try {
+			// try decompressing (for long audios)
+			decompressed = inflate(compressed);
+		} catch {
+			// If it fails, use the data directly (short audios)
+			decompressed = compressed;
+		}
+
+		// Normalize bytes to [0, 1]
+		const peaks = [];
+		for (const element of decompressed) {
+			peaks.push(element / 255);
+		}
+
+		return peaks;
+	}
+	/**
+	 * raw discord Base64 encoded bytearray representing a sampled waveform
+	 */
+
+	@property()
+	public waveform?: string;
 
 	public speeds = [0.75, 1, 1.5, 2];
 
@@ -301,7 +341,7 @@ export class DiscordVoiceMessage extends DiscordMediaLifecycle implements LightT
 			fetchParams: {
 				mode: 'no-cors'
 			},
-			peaks: this.peaks && JSON.parse(this.peaks),
+			peaks: (this.waveform && this.createPeaksFromRawDiscordWaveform(this.waveform)) ?? (this.peaks && JSON.parse(this.peaks)),
 			backend: 'MediaElement',
 			height: 24,
 			dragToSeek: true

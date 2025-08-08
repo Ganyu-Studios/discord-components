@@ -8,12 +8,13 @@ import { avatars, profiles } from '../../config.js';
 import type { DiscordTimestamp, LightTheme, Profile } from '../../types.js';
 import { handleTimestamp } from '../../util.js';
 import '../discord-author-info/DiscordAuthorInfo.js';
+import { forwardedMessageContext } from '../discord-forwarded-message/DiscordForwardedMessage.js';
 import type { DiscordMention } from '../discord-mention/DiscordMention.js';
 import { messagesCompactMode, messagesLightTheme, messagesNoBackground } from '../discord-messages/DiscordMessages.js';
 import Ephemeral from '../svgs/Ephemeral.js';
 
 export const messageProfile = createContext<Profile | undefined>(Symbol('message-profile'));
-export const messageTimestamp = createContext<DiscordTimestamp | undefined>(Symbol('message-timestamp'));
+export const messageTimestamp = createContext<string | undefined>(Symbol('message-timestamp'));
 
 @customElement('discord-message')
 export class DiscordMessage extends LitElement implements LightTheme {
@@ -43,6 +44,11 @@ export class DiscordMessage extends LitElement implements LightTheme {
 			margin-top: inherit;
 			margin-bottom: inherit;
 			line-height: 16px;
+		}
+
+		:host([is-in-forwarded-message]) {
+			padding-left: 0;
+			padding-right: 0;
 		}
 
 		.discord-message-inner {
@@ -203,6 +209,11 @@ export class DiscordMessage extends LitElement implements LightTheme {
 
 		:host([compact-mode]) .discord-message-compact-indent {
 			padding-left: 10px;
+		}
+
+		.discord-message-compact-indent {
+			display: grid;
+			grid-template-columns: 1fr;
 		}
 
 		:host .discord-message-markup {
@@ -367,12 +378,15 @@ export class DiscordMessage extends LitElement implements LightTheme {
 	@property({ type: Boolean, reflect: true })
 	public ephemeral = false;
 
+	@provide({ context: messageTimestamp })
+	@property({ type: String, attribute: 'raw-timestamp' })
+	public rawTimestamp: string = new Date().toISOString();
+
 	/**
 	 * The timestamp to use for the message date.
 	 *
 	 * if {@link DiscordMessage.messageBodyOnly} is `true`, this will be shown in the gutter before the message on hover.
 	 */
-	@provide({ context: messageTimestamp })
 	@property({
 		type: String,
 		converter: (value) => handleTimestamp(value, false, false),
@@ -431,6 +445,10 @@ export class DiscordMessage extends LitElement implements LightTheme {
 	@provide({ context: messageProfile })
 	public resolvedProfile?: Profile;
 
+	@consume({ context: forwardedMessageContext, subscribe: true })
+	@property({ type: Boolean, reflect: true, attribute: 'is-in-forwarded-message' })
+	public isInForwardedMessage = false;
+
 	protected override render() {
 		const defaultData: Profile = {
 			author: this.author,
@@ -467,7 +485,7 @@ export class DiscordMessage extends LitElement implements LightTheme {
 					() => null
 				)}
 				${when(
-					this.messageBodyOnly,
+					this.messageBodyOnly && !this.isInForwardedMessage,
 					() =>
 						html`<time
 							datetime="${ifDefined(computedTimestamp)}"
@@ -480,7 +498,7 @@ export class DiscordMessage extends LitElement implements LightTheme {
 					() => null
 				)}
 				${when(
-					this.compactMode || this.messageBodyOnly,
+					this.compactMode || this.messageBodyOnly || this.isInForwardedMessage,
 					() => null,
 					() =>
 						html`<div class="discord-author-avatar">
@@ -490,7 +508,7 @@ export class DiscordMessage extends LitElement implements LightTheme {
 
 				<div class="discord-message-content">
 					${when(
-						this.compactMode || this.messageBodyOnly,
+						this.compactMode || this.messageBodyOnly || this.isInForwardedMessage,
 						() => null,
 						() => html`
 							<discord-author-info

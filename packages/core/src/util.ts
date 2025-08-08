@@ -28,7 +28,7 @@ export function handleTimestamp(value: DiscordTimestamp, useTime = false, hour24
 		throw new TypeError('Timestamp prop must be a Date object or a string.');
 	}
 
-	return useTime ? formatTime(value, hour24) : formatDate(value);
+	return useTime ? formatTime(new Date(value), hour24) : formatDate(new Date(value));
 }
 
 export const IMAGE_EXTENSION = /\.(?<ext>bmp|jpe?g|png|gif|webp|tiff)$/i;

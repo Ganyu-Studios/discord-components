@@ -139,7 +139,7 @@ export class DiscordMediaGalleryItem extends LitElement {
 	}
 
 	protected override render() {
-		const isVideo = DiscordMediaGalleryItem.isVideo(this.media);
+		const isVideo = DiscordMediaGalleryItem.isVideo(this.media, this.mimeType);
 
 		const isOnlyOne = this.mediaItems.length === 1;
 

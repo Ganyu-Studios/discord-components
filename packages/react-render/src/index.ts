@@ -34,7 +34,7 @@ export const DiscordMediaFullscreenPreviewer = createReactComponent(
 	ReactComponents.DiscordMediaFullscreenPreviewer
 );
 export const DiscordMediaGallery = createReactComponent('discord-media-gallery', ReactComponents.DiscordMediaGallery);
-export const DiscordMediaGalleryItem = createReactComponent('discord-media-gallery-tem', ReactComponents.DiscordMediaGalleryItem);
+export const DiscordMediaGalleryItem = createReactComponent('discord-media-gallery-item', ReactComponents.DiscordMediaGalleryItem);
 export const DiscordMediaSpoileableCover = createReactComponent('discord-media-spoileable-cover', ReactComponents.DiscordMediaSpoileableCover);
 export const DiscordMention = createReactComponent('discord-mention', ReactComponents.DiscordMention);
 export const DiscordMessage = createReactComponent('discord-message', ReactComponents.DiscordMessage);
@@ -59,7 +59,7 @@ export const DiscordSystemMessage = createReactComponent('discord-system-message
 export const DiscordTenorVideo = createReactComponent('discord-tenor-video', ReactComponents.DiscordTenorVideo);
 export const DiscordTextDisplay = createReactComponent('discord-text-display', ReactComponents.DiscordTextDisplay);
 export const DiscordTextFileAttachmentPreviewer = createReactComponent(
-	'discord-text-file-attachment-preview',
+	'discord-text-file-attachment-previewer',
 	ReactComponents.DiscordTextFileAttachmentPreviewer
 );
 export const DiscordThread = createReactComponent('discord-thread', ReactComponents.DiscordThread);

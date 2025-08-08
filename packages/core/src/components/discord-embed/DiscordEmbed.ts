@@ -30,14 +30,10 @@ export class DiscordEmbed extends LitElement implements LightTheme {
 		}
 
 		:host .discord-left-border {
-			background-color: #202225;
+			background-color: #4c4d54;
 			border-radius: 4px 0 0 4px;
 			flex-shrink: 0;
 			width: 4px;
-		}
-
-		:host([light-theme]) .discord-left-border {
-			background-color: #e3e5e8;
 		}
 
 		:host .discord-embed-root {

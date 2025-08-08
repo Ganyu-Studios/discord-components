@@ -1,6 +1,6 @@
 {
 	"name": "@penwin/discord-components-react-render",
-	"version": "4.1.0",
+	"version": "4.1.4",
 	"description": "React bindings for @skyra/discord-components-core",
 	"author": "@skyra",
 	"license": "MIT",
@@ -25,17 +25,18 @@
 	"homepage": "https://github.com/skyra-project/discord-components/tree/main/packages/react#readme",
 	"scripts": {
 		"build": "pnpm build:core && tsup && pnpm build:rename-esm-index && pnpm include-core",
+		"bundle": "tsup",
 		"build:rename-esm-index": "node scripts/rename-esm-index.mjs",
-		"prepack": "pnpm build",
+		"prepack": "pnpm build && pnpm bundle",
 		"build:core": "pnpm --filter discord-components-core build",
 		"include-core": "pnpm --filter discord-components-core build:bundle && xcopy ..\\core\\dist\\bundle dist\\core-bundle /I /E /Y"
 	},
 	"dependencies": {
-		"@penwin/discord-components-core": "workspace:^",
+		"@lit/react": "^1.0.8",
 		"react": "^19.1.0"
 	},
 	"devDependencies": {
-		"@lit/react": "^1.0.8",
+		"@penwin/discord-components-core": "workspace:^",
 		"@types/react": "^19.1.8",
 		"colorette": "^2.0.20",
 		"lit": "^3.3.1",

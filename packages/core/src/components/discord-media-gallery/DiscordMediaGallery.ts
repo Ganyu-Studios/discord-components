@@ -19,7 +19,7 @@ export class DiscordMediaGallery extends LitElement {
 		.discord-media-gallery-wrapper {
 			display: flex;
 			gap: 4px;
-			border-radius: 8px;
+			border-radius: 6px;
 			overflow: hidden;
 			width: min(100%, 600px);
 			align-items: stretch;
@@ -87,9 +87,9 @@ export class DiscordMediaGallery extends LitElement {
 
 		.discord-media-gallery-unique-display-grid {
 			&::slotted(discord-media-gallery-item) {
-				width: unset;
-				height: unset;
-				border-radius: 8px;
+				width: fit-content;
+				height: fit-content;
+				border-radius: 6px;
 				max-width: min(100%, 600px);
 				--img-width: auto;
 				--img-height: auto;
