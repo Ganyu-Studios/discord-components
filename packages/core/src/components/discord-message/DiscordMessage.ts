@@ -274,6 +274,10 @@ export class DiscordMessage extends LitElement implements LightTheme {
 			margin-right: 4px;
 			vertical-align: text-bottom;
 		}
+
+		slot[name='embeds']::slotted(discord-media-gallery:not(:last-child)) {
+			margin-bottom: 4px;
+		}
 	`;
 
 	/**

@@ -18,8 +18,8 @@ export class DiscordCustomEmoji extends LitElement {
 
 		.discord-custom-emoji .discord-custom-emoji-image {
 			object-fit: contain;
-			width: 1.375rem;
-			height: 1.375rem;
+			width: 1.375em;
+			height: 1.375em;
 			vertical-align: bottom;
 		}
 

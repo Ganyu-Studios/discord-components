@@ -9,7 +9,7 @@ export class DiscordHeader extends LitElement {
 	 */
 	public static override readonly styles = css`
 		:host > * {
-			margin: 16px 0 8px;
+			margin: var(--margin-top, 16px) 0 8px;
 			font-weight: 700;
 			line-height: 1.375em;
 		}
@@ -28,11 +28,11 @@ export class DiscordHeader extends LitElement {
 
 		:host([level='1']):first-child() > h1,
 		:host([level='2']):first-child() > h2 {
-			margin-top: 8px;
+			margin-top: var(--margin-top, 8px);
 		}
 
 		:host([level='3']):first-child() > h3 {
-			margin-top: 4px;
+			margin-top: var(--margin-top, 4px);
 		}
 	`;
 

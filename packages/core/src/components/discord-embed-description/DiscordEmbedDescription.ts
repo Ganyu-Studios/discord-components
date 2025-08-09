@@ -30,6 +30,10 @@ export class DiscordEmbedDescription extends LitElement implements LightTheme {
 				--background-color: #f3f3f4;
 			}
 		}
+
+		slot::slotted(discord-header:first-child) {
+			--margin-top: 0px;
+		}
 	`;
 
 	@consume({ context: messagesLightTheme, subscribe: true })

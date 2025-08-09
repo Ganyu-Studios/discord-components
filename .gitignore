@@ -24,4 +24,5 @@ dist/
 coverage/
 
 custom-elements.json
-message.ts
+
+packages/core/demo/transcript.html
