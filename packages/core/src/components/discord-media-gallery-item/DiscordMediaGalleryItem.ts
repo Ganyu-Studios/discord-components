@@ -2,10 +2,10 @@
 import { consume } from '@lit/context';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { when } from 'lit/directives/when.js';
-import '../discord-custom-emoji/DiscordCustomEmoji.js';
 import { type OpenInFullScreenEventDetail } from '../_private/mediaGalleryFullScreenContext.js';
-import { type MediaItem } from '../discord-media-fullscreen-previewer/DiscordMediaFullscreenPreviewer.js';
+import '../discord-custom-emoji/DiscordCustomEmoji.js';
 import { mediaItemsContext } from '../discord-media-gallery/DiscordMediaGallery.js';
 import { DiscordMediaSpoileableCover } from '../discord-media-spoileable-cover/DiscordMediaSpoileableCover.js';
 import MediaPlayIcon from '../svgs/MediaPlayIcon.js';
@@ -60,9 +60,10 @@ export class DiscordMediaGalleryItem extends LitElement {
 						transform: translate(-50%, -50%);
 						opacity: 0.6;
 						transition: opacity 0.25s;
-						&:hover {
-							opacity: 0.8;
-						}
+					}
+
+					&:hover .discord-media-attachment-control-icon {
+						opacity: 0.8;
 					}
 				}
 			}
@@ -100,6 +101,12 @@ export class DiscordMediaGalleryItem extends LitElement {
 	@property({ type: Boolean })
 	public spoiler = false;
 
+	@property({ type: Number })
+	public width?: number;
+
+	@property({ type: Number })
+	public height?: number;
+
 	public static discordSupportedVideoExtensions = new Set(['mp4', 'webm', 'mov', 'avi', 'mkv', 'wmv', 'flv']);
 
 	public static discordSupportedVideoMimeTypes = new Set([
@@ -118,7 +125,7 @@ export class DiscordMediaGalleryItem extends LitElement {
 	}
 
 	@consume({ context: mediaItemsContext, subscribe: true })
-	public mediaItems: MediaItem[];
+	public mediaItems: DiscordMediaGalleryItem[];
 
 	public openInFullScreen() {
 		const slot = this.getAttribute('slot');
@@ -149,6 +156,8 @@ export class DiscordMediaGalleryItem extends LitElement {
 				spoiler=${this.spoiler}
 				description=${this.description}
 				class="no-top-margin"
+				width=${ifDefined(this.width)}
+				height=${ifDefined(this.height)}
 			></discord-video-attachment>`;
 		}
 
@@ -157,8 +166,8 @@ export class DiscordMediaGalleryItem extends LitElement {
 			${when(
 				isVideo,
 				() => html`
-					<div class="discord-media-gallery-video-container">
-						<video src=${this.media} alt=${this.description ?? this.media} @click=${this.openInFullScreen}></video>
+					<div class="discord-media-gallery-video-container" @click=${this.openInFullScreen}>
+						<video src=${this.media} alt=${this.description ?? this.media}></video>
 						${MediaPlayIcon({ class: 'discord-media-attachment-control-icon' })}
 					</div>
 				`,

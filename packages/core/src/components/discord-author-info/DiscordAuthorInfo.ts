@@ -43,7 +43,7 @@ export class DiscordAuthorInfo extends LitElement {
 			background-color: oklab(0.431937 0.00109309 -0.0132537 / 0.54);
 			color: #fff;
 			font-size: 12px;
-			font-weight: 500;
+			font-weight: 600;
 			margin-left: 0.25rem;
 			border-radius: 4px;
 			line-height: 100%;

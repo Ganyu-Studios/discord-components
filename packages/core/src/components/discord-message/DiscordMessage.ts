@@ -6,7 +6,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { when } from 'lit/directives/when.js';
 import { avatars, profiles } from '../../config.js';
 import type { DiscordTimestamp, LightTheme, Profile } from '../../types.js';
-import { handleTimestamp } from '../../util.js';
+import { dateFormatter, handleTimestamp } from '../../util.js';
 import '../discord-author-info/DiscordAuthorInfo.js';
 import { forwardedMessageContext } from '../discord-forwarded-message/DiscordForwardedMessage.js';
 import type { DiscordMention } from '../discord-mention/DiscordMention.js';
@@ -275,6 +275,10 @@ export class DiscordMessage extends LitElement implements LightTheme {
 			vertical-align: text-bottom;
 		}
 
+		.bold-timestamp {
+			font-weight: 600;
+		}
+
 		slot[name='embeds']::slotted(discord-media-gallery:not(:last-child)) {
 			margin-bottom: 4px;
 		}
@@ -528,7 +532,9 @@ export class DiscordMessage extends LitElement implements LightTheme {
 								clan-icon=${profile.clanIcon ?? ''}
 								clan-tag=${profile.clanTag ?? ''}
 							></discord-author-info
-							><time datetime="${ifDefined(computedTimestamp)}" class="discord-message-timestamp">${computedTimestamp}</time>
+							><time datetime="${ifDefined(computedTimestamp)}" class="discord-message-timestamp bold-timestamp"
+								>${dateFormatter(this.rawTimestamp)}
+							</time>
 						`
 					)}
 					<div class="discord-message-body">

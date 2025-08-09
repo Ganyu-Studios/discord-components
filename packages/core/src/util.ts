@@ -83,3 +83,62 @@ export const litMemo = <R>(render: () => R, dependencies: unknown[] = [], old: L
 		dependencies
 	};
 };
+
+const HOUR = 60 * 60 * 1_000;
+const DAY = 24 * HOUR;
+
+const capitalize = (str: string): string => {
+	return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+const clampToOnlyDate = (date: Date): Date => {
+	const day = date.getDate();
+	const month = date.getMonth();
+	const year = date.getFullYear();
+
+	return new Date(year, month, day);
+};
+
+const PMRegex = /p\.?\s?m\.?$/;
+const AMRegex = /a\.?\s?m\.?$/;
+
+export function dateFormatter(date: Date | string, allowWeekday = false): string {
+	const today = new Date();
+	const inputDate = new Date(date);
+
+	const isYesterday = clampToOnlyDate(inputDate).getTime() === clampToOnlyDate(today).getTime() - DAY;
+	const isToday = clampToOnlyDate(inputDate).getTime() === clampToOnlyDate(today).getTime();
+
+	if (isToday || isYesterday) {
+		const hour = inputDate
+			.toLocaleTimeString(void 0, { hour: 'numeric', minute: 'numeric', hour12: true })
+			.replace(PMRegex, 'PM')
+			.replace(AMRegex, 'AM');
+		if (isToday) {
+			return hour;
+		}
+
+		return `Yesterday at ${hour}`;
+	}
+
+	const isSameWeek = (d1: Date): boolean => {
+		if (!allowWeekday) return false;
+		const startOfWeek1 = new Date(d1);
+		startOfWeek1.setDate(d1.getDate() - d1.getDay());
+		startOfWeek1.setHours(0, 0, 0, 0);
+
+		const endOfWeek1 = new Date(d1);
+		endOfWeek1.setDate(d1.getDate() + (6 - d1.getDay()));
+		endOfWeek1.setHours(23, 59, 59, 999);
+
+		return inputDate >= startOfWeek1 && inputDate <= endOfWeek1;
+	};
+
+	if (isSameWeek(today)) {
+		const options: Intl.DateTimeFormatOptions = { weekday: 'long' };
+		return capitalize(inputDate.toLocaleDateString(void 0, options));
+	} else {
+		const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
+		return inputDate.toLocaleDateString(void 0, options);
+	}
+}

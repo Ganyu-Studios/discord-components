@@ -1,6 +1,6 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
 import { consume, provide } from '@lit/context';
-import { css, html, LitElement } from 'lit';
+import { css, html, LitElement, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
@@ -14,11 +14,6 @@ import { mediaItemsContext } from '../discord-media-gallery/DiscordMediaGallery.
 import { DiscordMediaGalleryItem } from '../discord-media-gallery-item/DiscordMediaGalleryItem.js';
 import { messageProfile, messageTimestamp } from '../discord-message/DiscordMessage.js';
 import { messagesLightTheme } from '../discord-messages/DiscordMessages.js';
-
-export interface MediaItem {
-	href: string;
-	mimeType?: string | null;
-}
 
 const clamp = (val: number, min: number, max: number) => Math.max(min, Math.min(max, val));
 const roundBySteps = (val: number, steps: number) => Math.round(val / steps) * steps;
@@ -445,7 +440,8 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 	}
 
 	private handleWindowResize() {
-		this.calcCanBeDraggable();
+		if (this.isZoomed) this.calcCanBeDraggable();
+		this.patchCurrentMediaContainerHeight();
 	}
 
 	public handleImageClick(event: MouseEvent) {
@@ -458,7 +454,6 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 				return;
 			}
 
-			window.removeEventListener('resize', this.handleWindowResize);
 			this.isZoomed = false;
 			return;
 		}
@@ -488,8 +483,6 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 
 		this.isZoomed = true;
 		this.calcCanBeDraggable(true);
-
-		window.addEventListener('resize', this.handleWindowResize);
 	}
 
 	public handleImageMouseMove(event: MouseEvent) {
@@ -565,6 +558,11 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 		target.parentElement?.style.setProperty('--x', `${x}%`);
 	}
 
+	public override connectedCallback(): void {
+		super.connectedCallback();
+		window.addEventListener('resize', this.handleWindowResize);
+	}
+
 	public override disconnectedCallback() {
 		super.disconnectedCallback();
 		window.removeEventListener('resize', this.handleWindowResize);
@@ -577,7 +575,7 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 
 	@consume({ context: mediaItemsContext, subscribe: true })
 	@state()
-	public mediaItems: MediaItem[];
+	public mediaItems: DiscordMediaGalleryItem[];
 
 	@consume({ context: messageProfile, subscribe: true })
 	public profile: Profile | undefined;
@@ -660,11 +658,25 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 		this.close();
 	}
 
+	private currentMediaContainer = createRef<HTMLDivElement>();
+
+	private patchCurrentMediaContainerHeight() {
+		const currentMediaContainer = this.currentMediaContainer.value;
+		if (!currentMediaContainer) return;
+		const rect = currentMediaContainer.getBoundingClientRect();
+		currentMediaContainer.style.setProperty('--current-media-container-height', `${rect.height}px`);
+	}
+
+	public override updated(changed: PropertyValues) {
+		super.updated(changed);
+		this.patchCurrentMediaContainerHeight();
+	}
+
 	protected override render() {
 		if (!this.isOpen) return null;
 
-		const currentSlot = this.mediaItems[clamp(this.currentSlot, 0, this.mediaItems.length - 1)];
-		const isVideo = DiscordMediaGalleryItem.isVideo(currentSlot.href, currentSlot.mimeType);
+		const currentItemSlot = this.mediaItems[clamp(this.currentSlot, 0, this.mediaItems.length - 1)];
+		const isVideo = DiscordMediaGalleryItem.isVideo(currentItemSlot.media, currentItemSlot.mimeType);
 
 		const isOnlyOne = this.mediaItems.length === 1;
 
@@ -736,7 +748,7 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 									</button>`
 							)}
 							<button class="btn">
-								<a href=${currentSlot.href} target="_blank">
+								<a href=${currentItemSlot.media} target="_blank">
 									<svg
 										aria-hidden="true"
 										role="img"
@@ -799,12 +811,17 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 							</svg>
 						</button>
 					</div>
-					<div class="current-media-container">
+					<div class="current-media-container" ${ref(this.currentMediaContainer)}>
 						${keyed(
-							currentSlot.href,
+							currentItemSlot.media,
 							when(
 								isVideo,
-								() => html`<discord-video-attachment href=${currentSlot.href}></discord-video-attachment>`,
+								() =>
+									html`<discord-video-attachment
+										href=${currentItemSlot.media}
+										width=${ifDefined(currentItemSlot.width)}
+										height=${ifDefined(currentItemSlot.height)}
+									></discord-video-attachment>`,
 								() =>
 									html`<img
 										${ref(this.imageRef)}
@@ -814,8 +831,8 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 										@mousedown=${this.handleImageMouseDown}
 										@click=${this.handleImageClick}
 										draggable="false"
-										src=${currentSlot.href}
-										alt=${currentSlot.href}
+										src=${currentItemSlot.media}
+										alt=${currentItemSlot.media}
 										class="current-image-preview"
 									/>`
 							)
@@ -844,12 +861,12 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 				<nav>
 					<div class="items-navigation-container">
 						${this.mediaItems.map((item, idx) => {
-							const isVideo = DiscordMediaGalleryItem.isVideo(item.href, item.mimeType);
+							const isVideo = DiscordMediaGalleryItem.isVideo(item.media, item.mimeType);
 							return html`<button @click=${() => this.setCurrentSlot(idx)} class=${classMap({ selected: this.currentSlot === idx })}>
 								${when(
 									isVideo,
-									() => html`<video src=${item.href} alt=${item.href}></video>`,
-									() => html`<img src=${item.href} alt=${item.href} />`
+									() => html`<video src=${item.media} alt=${item.media}></video>`,
+									() => html`<img src=${item.media} alt=${item.media} />`
 								)}
 							</button>`;
 						})}

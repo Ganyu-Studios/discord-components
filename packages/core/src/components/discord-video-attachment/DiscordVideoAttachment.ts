@@ -11,8 +11,8 @@ import { DiscordMediaAttachmentStyles } from '../_private/DiscordMediaAttachment
 import { DiscordMediaLifecycle } from '../_private/DiscordMediaLifecycle.js';
 import { DiscordPlaybackControlStyles } from '../_private/DiscordPlaybackControlStyles.js';
 import { DiscordVolumeControlStyles } from '../_private/DiscordVolumeControlStyles.js';
-import '../discord-link/DiscordLink.js';
 import { isInMediaFullScreenPreviewer } from '../_private/mediaGalleryFullScreenContext.js';
+import '../discord-link/DiscordLink.js';
 import { messagesLightTheme } from '../discord-messages/DiscordMessages.js';
 import AttachmentDownloadButton from '../svgs/AttachmentDownloadButton.js';
 import MediaPauseIcon from '../svgs/MediaPauseIcon.js';
@@ -62,6 +62,23 @@ export class DiscordVideoAttachment extends DiscordMediaLifecycle implements Lig
 				display: flex;
 				align-items: center;
 				justify-content: center;
+
+				.discord-media-attachment-non-visual-media-item-container {
+					margin-top: 0;
+
+					&.isFullScreen {
+						.discord-video-attachment-wrapper {
+							background-color: transparent;
+						}
+						.discord-video-attachment-video-container {
+							max-height: 100vh;
+							max-width: 100vw;
+							height: 100vh;
+							width: 100vw;
+							object-fit: contain;
+						}
+					}
+				}
 
 				.discord-video-attachment-one-by-one-grid {
 					margin: 0;
@@ -148,9 +165,10 @@ export class DiscordVideoAttachment extends DiscordMediaLifecycle implements Lig
 			}
 
 			.discord-video-attachment-video-container {
+				aspect-ratio: var(--width) / var(--height);
 				width: 100%;
 				height: 100%;
-				max-height: inherit;
+				max-height: var(--current-media-container-height, inherit);
 				object-fit: cover;
 				position: relative;
 				display: block;
@@ -194,9 +212,10 @@ export class DiscordVideoAttachment extends DiscordMediaLifecycle implements Lig
 					border-radius: 50%;
 					opacity: 0.6;
 					transition: opacity 0.25s;
-					&:hover {
-						opacity: 0.8;
-					}
+				}
+
+				&:hover .discord-media-attachment-control-icon {
+					opacity: 0.8;
 				}
 			}
 
@@ -376,6 +395,12 @@ export class DiscordVideoAttachment extends DiscordMediaLifecycle implements Lig
 
 	private __mouseMoveInFullScreenTimeout: number | undefined;
 
+	@property({ type: Number })
+	public width?: number;
+
+	@property({ type: Number })
+	public height?: number;
+
 	private handleFullScreenChange() {
 		this.isFullScreen = Boolean(this.shadowRoot?.fullscreenElement);
 	}
@@ -422,7 +447,12 @@ export class DiscordVideoAttachment extends DiscordMediaLifecycle implements Lig
 	}
 
 	protected override render() {
-		return html`<div class="discord-media-attachment-non-visual-media-item-container">
+		return html`<div
+			class=${classMap({
+				'discord-media-attachment-non-visual-media-item-container': true,
+				isFullScreen: this.isFullScreen
+			})}
+		>
 			${when(
 				!this.isClickedPlayOverlay && !this.isInMediaFullScreenPreviewer,
 				() =>

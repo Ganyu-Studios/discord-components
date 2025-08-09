@@ -3,38 +3,9 @@ import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { when } from 'lit/directives/when.js';
-import type { DiscordTimestamp, LightTheme } from '../../types.js';
-import { handleTimestamp } from '../../util.js';
+import type { LightTheme } from '../../types.js';
+import { dateFormatter } from '../../util.js';
 import { messagesLightTheme } from '../discord-messages/DiscordMessages.js';
-
-const capitalize = (str: string): string => {
-	return str.charAt(0).toUpperCase() + str.slice(1);
-};
-
-function dateFormatter(date: Date | string): string {
-	const today = new Date();
-	const inputDate = new Date(date);
-
-	const isSameWeek = (d1: Date): boolean => {
-		const startOfWeek1 = new Date(d1);
-		startOfWeek1.setDate(d1.getDate() - d1.getDay());
-		startOfWeek1.setHours(0, 0, 0, 0);
-
-		const endOfWeek1 = new Date(d1);
-		endOfWeek1.setDate(d1.getDate() + (6 - d1.getDay()));
-		endOfWeek1.setHours(23, 59, 59, 999);
-
-		return inputDate >= startOfWeek1 && inputDate <= endOfWeek1;
-	};
-
-	if (isSameWeek(today)) {
-		const options: Intl.DateTimeFormatOptions = { weekday: 'long' };
-		return capitalize(inputDate.toLocaleDateString(void 0, options));
-	} else {
-		const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
-		return inputDate.toLocaleDateString(void 0, options);
-	}
-}
 
 export const forwardedMessageContext = createContext<boolean>(Symbol('forwarded-message-context'));
 
@@ -130,10 +101,9 @@ export class DiscordForwardedMessage extends LitElement implements LightTheme {
 
 	@property({
 		reflect: true,
-		converter: (value) => handleTimestamp(value, false, false),
 		attribute: true
 	})
-	public timestamp?: DiscordTimestamp = new Date();
+	public timestamp?: string = new Date().toISOString();
 
 	@provide({ context: forwardedMessageContext })
 	public isInforwardedMessage = true;
@@ -172,7 +142,7 @@ export class DiscordForwardedMessage extends LitElement implements LightTheme {
 									<img src="${this.guildIcon!}" alt="${this.channelName!}" />
 									<span>${this.channelName}</span>
 									<span>•</span>
-									${dateFormatter(this.timestamp!)}
+									${dateFormatter(this.timestamp!, true)}
 									<svg
 										aria-hidden="true"
 										role="img"

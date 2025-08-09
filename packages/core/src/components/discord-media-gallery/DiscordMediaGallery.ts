@@ -2,13 +2,13 @@ import { createContext, provide } from '@lit/context';
 import { css, html, LitElement, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { choose } from 'lit/directives/choose.js';
-import '../discord-custom-emoji/DiscordCustomEmoji.js';
 import { type CloseFullScreenEventDetail, type OpenInFullScreenEventDetail } from '../_private/mediaGalleryFullScreenContext.js';
-import type { MediaItem } from '../discord-media-fullscreen-previewer/DiscordMediaFullscreenPreviewer.js';
+import '../discord-custom-emoji/DiscordCustomEmoji.js';
+import type { DiscordMediaGalleryItem } from '../discord-media-gallery-item/DiscordMediaGalleryItem.js';
 
 const withWrapper = (val: unknown) => html`<div class="discord-media-gallery-wrapper">${val}</div>`;
 
-export const mediaItemsContext = createContext<MediaItem[]>(Symbol('media-items-list'));
+export const mediaItemsContext = createContext<DiscordMediaGalleryItem[]>(Symbol('media-items-list'));
 
 @customElement('discord-media-gallery')
 export class DiscordMediaGallery extends LitElement {
@@ -116,7 +116,7 @@ export class DiscordMediaGallery extends LitElement {
 	public size = 0;
 
 	@provide({ context: mediaItemsContext })
-	public mediaItems: MediaItem[];
+	public mediaItems: DiscordMediaGalleryItem[];
 
 	@state()
 	public currentSlot = 0;
@@ -137,18 +137,16 @@ export class DiscordMediaGallery extends LitElement {
 	protected override updated(changed: PropertyValues) {
 		if (changed.has('mediaItems') || (changed.has('size') && changed.get('size') !== undefined)) return;
 
-		const items = this.querySelectorAll('discord-media-gallery-item');
+		const items = this.querySelectorAll('discord-media-gallery-item') as unknown as DiscordMediaGalleryItem[];
 
 		if (this.size === items.length) return;
 		this.size = items.length;
 
-		const mediaItems: MediaItem[] = [];
+		const mediaItems: DiscordMediaGalleryItem[] = [];
 
 		for (const [idx, item] of items.entries()) {
 			item.setAttribute('slot', `media-${idx + 1}`);
-			const href = item.getAttribute('media');
-			if (!href) continue;
-			mediaItems.push({ href, mimeType: item.getAttribute('mime-type') });
+			mediaItems.push(item);
 		}
 
 		this.mediaItems = mediaItems;
