@@ -223,6 +223,7 @@ export class DiscordMessage extends LitElement implements LightTheme {
 			user-select: text;
 			font-weight: 400;
 			display: inline;
+			/* white-space: pre-wrap; */
 		}
 
 		:host(:hover) {
