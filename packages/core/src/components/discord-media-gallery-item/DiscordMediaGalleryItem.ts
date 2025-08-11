@@ -82,6 +82,18 @@ export class DiscordMediaGalleryItem extends LitElement {
 					max-height: 350px;
 				}
 			}
+
+			.discord-media-gallery-item-gif {
+				position: absolute;
+				top: 6px;
+				left: 6px;
+				font-weight: bold;
+				color: white;
+				font-size: 13px;
+				background-color: rgba(0, 0, 0, 0.65);
+				padding: 4px 4px;
+				border-radius: 4px;
+			}
 		`,
 		DiscordMediaSpoileableCover.hostStyles
 	];
@@ -176,7 +188,10 @@ export class DiscordMediaGalleryItem extends LitElement {
 						${MediaPlayIcon({ class: 'discord-media-attachment-control-icon' })}
 					</div>
 				`,
-				() => html`<img src=${this.media} alt=${this.description ?? this.media} @click=${this.openInFullScreen} /> `
+				() => html`
+					${when(DiscordMediaGalleryItem.isGif(this.media), () => html` <div class="discord-media-gallery-item-gif">GIF</div> `)}
+					<img src=${this.media} alt=${this.description ?? this.media} @click=${this.openInFullScreen} />
+				`
 			)}
 		`;
 	}
