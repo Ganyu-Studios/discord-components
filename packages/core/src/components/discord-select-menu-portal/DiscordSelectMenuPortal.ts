@@ -37,7 +37,7 @@ export class DiscordSelectMenuPortal extends LitElement {
 						avatar-url=${user.avatarUrl}
 						username=${user.username}
 						discriminator=${user.discriminator}
-						globalName=${ifDefined(user.globalName)}
+						global-name=${ifDefined(user.globalName)}
 						?bot=${user.bot}
 						?verified=${user.verified}
 						?selected=${user.identifier === this.defaultIdentifier && isDefaultInUsers}
@@ -55,7 +55,7 @@ export class DiscordSelectMenuPortal extends LitElement {
 						name=${role.name}
 						color=${role.color}
 						member-count=${role.memberCount}
-						iconUrl=${ifDefined(role.iconUrl)}
+						icon-url=${ifDefined(role.iconUrl)}
 						?selected=${role.identifier === this.defaultIdentifier && isDefaultInRoles}
 						.showMemberCount=${role.showMemberCount ?? true}
 					></discord-role-select-menu-option>`

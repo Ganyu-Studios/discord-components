@@ -77,10 +77,10 @@ export class DiscordUserSelectMenuOption extends BaseDiscordSelectMenuOption imp
 	@property({ reflect: true, attribute: 'global-name' })
 	public globalName: string;
 
-	@property({ type: Boolean, reflect: true, attribute: 'bot' })
+	@property({ type: Boolean, reflect: true })
 	public bot = false;
 
-	@property({ type: Boolean, reflect: true, attribute: 'verified' })
+	@property({ type: Boolean, reflect: true })
 	public verified = false;
 
 	public filter(searchValue: string) {
