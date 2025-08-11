@@ -281,7 +281,7 @@ export class DiscordStringSelectMenu extends LitElement implements LightTheme {
 							html`<input
 								${ref(this.inputRef)}
 								class="search-input"
-								id="label-target"
+								id=${this.__previousSelectedNode ? 'search-input' : 'label-target'}
 								type="text"
 								spellcheck="false"
 								autocomplete="off"
@@ -314,7 +314,10 @@ export class DiscordStringSelectMenu extends LitElement implements LightTheme {
 					${ExpandMore({ class: 'discord-expand-more-icon' })}
 				</div>
 				<span class="discord-string-select-menu-hidden"
-					><input id=${this.withSearch ? 'clear-input' : 'label-target'} type="checkbox" @click=${() => this.openOptions()}
+					><input
+						id=${this.withSearch && !this.__previousSelectedNode ? 'clear-input' : 'label-target'}
+						type="checkbox"
+						@click=${() => this.openOptions()}
 				/></span>
 			</label>
 			<div class="discord-string-select-menu-option-slot discord-string-select-menu-hidden">

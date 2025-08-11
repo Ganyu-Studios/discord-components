@@ -1,5 +1,12 @@
 /* eslint-disable vars-on-top */
+import type { ChannelSelectMenuOptionData } from './components/discord-channel-select-menu-option/DiscordChannelSelectMenuOption.js';
+import type { RoleSelectMenuOptionData } from './components/discord-role-select-menu-option/DiscordRoleSelectMenuOption.js';
+import type { UserSelectMenuOptionData } from './components/discord-user-select-menu-option/DiscordUserSelectMenuOption.js';
 import type { DiscordMessageOptions } from './types.js';
+
+export type { RoleSelectMenuOptionData } from './components/discord-role-select-menu-option/DiscordRoleSelectMenuOption.js';
+export type { UserSelectMenuOptionData } from './components/discord-user-select-menu-option/DiscordUserSelectMenuOption.js';
+export type { ChannelSelectMenuOptionData } from './components/discord-channel-select-menu-option/DiscordChannelSelectMenuOption.js';
 
 /* EXPORTS START */
 
@@ -137,6 +144,8 @@ export { DiscordRoleSelectMenuOption } from './components/discord-role-select-me
 
 export { DiscordChannelSelectMenuOption } from './components/discord-channel-select-menu-option/DiscordChannelSelectMenuOption.js';
 
+export { DiscordSelectMenuPortal } from './components/discord-select-menu-portal/DiscordSelectMenuPortal.js';
+
 /* EXPORTS END */
 
 export { getConfig, setConfig } from './config.js';
@@ -147,4 +156,11 @@ export { DiscordComponentsError } from './util.js';
 
 declare global {
 	var $discordMessage: DiscordMessageOptions | undefined;
+	var $discordSelectMenu:
+		| {
+				channel?: ChannelSelectMenuOptionData[];
+				role?: RoleSelectMenuOptionData[];
+				user?: UserSelectMenuOptionData[];
+		  }
+		| undefined;
 }

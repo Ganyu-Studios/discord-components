@@ -1,11 +1,22 @@
+/* eslint-disable typescript-sort-keys/interface */
 import { css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { when } from 'lit/directives/when.js';
 import { BaseDiscordSelectMenuOption } from '../_private/BaseDiscordSelectMenuOption.js';
 
+export interface UserSelectMenuOptionData {
+	avatarUrl: string;
+	discriminator: string;
+	username: string;
+	globalName?: string;
+	bot?: boolean;
+	verified?: boolean;
+	identifier: string;
+}
+
 @customElement('discord-user-select-menu-option')
-export class DiscordUserSelectMenuOption extends BaseDiscordSelectMenuOption {
+export class DiscordUserSelectMenuOption extends BaseDiscordSelectMenuOption implements UserSelectMenuOptionData {
 	/**
 	 * @internal
 	 */
@@ -51,8 +62,8 @@ export class DiscordUserSelectMenuOption extends BaseDiscordSelectMenuOption {
 		BaseDiscordSelectMenuOption.baseStyles
 	];
 
-	@property({ reflect: true, attribute: 'user-id' })
-	public userId: string;
+	@property({ reflect: true })
+	public identifier: string;
 
 	@property({ reflect: true, attribute: 'avatar-url' })
 	public avatarUrl: string;

@@ -1,3 +1,4 @@
+/* eslint-disable typescript-sort-keys/interface */
 import { css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
@@ -27,8 +28,17 @@ const roleIcon = html`
 	</svg>
 `;
 
+export interface RoleSelectMenuOptionData {
+	color: string;
+	name: string;
+	identifier: string;
+	memberCount: number;
+	iconUrl?: string;
+	showMemberCount?: boolean;
+}
+
 @customElement('discord-role-select-menu-option')
-export class DiscordRoleSelectMenuOption extends BaseDiscordSelectMenuOption {
+export class DiscordRoleSelectMenuOption extends BaseDiscordSelectMenuOption implements RoleSelectMenuOptionData {
 	/**
 	 * @internal
 	 */
@@ -72,6 +82,9 @@ export class DiscordRoleSelectMenuOption extends BaseDiscordSelectMenuOption {
 		`,
 		BaseDiscordSelectMenuOption.baseStyles
 	];
+
+	@property({ type: String, reflect: true })
+	public identifier: string;
 
 	@property({ reflect: true, attribute: 'name' })
 	public name: string;

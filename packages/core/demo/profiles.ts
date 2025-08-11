@@ -68,3 +68,85 @@ globalThis.$discordMessage = {
 		}
 	}
 };
+
+globalThis.$discordSelectMenu = {
+	channel: [
+		{
+			identifier: '1',
+			name: 'General',
+			type: 0
+		},
+		{
+			identifier: '2',
+			name: 'Announcements',
+			type: 2
+		},
+		{
+			identifier: '3',
+			name: 'Games',
+			type: 15
+		},
+		{
+			identifier: '4',
+			name: 'Community',
+			type: 16
+		}
+	],
+	role: [
+		{
+			identifier: '5',
+			name: 'Admin',
+			color: '#ff0000',
+			memberCount: 10
+		},
+		{
+			identifier: '6',
+			name: 'Moderator',
+			color: '#00ff00',
+			memberCount: 10
+		},
+		{
+			identifier: '7',
+			name: 'Support',
+			color: '#0000ff',
+			memberCount: 10
+		}
+	],
+	user: [
+		{
+			identifier: '8',
+			avatarUrl: 'https://github.com/NM-EEA-Y.png',
+			username: 'skyra',
+			discriminator: '0',
+			globalName: 'Skyra'
+		},
+		{
+			identifier: '9',
+			avatarUrl: 'https://github.com/favna.png',
+			username: 'favna',
+			discriminator: '0',
+			globalName: 'Favna'
+		},
+		{
+			identifier: '10',
+			avatarUrl: 'https://github.com/eumarciel404.png',
+			username: 'marciel404',
+			discriminator: '0',
+			globalName: 'Marciel404'
+		},
+		{
+			identifier: '11',
+			avatarUrl: 'https://github.com/mezotv.png',
+			username: 'dominik',
+			discriminator: '0',
+			globalName: 'Dominik'
+		},
+		{
+			identifier: '12',
+			avatarUrl: 'https://github.com/dpaulos6.png',
+			username: 'paulos',
+			discriminator: '0',
+			globalName: 'Paulos'
+		}
+	]
+};

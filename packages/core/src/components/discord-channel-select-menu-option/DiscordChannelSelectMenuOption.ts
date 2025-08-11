@@ -115,8 +115,14 @@ export const channelIcon: Record<number | string, { normal: TemplateResult; priv
 	}
 };
 
+export interface ChannelSelectMenuOptionData {
+	identifier: string;
+	name: string;
+	type: number;
+}
+
 @customElement('discord-channel-select-menu-option')
-export class DiscordChannelSelectMenuOption extends BaseDiscordSelectMenuOption {
+export class DiscordChannelSelectMenuOption extends BaseDiscordSelectMenuOption implements ChannelSelectMenuOptionData {
 	/**
 	 * @internal
 	 */
@@ -160,6 +166,9 @@ export class DiscordChannelSelectMenuOption extends BaseDiscordSelectMenuOption 
 		`,
 		BaseDiscordSelectMenuOption.baseStyles
 	];
+
+	@property({ type: String, reflect: true })
+	public identifier: string;
 
 	@property({ reflect: true, attribute: 'name' })
 	public name: string;
