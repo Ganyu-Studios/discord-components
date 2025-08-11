@@ -1,5 +1,6 @@
+/* eslint-disable lit-a11y/click-events-have-key-events */
 import { css, html, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import '../discord-custom-emoji/DiscordCustomEmoji.js';
 import { DiscordMediaSpoileableCover } from '../discord-media-spoileable-cover/DiscordMediaSpoileableCover.js';
 
@@ -17,6 +18,9 @@ export class DiscordThumbnail extends LitElement {
 				border-radius: 8px;
 				overflow: hidden;
 			}
+			img {
+				cursor: pointer;
+			}
 		`,
 		DiscordMediaSpoileableCover.hostStyles
 	];
@@ -30,12 +34,19 @@ export class DiscordThumbnail extends LitElement {
 	@property({ type: Boolean, reflect: true })
 	public spoiler = false;
 
+	@state()
+	private isOpen = false;
+
 	protected override render() {
 		return html`
 			${DiscordMediaSpoileableCover.inject(this.spoiler)}
-			<a href=${this.media} target="_blank" rel="noopener noreferrer">
-				<img src=${this.media} alt="Thumbnail" width="85" height="85" />
-			</a>
+			<img src=${this.media} alt="Thumbnail" width="85" height="85" draggable="false" @click=${() => (this.isOpen = true)} />
+			<discord-media-fullscreen-previewer
+				@close-full-screen=${() => (this.isOpen = false)}
+				.currentSlot=${0}
+				.isOpen=${this.isOpen}
+				.mediaItems=${[{ height: 85, media: this.media, mimeType: 'image', width: 85 }]}
+			></discord-media-fullscreen-previewer>
 		`;
 	}
 }

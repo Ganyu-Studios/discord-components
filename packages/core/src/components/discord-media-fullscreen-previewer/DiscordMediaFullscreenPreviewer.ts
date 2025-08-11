@@ -79,6 +79,10 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 					align-items: center;
 					gap: 12px;
 
+					&.hidden {
+						visibility: hidden;
+					}
+
 					& > * {
 						pointer-events: none;
 					}
@@ -575,7 +579,7 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 
 	@consume({ context: mediaItemsContext, subscribe: true })
 	@state()
-	public mediaItems: DiscordMediaGalleryItem[];
+	public mediaItems: Pick<DiscordMediaGalleryItem, 'height' | 'media' | 'mimeType' | 'width'>[];
 
 	@consume({ context: messageProfile, subscribe: true })
 	public profile: Profile | undefined;
@@ -693,7 +697,12 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 				@keyup=${this.handleContainerKeyUp}
 			>
 				<header>
-					<div class="author-info">
+					<div
+						class=${classMap({
+							'author-info': true,
+							hidden: !this.profile
+						})}
+					>
 						<img width="40" height="40" src=${ifDefined(this.profile?.avatar)} alt="avatar" />
 						<div>
 							${when(

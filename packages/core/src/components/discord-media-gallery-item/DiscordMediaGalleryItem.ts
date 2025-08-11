@@ -124,6 +124,11 @@ export class DiscordMediaGalleryItem extends LitElement {
 		return DiscordMediaGalleryItem.discordSupportedVideoExtensions.has(extension);
 	}
 
+	public static isGif(url: string, mimeType?: string | null) {
+		if (url.endsWith('.gif')) return true;
+		return mimeType === 'image/gif';
+	}
+
 	@consume({ context: mediaItemsContext, subscribe: true })
 	public mediaItems: DiscordMediaGalleryItem[];
 

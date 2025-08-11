@@ -1,6 +1,7 @@
+/* eslint-disable lit-a11y/click-events-have-key-events */
 import { consume } from '@lit/context';
 import { css, html, LitElement, type TemplateResult } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { styleMap } from 'lit/directives/style-map.js';
@@ -8,6 +9,7 @@ import { when } from 'lit/directives/when.js';
 import type { Emoji, LightTheme } from '../../types.js';
 import { getGlobalEmojiUrl } from '../../util.js';
 import '../discord-custom-emoji/DiscordCustomEmoji.js';
+import { DiscordMediaGalleryItem } from '../discord-media-gallery-item/DiscordMediaGalleryItem.js';
 import { messagesLightTheme } from '../discord-messages/DiscordMessages.js';
 
 @customElement('discord-embed')
@@ -25,15 +27,19 @@ export class DiscordEmbed extends LitElement implements LightTheme {
 			margin-top: 8px;
 		}
 
-		:host([light-theme]) {
-			color: #2e3338;
-		}
-
 		:host .discord-left-border {
 			background-color: #4c4d54;
 			border-radius: 4px 0 0 4px;
 			flex-shrink: 0;
 			width: 4px;
+		}
+
+		:host([light-theme]) {
+			color: #2e3338;
+
+			.discord-left-border {
+				background-color: #e2e2e4;
+			}
 		}
 
 		:host .discord-embed-root {
@@ -82,6 +88,7 @@ export class DiscordEmbed extends LitElement implements LightTheme {
 			max-width: 80px;
 			object-fit: contain;
 			object-position: top center;
+			cursor: pointer;
 		}
 
 		:host .discord-embed-author {
@@ -191,6 +198,10 @@ export class DiscordEmbed extends LitElement implements LightTheme {
 			overflow: hidden;
 			position: relative;
 			user-select: text;
+		}
+
+		.discord-embed-image {
+			cursor: pointer;
 		}
 
 		:host .discord-embed-media .discord-embed-video {
@@ -316,6 +327,12 @@ export class DiscordEmbed extends LitElement implements LightTheme {
 	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
 	public lightTheme = false;
 
+	@state()
+	private isThumbnailOpen = false;
+
+	@state()
+	private isImageOpen = false;
+
 	protected override render() {
 		const emojiParsedAuthorName = this.parseTitle(this.authorName);
 		const emojiParsedEmbedTitle = this.parseTitle(this.embedTitle);
@@ -366,11 +383,38 @@ export class DiscordEmbed extends LitElement implements LightTheme {
 									${this.renderMedia()}
 								</div>`
 						)}
-						${when(this.thumbnail, () => html`<img src=${ifDefined(this.thumbnail)} alt="" class="discord-embed-thumbnail" />`)}
+						${when(
+							this.thumbnail,
+							() => html`
+								<img
+									src=${ifDefined(this.thumbnail)}
+									alt=${this.thumbnail}
+									@click=${() => (this.isThumbnailOpen = true)}
+									class="discord-embed-thumbnail"
+								/>
+								<discord-media-fullscreen-previewer
+									.isOpen=${this.isThumbnailOpen}
+									@close-full-screen=${() => (this.isThumbnailOpen = false)}
+									.mediaItems=${[
+										{ media: this.thumbnail, type: DiscordMediaGalleryItem.isGif(this.thumbnail) ? 'image/gif' : 'image/webp' }
+									]}
+								></discord-media-fullscreen-previewer>
+							`
+						)}
 						<slot name="footer"></slot>
 					</div>
 				</div>
-			</div>`;
+				${when(
+					this.image,
+					() =>
+						html`<discord-media-fullscreen-previewer
+							@close-full-screen=${() => (this.isImageOpen = false)}
+							.currentSlot=${0}
+							.isOpen=${this.isImageOpen}
+							.mediaItems=${[{ media: this.image, mimeType: 'image/webp' }]}
+						></discord-media-fullscreen-previewer>`
+				)}
+			</div> `;
 	}
 
 	private renderMedia() {
@@ -392,7 +436,12 @@ export class DiscordEmbed extends LitElement implements LightTheme {
 		}
 
 		if (this.image) {
-			return html`<img src=${ifDefined(this.image)} alt="Discord embed media" class="discord-embed-image" />`;
+			return html`<img
+				src=${ifDefined(this.image)}
+				alt="Discord embed media"
+				class="discord-embed-image"
+				@click=${() => (this.isImageOpen = true)}
+			/>`;
 		}
 
 		return null;
