@@ -27,7 +27,6 @@ export class DiscordSelectMenuPortal extends LitElement {
 		const hasChannels = this.type === 'channel' || isMentionable;
 
 		const data = globalThis.$discordSelectMenu;
-		console.log(data);
 
 		if (hasUsers && data?.users) {
 			const isDefaultInUsers = !this.defaultType || this.defaultType === 'user';
