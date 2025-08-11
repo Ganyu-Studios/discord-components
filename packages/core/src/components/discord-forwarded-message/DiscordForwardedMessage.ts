@@ -99,6 +99,9 @@ export class DiscordForwardedMessage extends LitElement implements LightTheme {
 	@property({ reflect: true, attribute: 'guild-icon' })
 	public guildIcon?: string;
 
+	@property({ type: Boolean, reflect: true, attribute: 'is-same-guild' })
+	public isSameGuild = false;
+
 	@property({
 		reflect: true,
 		attribute: true
@@ -135,11 +138,11 @@ export class DiscordForwardedMessage extends LitElement implements LightTheme {
 					</header>
 					<slot></slot>
 					${when(
-						this.channelName && this.guildIcon,
+						this.channelName && (this.guildIcon || this.isSameGuild),
 						() => html`
 							<footer>
 								<a href=${ifDefined(this.href)} target="_blank" rel="noopener noreferrer">
-									<img src="${this.guildIcon!}" alt="${this.channelName!}" />
+									${when(!this.isSameGuild, () => html`<img src="${this.guildIcon!}" alt="${this.channelName!}" />`)}
 									<span>${this.channelName}</span>
 									<span>•</span>
 									${dateFormatter(this.timestamp!, true)}

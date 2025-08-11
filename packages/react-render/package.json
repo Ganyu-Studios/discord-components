@@ -1,6 +1,6 @@
 {
 	"name": "@penwin/discord-components-react-render",
-	"version": "4.2.2",
+	"version": "4.3.1",
 	"description": "React bindings for @skyra/discord-components-core",
 	"author": "@skyra",
 	"license": "MIT",
@@ -27,7 +27,8 @@
 		"build": "pnpm bundle && pnpm build:rename-esm-index",
 		"bundle": "tsup",
 		"build:rename-esm-index": "node scripts/rename-esm-index.mjs",
-		"prepack": "pnpm build"
+		"prepack": "pnpm build",
+		"npm-publish": "pnpm npm publish"
 	},
 	"dependencies": {
 		"@lit/react": "^1.0.8",

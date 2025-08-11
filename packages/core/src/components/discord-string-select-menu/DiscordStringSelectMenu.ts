@@ -17,6 +17,10 @@ export class DiscordStringSelectMenu extends LitElement implements LightTheme {
 	 * @internal
 	 */
 	public static override readonly styles = css`
+		:host {
+			width: 100%;
+		}
+
 		.discord-string-select-menu {
 			height: 46px;
 			min-height: 36px;
@@ -321,8 +325,12 @@ export class DiscordStringSelectMenu extends LitElement implements LightTheme {
 				/></span>
 			</label>
 			<div class="discord-string-select-menu-option-slot discord-string-select-menu-hidden">
-				<slot></slot>
-				${when(this.noResultsFound, () => html`<center>No results found</center>`)}
+				<slot> </slot>
+				${when(
+					this.noResultsFound,
+					() => html`<center>No results found</center>`,
+					() => when(this.options?.length === 0, () => html`<center>No options provided</center>`)
+				)}
 			</div>
 		`;
 	}

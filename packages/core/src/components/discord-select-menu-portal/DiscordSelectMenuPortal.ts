@@ -1,9 +1,15 @@
-import { html, LitElement, type TemplateResult } from 'lit';
+import { html, LitElement, type TemplateResult, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 @customElement('discord-select-menu-portal')
 export class DiscordSelectMenuPortal extends LitElement {
+	public static override styles = css`
+		:host {
+			display: contents;
+		}
+	`;
+
 	@property({ type: String })
 	public type: 'channel' | 'mentionable' | 'role' | 'user';
 
@@ -22,9 +28,9 @@ export class DiscordSelectMenuPortal extends LitElement {
 
 		const data = globalThis.$discordSelectMenu;
 
-		if (hasUsers && data?.user) {
+		if (hasUsers && data?.users) {
 			const isDefaultInUsers = !this.defaultType || this.defaultType === 'user';
-			for (const user of data.user) {
+			for (const user of data.users) {
 				options.push(
 					html`<discord-user-select-menu-option
 						identifier=${user.identifier}
@@ -40,9 +46,9 @@ export class DiscordSelectMenuPortal extends LitElement {
 			}
 		}
 
-		if (hasRoles && data?.role) {
+		if (hasRoles && data?.roles) {
 			const isDefaultInRoles = !this.defaultType || this.defaultType === 'role';
-			for (const role of data.role) {
+			for (const role of data.roles) {
 				options.push(
 					html`<discord-role-select-menu-option
 						identifier=${role.identifier}
@@ -56,9 +62,9 @@ export class DiscordSelectMenuPortal extends LitElement {
 			}
 		}
 
-		if (hasChannels && data?.channel) {
+		if (hasChannels && data?.channels) {
 			const isDefaultInChannels = !this.defaultType || this.defaultType === 'channel';
-			for (const channel of data.channel) {
+			for (const channel of data.channels) {
 				options.push(
 					html`<discord-channel-select-menu-option
 						identifier=${channel.identifier}

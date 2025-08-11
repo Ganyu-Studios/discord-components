@@ -186,7 +186,9 @@ export class DiscordChannelSelectMenuOption extends BaseDiscordSelectMenuOption 
 	protected override render() {
 		const defaultIcon = channelIcon[0];
 
-		const icon = this.isPrivate ? (channelIcon[this.type].private ?? defaultIcon.private) : (channelIcon[this.type].normal ?? defaultIcon.normal);
+		const icon =
+			(this.isPrivate ? (channelIcon[this.type].private ?? channelIcon[this.type].normal) : channelIcon[this.type].normal) ??
+			defaultIcon.normal;
 
 		return html`
 			<label>

@@ -84,6 +84,7 @@ export class DiscordMediaGalleryItem extends LitElement {
 			}
 
 			.discord-media-gallery-item-gif {
+				line-height: 16px;
 				position: absolute;
 				top: 6px;
 				left: 6px;

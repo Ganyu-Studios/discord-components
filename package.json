@@ -19,7 +19,7 @@
 		"build:react": "pnpm print \"building react\" && pnpm --filter discord-components-react build",
 		"build:react-render": "pnpm print \"building react-render\" && pnpm --filter discord-components-react-render build",
 		"build:documentation": "pnpm --filter documentation build",
-		"publish:react-render": "pnpm inject & cd packages/react-render && pnpm npm publish && cd ../../packages/core && pnpm npm publish"
+		"publish:react-render": "pnpm inject && pnpm --filter discord-components-core npm-publish && pnpm --filter discord-components-react-render npm-publish"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^19.8.1",

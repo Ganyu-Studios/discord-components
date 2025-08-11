@@ -1,11 +1,14 @@
 /* eslint-disable vars-on-top */
+
 import type { ChannelSelectMenuOptionData } from './components/discord-channel-select-menu-option/DiscordChannelSelectMenuOption.js';
 import type { RoleSelectMenuOptionData } from './components/discord-role-select-menu-option/DiscordRoleSelectMenuOption.js';
 import type { UserSelectMenuOptionData } from './components/discord-user-select-menu-option/DiscordUserSelectMenuOption.js';
 import type { DiscordMessageOptions } from './types.js';
 
 export type { RoleSelectMenuOptionData } from './components/discord-role-select-menu-option/DiscordRoleSelectMenuOption.js';
+
 export type { UserSelectMenuOptionData } from './components/discord-user-select-menu-option/DiscordUserSelectMenuOption.js';
+
 export type { ChannelSelectMenuOptionData } from './components/discord-channel-select-menu-option/DiscordChannelSelectMenuOption.js';
 
 /* EXPORTS START */
@@ -21,6 +24,8 @@ export { DiscordAuthorInfo } from './components/discord-author-info/DiscordAutho
 export { DiscordBold } from './components/discord-bold/DiscordBold.js';
 
 export { DiscordButton } from './components/discord-button/DiscordButton.js';
+
+export { DiscordChannelSelectMenuOption } from './components/discord-channel-select-menu-option/DiscordChannelSelectMenuOption.js';
 
 export { DiscordCode } from './components/discord-code/DiscordCode.js';
 
@@ -72,6 +77,8 @@ export { DiscordMediaSpoileableCover } from './components/discord-media-spoileab
 
 export { DiscordMention } from './components/discord-mention/DiscordMention.js';
 
+export { DiscordMentionableSelectMenu } from './components/discord-mentionable-select-menu/DiscordMentionableSelectMenu.js';
+
 export { DiscordMessage } from './components/discord-message/DiscordMessage.js';
 
 export { DiscordMessages } from './components/discord-messages/DiscordMessages.js';
@@ -94,9 +101,13 @@ export { DiscordReactions } from './components/discord-reactions/DiscordReaction
 
 export { DiscordReply } from './components/discord-reply/DiscordReply.js';
 
+export { DiscordRoleSelectMenuOption } from './components/discord-role-select-menu-option/DiscordRoleSelectMenuOption.js';
+
 export { DiscordSection } from './components/discord-section/DiscordSection.js';
 
 export { DiscordSectionComponents } from './components/discord-section-components/DiscordSectionComponents.js';
+
+export { DiscordSelectMenuPortal } from './components/discord-select-menu-portal/DiscordSelectMenuPortal.js';
 
 export { DiscordSeparator } from './components/discord-separator/DiscordSeparator.js';
 
@@ -130,21 +141,13 @@ export { DiscordUnderlined } from './components/discord-underlined/DiscordUnderl
 
 export { DiscordUnorderedList } from './components/discord-unordered-list/DiscordUnorderedList.js';
 
+export { DiscordUserSelectMenuOption } from './components/discord-user-select-menu-option/DiscordUserSelectMenuOption.js';
+
 export { DiscordVerifiedAuthorTag } from './components/discord-verified-author-tag/DiscordVerifiedAuthorTag.js';
 
 export { DiscordVideoAttachment } from './components/discord-video-attachment/DiscordVideoAttachment.js';
 
 export { DiscordVoiceMessage } from './components/discord-voice-message/DiscordVoiceMessage.js';
-
-export { DiscordUserSelectMenuOption } from './components/discord-user-select-menu-option/DiscordUserSelectMenuOption.js';
-
-export { DiscordMentionableSelectMenu } from './components/discord-mentionable-select-menu/DiscordMentionableSelectMenu.js';
-
-export { DiscordRoleSelectMenuOption } from './components/discord-role-select-menu-option/DiscordRoleSelectMenuOption.js';
-
-export { DiscordChannelSelectMenuOption } from './components/discord-channel-select-menu-option/DiscordChannelSelectMenuOption.js';
-
-export { DiscordSelectMenuPortal } from './components/discord-select-menu-portal/DiscordSelectMenuPortal.js';
 
 /* EXPORTS END */
 
@@ -156,11 +159,14 @@ export { DiscordComponentsError } from './util.js';
 
 declare global {
 	var $discordMessage: DiscordMessageOptions | undefined;
+
 	var $discordSelectMenu:
 		| {
-				channel?: ChannelSelectMenuOptionData[];
-				role?: RoleSelectMenuOptionData[];
-				user?: UserSelectMenuOptionData[];
+				channels?: ChannelSelectMenuOptionData[];
+
+				roles?: RoleSelectMenuOptionData[];
+
+				users?: UserSelectMenuOptionData[];
 		  }
 		| undefined;
 }

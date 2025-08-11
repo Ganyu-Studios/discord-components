@@ -9,6 +9,10 @@ export const DiscordAudioAttachment = createReactComponent('discord-audio-attach
 export const DiscordAuthorInfo = createReactComponent('discord-author-info', ReactComponents.DiscordAuthorInfo);
 export const DiscordBold = createReactComponent('discord-bold', ReactComponents.DiscordBold);
 export const DiscordButton = createReactComponent('discord-button', ReactComponents.DiscordButton);
+export const DiscordChannelSelectMenuOption = createReactComponent(
+	'discord-channel-select-menu-option',
+	ReactComponents.DiscordChannelSelectMenuOption
+);
 export const DiscordCode = createReactComponent('discord-code', ReactComponents.DiscordCode);
 export const DiscordCodeBlock = createReactComponent('discord-code-block', ReactComponents.DiscordCodeBlock);
 export const DiscordCommand = createReactComponent('discord-command', ReactComponents.DiscordCommand);
@@ -37,6 +41,7 @@ export const DiscordMediaGallery = createReactComponent('discord-media-gallery',
 export const DiscordMediaGalleryItem = createReactComponent('discord-media-gallery-item', ReactComponents.DiscordMediaGalleryItem);
 export const DiscordMediaSpoileableCover = createReactComponent('discord-media-spoileable-cover', ReactComponents.DiscordMediaSpoileableCover);
 export const DiscordMention = createReactComponent('discord-mention', ReactComponents.DiscordMention);
+export const DiscordMentionableSelectMenu = createReactComponent('discord-mentionable-select-menu', ReactComponents.DiscordMentionableSelectMenu);
 export const DiscordMessage = createReactComponent('discord-message', ReactComponents.DiscordMessage);
 export const DiscordMessages = createReactComponent('discord-messages', ReactComponents.DiscordMessages);
 export const DiscordModal = createReactComponent('discord-modal', ReactComponents.DiscordModal);
@@ -48,8 +53,10 @@ export const DiscordQuote = createReactComponent('discord-quote', ReactComponent
 export const DiscordReaction = createReactComponent('discord-reaction', ReactComponents.DiscordReaction);
 export const DiscordReactions = createReactComponent('discord-reactions', ReactComponents.DiscordReactions);
 export const DiscordReply = createReactComponent('discord-reply', ReactComponents.DiscordReply);
+export const DiscordRoleSelectMenuOption = createReactComponent('discord-role-select-menu-option', ReactComponents.DiscordRoleSelectMenuOption);
 export const DiscordSection = createReactComponent('discord-section', ReactComponents.DiscordSection);
 export const DiscordSectionComponents = createReactComponent('discord-section-components', ReactComponents.DiscordSectionComponents);
+export const DiscordSelectMenuPortal = createReactComponent('discord-select-menu-portal', ReactComponents.DiscordSelectMenuPortal);
 export const DiscordSeparator = createReactComponent('discord-separator', ReactComponents.DiscordSeparator);
 export const DiscordSpoiler = createReactComponent('discord-spoiler', ReactComponents.DiscordSpoiler);
 export const DiscordStringSelectMenu = createReactComponent('discord-string-select-menu', ReactComponents.DiscordStringSelectMenu);
@@ -69,6 +76,7 @@ export const DiscordTime = createReactComponent('discord-time', ReactComponents.
 export const DiscordTranscriptHeader = createReactComponent('discord-transcript-header', ReactComponents.DiscordTranscriptHeader);
 export const DiscordUnderlined = createReactComponent('discord-underlined', ReactComponents.DiscordUnderlined);
 export const DiscordUnorderedList = createReactComponent('discord-unordered-list', ReactComponents.DiscordUnorderedList);
+export const DiscordUserSelectMenuOption = createReactComponent('discord-user-select-menu-option', ReactComponents.DiscordUserSelectMenuOption);
 export const DiscordVerifiedAuthorTag = createReactComponent('discord-verified-author-tag', ReactComponents.DiscordVerifiedAuthorTag);
 export const DiscordVideoAttachment = createReactComponent('discord-video-attachment', ReactComponents.DiscordVideoAttachment);
 export const DiscordVoiceMessage = createReactComponent('discord-voice-message', ReactComponents.DiscordVoiceMessage);
