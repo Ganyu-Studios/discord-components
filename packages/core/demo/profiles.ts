@@ -70,7 +70,7 @@ globalThis.$discordMessage = {
 };
 
 globalThis.$discordSelectMenu = {
-	channel: [
+	channels: [
 		{
 			identifier: '1',
 			name: 'General',
@@ -92,7 +92,7 @@ globalThis.$discordSelectMenu = {
 			type: 16
 		}
 	],
-	role: [
+	roles: [
 		{
 			identifier: '5',
 			name: 'Admin',
@@ -112,7 +112,7 @@ globalThis.$discordSelectMenu = {
 			memberCount: 10
 		}
 	],
-	user: [
+	users: [
 		{
 			identifier: '8',
 			avatarUrl: 'https://github.com/NM-EEA-Y.png',

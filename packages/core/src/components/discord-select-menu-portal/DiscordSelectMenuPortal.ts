@@ -27,6 +27,7 @@ export class DiscordSelectMenuPortal extends LitElement {
 		const hasChannels = this.type === 'channel' || isMentionable;
 
 		const data = globalThis.$discordSelectMenu;
+		console.log(data);
 
 		if (hasUsers && data?.users) {
 			const isDefaultInUsers = !this.defaultType || this.defaultType === 'user';
@@ -57,6 +58,7 @@ export class DiscordSelectMenuPortal extends LitElement {
 						member-count=${role.memberCount}
 						iconUrl=${ifDefined(role.iconUrl)}
 						?selected=${role.identifier === this.defaultIdentifier && isDefaultInRoles}
+						.showMemberCount=${role.showMemberCount ?? true}
 					></discord-role-select-menu-option>`
 				);
 			}
