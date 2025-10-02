@@ -82,6 +82,7 @@ export class DiscordMediaGallery extends LitElement {
 			display: grid;
 			grid-template-columns: repeat(3, minmax(0, 1fr));
 			gap: 4px;
+			overflow: hidden;
 			aspect-ratio: 3 / 1;
 		}
 

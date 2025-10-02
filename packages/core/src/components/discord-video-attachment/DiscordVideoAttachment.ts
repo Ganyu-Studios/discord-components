@@ -5,6 +5,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
+import { styleMap } from 'lit/directives/style-map.js';
 import { when } from 'lit/directives/when.js';
 import type { LightTheme } from '../../types.js';
 import { DiscordMediaAttachmentStyles } from '../_private/DiscordMediaAttachmentStyles.js';
@@ -55,7 +56,7 @@ export class DiscordVideoAttachment extends DiscordMediaLifecycle implements Lig
 
 			:host .discord-button-download-attachment {
 				top: 5px !important;
-				right: 8px !important;
+				right: 5px !important;
 			}
 
 			:host([is-in-media-full-screen-previewer]) {
@@ -174,6 +175,42 @@ export class DiscordVideoAttachment extends DiscordMediaLifecycle implements Lig
 				display: block;
 				-o-object-fit: cover;
 				border-radius: 3px;
+			}
+
+			:host(:not(.video-attachment-in-fullscreen-previewer)) {
+				.discord-video-attachment-video-container {
+					max-height: 350px;
+					max-width: 550px;
+					object-fit: contain;
+					-o-object-fit: contain;
+					object-position: left;
+				}
+
+				.discord-video-attachment-wrapper {
+					max-height: 350px;
+					max-width: 550px;
+					width: unset;
+					aspect-ratio: var(--width) / var(--height);
+				}
+				.discord-video-attachment-image-wrapper {
+					width: fit-content;
+				}
+
+				.isFullScreen {
+					.discord-video-attachment-wrapper {
+						aspect-ratio: unset;
+						width: 100%;
+						max-height: unset;
+						max-width: unset;
+					}
+
+					.discord-video-attachment-video-container {
+						aspect-ratio: unset;
+						max-height: unset;
+						max-width: unset;
+						object-position: unset;
+					}
+				}
 			}
 
 			.discord-video-attachment-video-container::-webkit-media-controls-enclosure {
@@ -339,6 +376,20 @@ export class DiscordVideoAttachment extends DiscordMediaLifecycle implements Lig
 					bottom: -10px !important;
 				}
 			}
+
+			.no-duration-indicator {
+				.discord-video-attachment-video-controls:not(.isFullScreen) {
+					.discord-media-attachment-duration-time-wrapper {
+						display: none !important;
+					}
+				}
+			}
+
+			.discord-video-attachment-video-controls {
+				.discord-media-attachment-playback-control {
+					width: 100%;
+				}
+			}
 		`
 	];
 
@@ -450,7 +501,12 @@ export class DiscordVideoAttachment extends DiscordMediaLifecycle implements Lig
 		return html`<div
 			class=${classMap({
 				'discord-media-attachment-non-visual-media-item-container': true,
-				isFullScreen: this.isFullScreen
+				isFullScreen: this.isFullScreen,
+				'no-duration-indicator': Boolean(this.width && this.height && (this.width / this.height) * 350 < 300)
+			})}
+			style=${styleMap({
+				'--width': this.width,
+				'--height': this.height
 			})}
 		>
 			${when(

@@ -828,6 +828,7 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 								() =>
 									html`<discord-video-attachment
 										href=${currentItemSlot.media}
+										class="video-attachment-in-fullscreen-previewer"
 										width=${ifDefined(currentItemSlot.width)}
 										height=${ifDefined(currentItemSlot.height)}
 									></discord-video-attachment>`,
