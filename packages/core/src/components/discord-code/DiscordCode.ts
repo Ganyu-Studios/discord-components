@@ -11,7 +11,8 @@ export class DiscordCode extends LitElement implements LightTheme {
 	 */
 	public static override readonly styles = css`
 		:host {
-			white-space: break-spaces;
+			white-space: normal !important;
+
 			font-family:
 				Consolas,
 				Andale Mono WT,
@@ -31,18 +32,17 @@ export class DiscordCode extends LitElement implements LightTheme {
 		}
 
 		code {
-			padding: 0.1em 0.2em;
-			margin: -0.2em;
+			padding: 0.1em;
 			border-radius: 3px;
 			border: none;
 			text-indent: 0;
 			white-space: pre-wrap;
 			background-color: var(
-				--background-color,
+				--discord-code-background-color,
 				color-mix(in oklab, hsl(234.935 calc(1 * 85.556%) 64.706% /0.0784313725490196) 100%, hsl(0 0% 0% /0.0784313725490196) 0%)
 			);
 
-			border: var(--border, 1px solid color-mix(in oklab, hsl(240 calc(1 * 4%) 60.784% /0.2) 100%, hsl(0 0% 0% /0.2) 0%));
+			border: var(--discord-code-border, 1px solid color-mix(in oklab, hsl(240 calc(1 * 4%) 60.784% /0.2) 100%, hsl(0 0% 0% /0.2) 0%));
 		}
 
 		:host([multiline]) code {
@@ -66,8 +66,8 @@ export class DiscordCode extends LitElement implements LightTheme {
 		}
 
 		:host([light-theme]) {
-			--border: 1px solid #d3d4da;
-			--background-color: #f4f5fa;
+			--discord-code-border: 1px solid #d3d4da;
+			--discord-code-background-color: #f4f5fa;
 		}
 
 		:host([light-theme][embed]) code {
@@ -92,13 +92,13 @@ export class DiscordCode extends LitElement implements LightTheme {
 	public embed = false;
 
 	protected override render() {
+		const content = html`<code><slot></slot></code>`;
+
 		if (this.multiline) {
-			return html`<discord-pre ?embed=${this.embed}
-				><code><slot></slot></code
-			></discord-pre>`;
+			return html`<discord-pre ?embed=${this.embed}>${content}</discord-pre>`;
 		}
 
-		return html`<code><slot></slot></code>`;
+		return content;
 	}
 }
 

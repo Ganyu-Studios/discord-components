@@ -556,7 +556,9 @@ export class DiscordMessage extends LitElement implements LightTheme {
 									clan-tag=${profile.clanTag ?? ''}
 								></discord-author-info>`,
 							() => null
-						)}<span class="discord-message-markup"><slot></slot></span>
+						)}<span class="discord-message-markup">
+							<discord-white-space><slot></slot></discord-white-space>
+						</span>
 						${when(
 							this.edited,
 							() => html`<span class="discord-message-edited">(edited)</span>`,

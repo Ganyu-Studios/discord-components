@@ -2,11 +2,11 @@ import { consume } from '@lit/context';
 import { css, html, LitElement, type TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import { when } from 'lit/directives/when.js';
 import type { Emoji, LightTheme } from '../../types.js';
 import { getGlobalEmojiUrl } from '../../util.js';
 import '../discord-custom-emoji/DiscordCustomEmoji.js';
 import { messagesLightTheme } from '../discord-messages/DiscordMessages.js';
+import '../_private/DiscordWhiteSpace.js';
 
 @customElement('discord-embed-field')
 export class DiscordEmbedField extends LitElement implements LightTheme {
@@ -42,20 +42,14 @@ export class DiscordEmbedField extends LitElement implements LightTheme {
 			color: #313338;
 		}
 
-		::slotted(discord-code),
-		slot[name='field-title']::slotted(discord-code),
-		discord-code {
-			margin: 0px 2px;
-			--background-color: color-mix(in oklab, hsl(230 calc(1 * 6.383%) 18.431% /1) 100%, #000 0%);
-			--border: none;
+		:host {
+			/* margin: 0px 2px; */
+			--discord-code-background-color: color-mix(in oklab, hsl(230 calc(1 * 6.383%) 18.431% /1) 100%, #000 0%);
+			--discord-code-border: none;
 		}
 
-		:host([light-theme]),
-		slot[name='field-title']::slotted(discord-code),
-		discord-code {
-			::slotted(discord-code) {
-				--background-color: #f3f3f4;
-			}
+		:host([light-theme]) {
+			--discord-code-background-color: #f3f3f4;
 		}
 	`;
 
@@ -112,15 +106,13 @@ export class DiscordEmbedField extends LitElement implements LightTheme {
 
 		const emojiParsedEmbedFieldTitle = this.parseTitle(this.fieldTitle);
 
-		const component = when(
-			emojiParsedEmbedFieldTitle,
-			() =>
-				html`<div class="discord-field-title">
-					<slot name="field-title">${[...(emojiParsedEmbedFieldTitle as NonNullable<typeof emojiParsedEmbedFieldTitle>)]}</slot>
-				</div>`
-		);
+		const content = [...(emojiParsedEmbedFieldTitle as NonNullable<typeof emojiParsedEmbedFieldTitle>)];
 
-		return html`${component}<slot></slot>`;
+		const component = html`<div class="discord-field-title">
+			<discord-white-space><slot name="field-title">${content}</slot></discord-white-space>
+		</div>`;
+
+		return html`${component}<discord-white-space><slot></slot></discord-white-space>`;
 	}
 
 	private parseTitle(title?: string) {

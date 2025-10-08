@@ -34,8 +34,10 @@ export class DiscordCodeBlock extends LitElement implements LightTheme {
 		// check if hljs has the language
 		const language = this.language ? (hljs.getLanguage(this.language) ? this.language : 'plaintext') : 'plaintext';
 
+		const parsed = unsafeHTML(hljs.highlight(this.code, { language }).value);
+
 		return html`<div class="discord-code-block-pre discord-code-block-pre--multiline language">
-			<code class=${`hljs language-${language}`}>${unsafeHTML(hljs.highlight(this.code, { language }).value)}</code>
+			<code class=${`hljs language-${language}`}>${parsed}</code>
 		</div>`;
 	}
 }

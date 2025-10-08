@@ -15,6 +15,10 @@ export class DiscordForwardedMessage extends LitElement implements LightTheme {
 	 * @internal
 	 */
 	public static override readonly styles = css`
+		:host {
+			white-space: normal !important;
+		}
+
 		.discord-message-container {
 			display: flex;
 			flex-direction: column;

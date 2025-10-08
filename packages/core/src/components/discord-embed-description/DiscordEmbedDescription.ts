@@ -21,9 +21,8 @@ export class DiscordEmbedDescription extends LitElement implements LightTheme {
 		}
 
 		::slotted(discord-code) {
-			margin: 0px 2px;
-			--background-color: color-mix(in oklab, hsl(230 calc(1 * 6.383%) 18.431% /1) 100%, #000 0%);
-			--border: none;
+			--discord-code-background-color: color-mix(in oklab, hsl(230 calc(1 * 6.383%) 18.431% /1) 100%, #000 0%);
+			--discord-code-border: none;
 		}
 
 		:host([light-theme]) {
@@ -42,7 +41,7 @@ export class DiscordEmbedDescription extends LitElement implements LightTheme {
 	public lightTheme = false;
 
 	protected override render() {
-		return html`<slot></slot>`;
+		return html` <discord-white-space><slot></slot></discord-white-space>`;
 	}
 }
 

@@ -15,6 +15,7 @@ export class DiscordSubscript extends LitElement implements LightTheme {
 			color: color-mix(in oklab, hsl(214 calc(1 * 8.1%) 61.2% / 1) 100%, black 0%);
 			font-size: 0.8125rem;
 			line-height: 1.11719rem;
+			white-space: normal;
 		}
 
 		:host([light-theme]) > small {
@@ -27,13 +28,10 @@ export class DiscordSubscript extends LitElement implements LightTheme {
 	public lightTheme = false;
 
 	protected override render() {
-		return html`
-			<small>
-				<span>
-					<slot></slot>
-				</span>
-			</small>
-		`;
+		return html`<small
+			><span>
+				<discord-white-space><slot></slot></discord-white-space> </span
+		></small>`;
 	}
 }
 

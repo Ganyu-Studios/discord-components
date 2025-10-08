@@ -13,7 +13,7 @@ export class DiscordPre extends LitElement {
 			font-size: 0.75rem;
 			line-height: 1rem;
 			margin-top: 6px;
-			white-space: pre-wrap;
+			white-space: pre;
 			background-clip: border-box;
 			width: 90%;
 			border: none;
@@ -30,8 +30,7 @@ export class DiscordPre extends LitElement {
 	public embed = false;
 
 	protected override render() {
-		return html`<pre><slot></slot
-		></pre>`;
+		return html`<pre><slot></slot></pre>`;
 	}
 }
 

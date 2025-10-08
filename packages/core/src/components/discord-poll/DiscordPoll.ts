@@ -28,6 +28,7 @@ export class DiscordPoll extends LitElement {
 			box-sizing: border-box;
 			position: relative;
 			overflow: hidden;
+			white-space: normal !important;
 		}
 
 		:host([light-theme]) {

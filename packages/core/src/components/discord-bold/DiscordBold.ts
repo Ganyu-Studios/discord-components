@@ -13,11 +13,7 @@ export class DiscordBold extends LitElement {
 	`;
 
 	protected override render() {
-		return html`
-			<strong>
-				<slot></slot>
-			</strong>
-		`;
+		return html`<strong><slot></slot></strong>`;
 	}
 }
 
