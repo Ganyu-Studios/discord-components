@@ -31,7 +31,7 @@ export class DiscordCode extends LitElement implements LightTheme {
 		}
 
 		code {
-			padding: 0.2em;
+			padding: 0.1em 0.2em;
 			margin: -0.2em;
 			border-radius: 3px;
 			border: none;

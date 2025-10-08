@@ -41,6 +41,22 @@ export class DiscordEmbedField extends LitElement implements LightTheme {
 		:host([light-theme]) .discord-field-title {
 			color: #313338;
 		}
+
+		::slotted(discord-code),
+		slot[name='field-title']::slotted(discord-code),
+		discord-code {
+			margin: 0px 2px;
+			--background-color: color-mix(in oklab, hsl(230 calc(1 * 6.383%) 18.431% /1) 100%, #000 0%);
+			--border: none;
+		}
+
+		:host([light-theme]),
+		slot[name='field-title']::slotted(discord-code),
+		discord-code {
+			::slotted(discord-code) {
+				--background-color: #f3f3f4;
+			}
+		}
 	`;
 
 	@property({ reflect: true, attribute: 'field-title' })
@@ -98,7 +114,10 @@ export class DiscordEmbedField extends LitElement implements LightTheme {
 
 		const component = when(
 			emojiParsedEmbedFieldTitle,
-			() => html`<div class="discord-field-title">${[...(emojiParsedEmbedFieldTitle as NonNullable<typeof emojiParsedEmbedFieldTitle>)]}</div>`
+			() =>
+				html`<div class="discord-field-title">
+					<slot name="field-title">${[...(emojiParsedEmbedFieldTitle as NonNullable<typeof emojiParsedEmbedFieldTitle>)]}</slot>
+				</div>`
 		);
 
 		return html`${component}<slot></slot>`;

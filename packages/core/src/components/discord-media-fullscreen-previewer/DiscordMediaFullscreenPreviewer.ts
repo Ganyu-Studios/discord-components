@@ -33,6 +33,10 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 	 * @internal
 	 */
 	public static override readonly styles = css`
+		:host {
+			display: contents;
+		}
+
 		.media-fullscreen-previewer {
 			position: fixed;
 			inset: 0;

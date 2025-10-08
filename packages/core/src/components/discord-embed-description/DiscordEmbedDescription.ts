@@ -17,6 +17,7 @@ export class DiscordEmbedDescription extends LitElement implements LightTheme {
 			line-height: 1.125rem;
 			margin-top: 8px;
 			min-width: 0;
+			max-width: 400px;
 		}
 
 		::slotted(discord-code) {

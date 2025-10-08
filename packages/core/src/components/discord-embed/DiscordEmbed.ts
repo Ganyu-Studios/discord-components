@@ -157,6 +157,7 @@ export class DiscordEmbed extends LitElement implements LightTheme {
 			grid-column: 1 / 1;
 			margin-top: 8px;
 			min-width: 0;
+			max-width: 400px;
 		}
 
 		:host .discord-embed-title a {
@@ -180,6 +181,7 @@ export class DiscordEmbed extends LitElement implements LightTheme {
 			border-radius: 4px;
 			max-width: 300px;
 			max-height: 300px;
+			min-width: 100%;
 		}
 
 		:host .discord-embed-media {
