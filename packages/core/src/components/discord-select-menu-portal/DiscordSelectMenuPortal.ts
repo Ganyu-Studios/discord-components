@@ -1,9 +1,12 @@
+import { consume } from '@lit/context';
 import { html, LitElement, type TemplateResult, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import type { LightTheme } from '../../types.js';
+import { messagesLightTheme } from '../discord-messages/DiscordMessages.js';
 
 @customElement('discord-select-menu-portal')
-export class DiscordSelectMenuPortal extends LitElement {
+export class DiscordSelectMenuPortal extends LitElement implements LightTheme {
 	public static override styles = css`
 		:host {
 			display: contents;
@@ -16,8 +19,18 @@ export class DiscordSelectMenuPortal extends LitElement {
 	@property({ type: String, attribute: 'default-identifier', reflect: true })
 	public defaultIdentifier?: string;
 
-	@property({ type: String, attribute: 'default-name', reflect: true })
+	@property({ type: String, attribute: 'default-type', reflect: true })
 	public defaultType?: 'channel' | 'role' | 'user';
+
+	@property({ type: Boolean, reflect: true })
+	public disabled = false;
+
+	@property({ attribute: 'placeholder' })
+	public placeholder: string = 'Make a selection';
+
+	@consume({ context: messagesLightTheme })
+	@property({ type: Boolean, reflect: true, attribute: 'light-theme' })
+	public lightTheme = false;
 
 	protected override render() {
 		const options: TemplateResult[] = [];
@@ -77,7 +90,11 @@ export class DiscordSelectMenuPortal extends LitElement {
 			}
 		}
 
-		return html` <discord-mentionable-select-menu> ${options} </discord-mentionable-select-menu> `;
+		return html`
+			<discord-mentionable-select-menu light-theme=${this.lightTheme} placeholder=${this.placeholder} ?disabled=${this.disabled}
+				>${options}</discord-mentionable-select-menu
+			>
+		`;
 	}
 }
 

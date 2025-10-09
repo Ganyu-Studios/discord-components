@@ -1,6 +1,6 @@
 {
 	"name": "@penwin/discord-components-react-render",
-	"version": "4.3.7",
+	"version": "4.3.8",
 	"description": "React bindings for @skyra/discord-components-core",
 	"author": "@skyra",
 	"license": "MIT",

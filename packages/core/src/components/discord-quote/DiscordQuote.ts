@@ -11,7 +11,8 @@ export class DiscordQuote extends LitElement implements LightTheme {
 	 */
 	public static override readonly styles = css`
 		:host {
-			display: flex;
+			display: grid;
+			grid-template-columns: auto 1fr;
 		}
 
 		.discord-quote-divider {
@@ -45,7 +46,6 @@ export class DiscordQuote extends LitElement implements LightTheme {
 	protected override render() {
 		return html`
 			<div class="discord-quote-divider"></div>
-			<!-- display: inline -->
 			<blockquote><slot></slot></blockquote>
 		`;
 	}
