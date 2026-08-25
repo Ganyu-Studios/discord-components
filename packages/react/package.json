@@ -24,8 +24,7 @@
 	],
 	"homepage": "https://github.com/skyra-project/discord-components/tree/main/packages/react#readme",
 	"scripts": {
-		"build": "tsup && pnpm build:rename-esm-index",
-		"build:rename-esm-index": "node scripts/rename-esm-index.mjs",
+		"build": "tsdown",
 		"prepack": "pnpm build"
 	},
 	"dependencies": {
@@ -38,7 +37,7 @@
 		"@types/react": "^19.2.18",
 		"colorette": "^2.0.20",
 		"rimraf": "^6.1.3",
-		"tsup": "^8.5.1",
+		"tsdown": "^0.22.14",
 		"typescript": "^5.9.3"
 	},
 	"peerDependencies": {

@@ -160,7 +160,7 @@
 		"analyze": "cem analyze --litelement",
 		"start": "vite",
 		"build": "pnpm build:ts && pnpm analyze --exclude dist",
-		"bundle": "tsup",
+		"bundle": "tsdown",
 		"prepack": "pnpm build && pnpm bundle",
 		"lint": "eslint src test --ext .ts",
 		"format": "prettier . --write --ignore-path ../../.prettierignore",
@@ -181,11 +181,12 @@
 	"devDependencies": {
 		"@custom-elements-manifest/analyzer": "^0.11.0",
 		"@favware/cliff-jumper": "^6.1.0",
+		"@tsdown/css": "^0.22.14",
 		"concurrently": "^9.2.4",
 		"esbuild-sass-plugin": "^3.7.0",
 		"sass-embedded": "^1.103.1",
 		"ts-lit-plugin": "^2.0.2",
-		"tsup": "^8.5.1",
+		"tsdown": "^0.22.14",
 		"typescript": "^5.9.3",
 		"vite": "^7.3.6"
 	},
