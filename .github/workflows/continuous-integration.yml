@@ -30,3 +30,6 @@ jobs:
         run: pnpm build:core && pnpm build:react && pnpm build:react-render
       - name: Run ESLint
         run: pnpm lint --fix=false
+      - name: Publish preview to pkg.pr.new
+        if: github.repository == 'Ganyu-Studios/discord-components'
+        run: pnpm dlx pkg-pr-new publish './packages/core' './packages/react' './packages/react-render'
