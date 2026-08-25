@@ -28,6 +28,7 @@ export { setConfig } from '../config.js';
 
 /**
  * Render a Lit template to an HTML string with declarative shadow DOM.
+ *
  * @param value - The Lit `TemplateResult` (or renderable) to render.
  * @returns The rendered HTML.
  */
