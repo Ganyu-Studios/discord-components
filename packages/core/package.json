@@ -83,6 +83,7 @@
 	},
 	"sideEffects": [
 		"./dist/index.js",
+		"./dist/hydrate/index.js",
 		"./dist/components/discord-action-row/DiscordActionRow.js",
 		"./dist/components/discord-attachments/DiscordAttachments.js",
 		"./dist/components/discord-audio-attachment/DiscordAudioAttachment.js",

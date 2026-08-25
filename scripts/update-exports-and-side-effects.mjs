@@ -7,7 +7,8 @@ const coreComponentsDirectoryPath = new URL('../packages/core/src/components/', 
 const coreComponentsDirectory = await readdir(coreComponentsDirectoryPath);
 
 const paths = {
-	'.': './dist/index.js'
+	'.': './dist/index.js',
+	'./hydrate': './dist/hydrate/index.js'
 };
 
 for (const item of coreComponentsDirectory) {

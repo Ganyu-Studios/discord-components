@@ -1,0 +1,15 @@
+# Normalize line endings to LF in the repository and on checkout, matching
+# prettier's endOfLine: lf. Without this, core.autocrlf=true on Windows checks
+# files out as CRLF while Linux CI checks them out as LF, so prettier passed
+# locally but failed in CI.
+* text=auto eol=lf
+
+# Binary assets git must never try to normalize.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.woff binary
+*.woff2 binary
