@@ -11,6 +11,7 @@
 	"customElements": "custom-elements.json",
 	"exports": {
 		".": "./dist/index.js",
+		"./hydrate": "./dist/hydrate/index.js",
 		"./discord-action-row.js": "./dist/components/discord-action-row/DiscordActionRow.js",
 		"./discord-attachments.js": "./dist/components/discord-attachments/DiscordAttachments.js",
 		"./discord-audio-attachment.js": "./dist/components/discord-audio-attachment/DiscordAudioAttachment.js",
@@ -167,6 +168,7 @@
 		"npm-publish": "pnpm npm publish"
 	},
 	"dependencies": {
+		"@lit-labs/ssr": "^4.1.0",
 		"@lit/context": "^1.1.6",
 		"@popperjs/core": "^2.11.8",
 		"@types/pako": "^2.0.3",

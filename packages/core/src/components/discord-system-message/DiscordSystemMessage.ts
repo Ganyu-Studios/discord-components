@@ -1,5 +1,5 @@
 import { consume } from '@lit/context';
-import { css, html, LitElement } from 'lit';
+import { css, html, isServer, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { choose } from 'lit/directives/choose.js';
 import type { DiscordTimestamp, LightTheme } from '../../types.js';
@@ -181,6 +181,9 @@ export class DiscordSystemMessage extends LitElement implements LightTheme {
 	}
 
 	protected override willUpdate(): void {
+		// children are only inspectable on the client; the client recomputes hasThread on hydration.
+		if (isServer) return;
+
 		this.hasThread = Array.from(this.children).some((child): boolean => {
 			return child.tagName.toLowerCase() === 'discord-thread';
 		});

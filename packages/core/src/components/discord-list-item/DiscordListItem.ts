@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { css, html, isServer, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { DiscordComponentsError } from '../../util.js';
 
@@ -14,6 +14,9 @@ export class DiscordListItem extends LitElement {
 	`;
 
 	public checkParentElement() {
+		// the parent is only known on the client; skip the structural validation during SSR.
+		if (isServer) return;
+
 		if (
 			this.parentElement?.tagName.toLowerCase() !== 'discord-unordered-list' &&
 			this.parentElement?.tagName.toLowerCase() !== 'discord-ordered-list'
