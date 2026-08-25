@@ -42,6 +42,7 @@ export async function renderToString(value: Parameters<typeof render>[0]): Promi
  * Render a server-rendered HTML string (custom-element markup, e.g. from React SSR) to HTML with
  * declarative shadow DOM. Lit SSR expands every registered custom element found in the markup, so
  * the transcript displays correctly without any client JavaScript.
+ *
  * @param markup - The HTML string to expand.
  * @returns The rendered HTML.
  */
