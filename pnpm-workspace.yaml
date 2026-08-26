@@ -3,6 +3,7 @@ packages:
   - docs/
 
 onlyBuiltDependencies:
+  - '@parcel/watcher'
   - esbuild
   - sharp
   - unrs-resolver

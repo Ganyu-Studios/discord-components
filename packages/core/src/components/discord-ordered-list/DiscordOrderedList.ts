@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { css, html, isServer, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { DiscordComponentsError } from '../../util.js';
 
@@ -34,6 +34,9 @@ export class DiscordOrderedList extends LitElement {
 	private startLength = 1;
 
 	public checkChildren() {
+		// children are only inspectable on the client; skip the validation during SSR.
+		if (isServer) return;
+
 		const allChildrenAreListItems = Array.from(this.children).every((child) => {
 			const tagNameLowerCase = child.tagName.toLowerCase();
 			return (
@@ -55,6 +58,9 @@ export class DiscordOrderedList extends LitElement {
 	 * the {@link DiscordOrderedList.startLength | startLength} state.
 	 */
 	protected override willUpdate(): void {
+		// children are only countable on the client; the client recomputes startLength on hydration.
+		if (isServer) return;
+
 		const amountOfListItems = Array.from(this.children).filter((child) => {
 			return child.tagName.toLowerCase() === 'discord-list-item';
 		}).length;

@@ -144,8 +144,10 @@ export class DiscordMediaGalleryItem extends LitElement {
 		return mimeType === 'image/gif';
 	}
 
+	// Defaulted so SSR (where context is not resolved) reads an empty list instead of undefined;
+	// the client re-resolves the context on hydration.
 	@consume({ context: mediaItemsContext, subscribe: true })
-	public mediaItems: DiscordMediaGalleryItem[];
+	public mediaItems: DiscordMediaGalleryItem[] = [];
 
 	public openInFullScreen() {
 		const slot = this.getAttribute('slot');

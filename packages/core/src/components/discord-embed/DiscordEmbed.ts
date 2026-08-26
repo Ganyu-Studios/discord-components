@@ -371,9 +371,11 @@ export class DiscordEmbed extends LitElement implements LightTheme {
 							emojiParsedEmbedTitle,
 							() =>
 								html`<div class="discord-embed-title">
-									${this.url
-										? html`<a href="${this.url}" target="_blank" rel="noopener noreferrer"> ${emojiParsedEmbedTitle} </a>`
-										: html`${emojiParsedEmbedTitle}`}
+									${
+										this.url
+											? html`<a href="${this.url}" target="_blank" rel="noopener noreferrer"> ${emojiParsedEmbedTitle} </a>`
+											: html`${emojiParsedEmbedTitle}`
+									}
 								</div>`
 						)}
 						<slot name="description"></slot>

@@ -29,10 +29,6 @@ export function getConfig(): DiscordMessageOptions {
 	return config;
 }
 
-export function setConfig(partialConfig: Partial<DiscordMessageOptions>): void {
-	config = Object.assign(config, partialConfig);
-}
-
 export const defaultDiscordAvatars: Omit<Avatars, 'default'> = {
 	blue: 'https://cdn.discordapp.com/embed/avatars/0.png',
 	gray: 'https://cdn.discordapp.com/embed/avatars/1.png',
@@ -49,6 +45,15 @@ export const avatars: Avatars = Object.assign(defaultDiscordAvatars, globalAvata
 });
 
 export const profiles: { [key: string]: Profile } = getConfig().profiles ?? {};
+
+export function setConfig(partialConfig: Partial<DiscordMessageOptions>): void {
+	config = Object.assign(config, partialConfig);
+
+	// Keep the derived collections live, so config supplied after this module has loaded — e.g.
+	// server-side before an SSR render, or on the client — is seen by components that read them.
+	if (partialConfig.profiles) Object.assign(profiles, partialConfig.profiles);
+	if (partialConfig.avatars) Object.assign(avatars, partialConfig.avatars);
+}
 
 export const defaultTheme: string = getConfig().defaultTheme === 'light' ? 'light' : 'dark';
 

@@ -24,24 +24,23 @@
 	],
 	"homepage": "https://github.com/skyra-project/discord-components/tree/main/packages/react#readme",
 	"scripts": {
-		"build": "pnpm bundle && pnpm build:rename-esm-index",
-		"bundle": "tsup",
-		"build:rename-esm-index": "node scripts/rename-esm-index.mjs",
+		"build": "pnpm bundle",
+		"bundle": "tsdown",
 		"prepack": "pnpm build",
 		"npm-publish": "pnpm npm publish"
 	},
 	"dependencies": {
 		"@lit/react": "^1.0.8",
-		"react": "^19.1.0"
+		"@penwin/discord-components-core": "workspace:^",
+		"react": "^19.2.8"
 	},
 	"devDependencies": {
-		"@penwin/discord-components-core": "workspace:^",
-		"@types/react": "^19.1.8",
+		"@types/react": "^19.2.18",
 		"colorette": "^2.0.20",
-		"lit": "^3.3.1",
-		"rimraf": "^6.0.1",
-		"tsup": "^8.5.0",
-		"typescript": "^5.8.3"
+		"lit": "^3.3.3",
+		"rimraf": "^6.1.3",
+		"tsdown": "^0.22.14",
+		"typescript": "^5.9.3"
 	},
 	"peerDependencies": {
 		"react": "16.8.x || 17.x || 18.x || 19.x",
