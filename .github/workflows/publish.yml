@@ -38,7 +38,7 @@ jobs:
       # Build gate: nothing gets published off a broken build. publish re-runs each package's
       # prepack, but building core first here also makes react-render's dts build see its types.
       - name: Build
-        run: pnpm build:core && pnpm build:react && pnpm build:react-render
+        run: pnpm build:core && pnpm build:react-render
 
       # The version in each package.json is the release: bump it on `main` and merge into `release`.
       # Publishing is skipped when that version is already on npm, so a merge that carries no bump
@@ -62,5 +62,4 @@ jobs:
           }
 
           publish_if_new "@penwin/discord-components-core" "packages/core"
-          publish_if_new "@penwin/discord-components-react" "packages/react"
           publish_if_new "@penwin/discord-components-react-render" "packages/react-render"
