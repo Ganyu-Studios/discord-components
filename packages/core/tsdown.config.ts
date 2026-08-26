@@ -12,9 +12,11 @@ export default defineConfig({
 	dts: false,
 	platform: 'browser',
 	minify: true,
-	// Bundle the runtime libraries into the browser bundle instead of externalizing them,
-	// so the CDN build is self-contained. tsdown externalizes dependencies by default.
-	noExternal: ['lit', '@lit/context', 'highlight.js', 'wavesurfer.js', '@popperjs/core', 'pako'],
+	// Bundle the runtime libraries into the browser bundle instead of externalizing them, so the CDN
+	// build is self-contained. tsdown externalizes dependencies by default and matches noExternal
+	// exactly, so the regex is needed to also catch subpaths (e.g. lit/decorators.js) — otherwise
+	// they stay as bare specifiers the browser cannot resolve.
+	noExternal: [/^(?:lit|@lit\/context|highlight\.js|wavesurfer\.js|@popperjs\/core|pako)(?:\/|$)/],
 	format: 'esm',
 	outExtensions: () => ({ js: '.mjs' }),
 	// Preserve the published CSS path (dist/bundle/styles/base.css) that consumers load from the CDN;
