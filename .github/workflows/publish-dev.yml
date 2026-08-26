@@ -1,0 +1,53 @@
+name: Publish Dev
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  publish_dev:
+    name: Publish Dev
+    runs-on: ubuntu-latest
+    if: github.repository == 'Ganyu-Studios/discord-components'
+    permissions:
+      id-token: write
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Fail before publishing anything if the token is missing or invalid.
+      - name: Verify npm token
+        run: npm whoami
+
+      # Bump core and react-render to the same prerelease version (no commit), so react-render's
+      # workspace:^ core resolves to this same dev version once pnpm publish converts the protocol.
+      - name: Bump to a shared dev version
+        run: |
+          npm config set //registry.npmjs.org/:_authToken ${NODE_AUTH_TOKEN}
+          pnpm --filter @penwin/discord-components-core exec npm version prerelease --preid dev-${{ github.run_id }} --no-git-tag-version
+          pnpm --filter @penwin/discord-components-react-render exec npm version prerelease --preid dev-${{ github.run_id }} --no-git-tag-version
+
+      # publish runs each package's prepack (build + bundle). Core first so react-render's dts build
+      # can read its types.
+      - name: Publish @penwin/discord-components-core (dev)
+        run: pnpm --filter @penwin/discord-components-core publish --tag dev --no-git-checks
+
+      - name: Publish @penwin/discord-components-react-render (dev)
+        run: pnpm --filter @penwin/discord-components-react-render publish --tag dev --no-git-checks
