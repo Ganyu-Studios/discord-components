@@ -31,10 +31,10 @@
 	},
 	"dependencies": {
 		"@lit/react": "^1.0.8",
+		"@penwin/discord-components-core": "workspace:^",
 		"react": "^19.2.8"
 	},
 	"devDependencies": {
-		"@penwin/discord-components-core": "workspace:^",
 		"@types/react": "^19.2.18",
 		"colorette": "^2.0.20",
 		"lit": "^3.3.3",

@@ -251,6 +251,9 @@ importers:
       '@lit/react':
         specifier: ^1.0.8
         version: 1.0.8(@types/react@19.2.18)
+      '@penwin/discord-components-core':
+        specifier: workspace:^
+        version: link:../core
       react:
         specifier: ^19.2.8
         version: 19.2.8
@@ -258,9 +261,6 @@ importers:
         specifier: 16.8.x || 17.x || 18.x || 19.x
         version: 19.1.0(react@19.2.8)
     devDependencies:
-      '@penwin/discord-components-core':
-        specifier: workspace:^
-        version: link:../core
       '@types/react':
         specifier: ^19.2.18
         version: 19.2.18
