@@ -1,81 +1,66 @@
 name: Publish
 
 on:
-  workflow_dispatch:
-    inputs:
-      is-alpha:
-        type: boolean
-        required: false
-        default: false
-        description: Whether to publish an alpha version or not
+  push:
+    branches:
+      - release
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   publish:
     name: Publish
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'skyra-project'
+    if: github.repository == 'Ganyu-Studios/discord-components'
+    permissions:
+      # Only npm provenance needs a token here; nothing is pushed back to the repository.
+      id-token: write
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
-      - name: Checkout Project
+      - name: Check out code
         uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install Node
+        uses: actions/setup-node@v4
         with:
-          fetch-depth: 0
-          ref: main
-          token: ${{ secrets.SKYRA_TOKEN }}
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+
       - name: Install dependencies
-        uses: sapphiredev/.github/actions/install-yarn-dependencies@main
-        with:
-          node-version: 24
-      - name: Configure Git
+        run: pnpm install --frozen-lockfile
+
+      # Build gate: nothing gets published off a broken build. publish re-runs each package's
+      # prepack, but building core first here also makes react-render's dts build see its types.
+      - name: Build
+        run: pnpm build:core && pnpm build:react && pnpm build:react-render
+
+      # The version in each package.json is the release: bump it on `main` and merge into `release`.
+      # Publishing is skipped when that version is already on npm, so a merge that carries no bump
+      # (or a re-run) is a no-op instead of a failure. pnpm publish converts workspace:^ to the
+      # matching version, so react-render pins the same core it was built against.
+      - name: Publish to npm
         run: |
-          git remote set-url origin "https://${GITHUB_TOKEN}:x-oauth-basic@github.com/${GITHUB_REPOSITORY}.git"
-          git config --local user.email "${GITHUB_EMAIL}"
-          git config --local user.name "${GITHUB_USER}"
-        env:
-          GITHUB_USER: github-actions[bot]
-          GITHUB_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Update generated readme files
-        run: yarn inject
-      - name: Build code
-        run: yarn build
-      - name: Bump Versions and make release
-        working-directory: packages/core
-        run: |
-          if [ "${{ github.event.inputs.is-alpha }}" == "true" ]; then
-            yarn bump --preid alpha --github-release-pre-release
-          else
-            yarn bump
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Store new version
-        id: store-new-version
-        working-directory: packages/core
-        run: echo "new_version=$(jq -r '.version' ./package.json)" >> "$GITHUB_OUTPUT"
-      - name: Set version of react package
-        working-directory: packages/react
-        run: yarn version ${{ steps.store-new-version.outputs.new_version }} --immediate
-      - name: Copy changelog over
-        working-directory: packages/react
-        run: cp ../core/CHANGELOG.md CHANGELOG.md
-      - name: Push changed package.json to github
-        run: |
-          git add packages/react/package.json packages/react/CHANGELOG.md
-          git commit -m "chore(react): update package version to ${{ steps.store-new-version.outputs.new_version }}"
-          git push origin main
-      - name: Configure yarn
-        run: |
-          yarn config set npmAuthToken ${NODE_AUTH_TOKEN}
-          yarn config set npmPublishRegistry "https://registry.yarnpkg.com"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
-      - name: Publish @skyra/discord-components-core
-        working-directory: packages/core
-        run: yarn npm publish
-      - name: Publish @skyra/discord-components-react
-        working-directory: packages/react
-        run: yarn npm publish
+          npm config set //registry.npmjs.org/:_authToken ${NODE_AUTH_TOKEN}
+
+          publish_if_new () {
+            pkg="$1"
+            dir="$2"
+            version=$(node -p "require('./${dir}/package.json').version")
+
+            if npm view "${pkg}@${version}" version > /dev/null 2>&1; then
+              echo "${pkg}@${version} is already published, nothing to do."
+            else
+              echo "Publishing ${pkg}@${version}"
+              pnpm --filter "${pkg}" publish --no-git-checks --provenance
+            fi
+          }
+
+          publish_if_new "@penwin/discord-components-core" "packages/core"
+          publish_if_new "@penwin/discord-components-react" "packages/react"
+          publish_if_new "@penwin/discord-components-react-render" "packages/react-render"
