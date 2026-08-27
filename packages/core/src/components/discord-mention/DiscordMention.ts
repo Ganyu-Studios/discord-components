@@ -1,5 +1,5 @@
 import { consume } from '@lit/context';
-import { css, html, isServer, LitElement } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { choose } from 'lit/directives/choose.js';
 import { hexToRgba } from '../../hex-to-rgba.js';
@@ -156,10 +156,6 @@ export class DiscordMention extends LitElement implements LightTheme {
 	}
 
 	protected override willUpdate(): void {
-		// `this.style` only exists on the client; the inline color/background are a browser-only
-		// concern (the base color already ships in the static styles), so skip them during SSR.
-		if (isServer) return;
-
 		if (this.color) {
 			this.style.color = this.color;
 			if (this.type === 'role') this.style.backgroundColor = hexToRgba(this.color, 0.1);
