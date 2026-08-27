@@ -1,5 +1,5 @@
 import { consume } from '@lit/context';
-import { css, html, isServer, LitElement } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { when } from 'lit/directives/when.js';
@@ -187,9 +187,6 @@ export class DiscordButton extends LitElement {
 	}
 
 	public checkParentElement() {
-		// the parent is only known on the client; skip the structural validation during SSR.
-		if (isServer) return;
-
 		if (this.parentElement?.tagName.toLowerCase() !== 'discord-action-row' && this.parentElement?.tagName.toLowerCase() !== 'discord-section') {
 			throw new DiscordComponentsError('All <discord-button> components must be direct children of <discord-action-row>.');
 		}

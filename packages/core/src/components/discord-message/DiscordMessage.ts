@@ -1,5 +1,5 @@
 import { consume, createContext, provide } from '@lit/context';
-import { css, html, isServer, LitElement } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
@@ -431,9 +431,6 @@ export class DiscordMessage extends LitElement implements LightTheme {
 	public dismissMessageClicked: () => void = () => {};
 
 	protected override willUpdate(): void {
-		// children are only inspectable on the client; during SSR the light DOM is streamed as-is.
-		if (isServer) return;
-
 		this.hasThread = Array.from(this.children).some((child): boolean => child.tagName.toLowerCase() === 'discord-thread');
 		this.highlight =
 			this.highlight ||

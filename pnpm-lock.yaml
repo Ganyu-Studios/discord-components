@@ -98,9 +98,6 @@ importers:
 
   packages/core:
     dependencies:
-      '@lit-labs/ssr':
-        specifier: ^4.1.0
-        version: 4.1.0(@types/node@24.13.3)
       '@lit/context':
         specifier: ^1.1.6
         version: 1.1.6
@@ -1172,15 +1169,6 @@ packages:
   '@lit-labs/ssr@3.3.1':
     resolution: {integrity: sha512-JlF1PempxvzrGEpRFrF+Ki0MHzR3HA51SK8Zv0cFpW9p0bPW4k0FeCwrElCu371UEpXF7RcaE2wgYaE1az0XKg==}
     engines: {node: '>=13.9.0'}
-
-  '@lit-labs/ssr@4.1.0':
-    resolution: {integrity: sha512-m0zymVVlHB1ddJQ1lastsV8ROW3whFOiHJhVPQWd04MnGTkTlUUVLQctux1QlyD9BtLXNN6iASxv388vhgKMFg==}
-    engines: {node: '>=13.9.0'}
-    peerDependencies:
-      '@types/node': '>=20.0.0 <25.0.0'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
 
   '@lit/context@1.1.6':
     resolution: {integrity: sha512-M26qDE6UkQbZA2mQ3RjJ3Gzd8TxP+/0obMgE5HfkfLhEEyYE3Bui4A5XHiGPjy0MUGAyxB3QgVuw2ciS0kHn6A==}
@@ -7707,21 +7695,6 @@ snapshots:
       lit-html: 3.3.1
       node-fetch: 3.3.2
       parse5: 7.3.0
-
-  '@lit-labs/ssr@4.1.0(@types/node@24.13.3)':
-    dependencies:
-      '@lit-labs/ssr-client': 1.1.7
-      '@lit-labs/ssr-dom-shim': 1.6.0
-      '@lit/reactive-element': 2.1.1
-      '@parse5/tools': 0.3.0
-      enhanced-resolve: 5.18.2
-      lit: 3.3.3
-      lit-element: 4.2.1
-      lit-html: 3.3.1
-      node-fetch: 3.3.2
-      parse5: 7.3.0
-    optionalDependencies:
-      '@types/node': 24.13.3
 
   '@lit/context@1.1.6':
     dependencies:
