@@ -15,8 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository == 'Ganyu-Studios/discord-components'
     permissions:
-      # Only npm provenance needs a token here; nothing is pushed back to the repository.
+      # npm provenance needs id-token; contents:write is for creating the tag and the release entry.
+      # Nothing is pushed back to a branch.
       id-token: write
+      contents: write
     env:
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
@@ -45,9 +47,11 @@ jobs:
       # (or a re-run) is a no-op instead of a failure. pnpm publish converts workspace:^ to the
       # matching version, so react-render pins the same core it was built against.
       - name: Publish to npm
+        id: publish
         run: |
           npm config set //registry.npmjs.org/:_authToken ${NODE_AUTH_TOKEN}
 
+          published=""
           publish_if_new () {
             pkg="$1"
             dir="$2"
@@ -58,8 +62,39 @@ jobs:
             else
               echo "Publishing ${pkg}@${version}"
               pnpm --filter "${pkg}" publish --no-git-checks --provenance
+              published="yes"
             fi
           }
 
           publish_if_new "@penwin/discord-components-core" "packages/core"
           publish_if_new "@penwin/discord-components-react-render" "packages/react-render"
+
+          # The GitHub release is tagged with the core version. Only emit it when something was
+          # actually published, so a merge carrying no bump creates no release.
+          if [ -n "$published" ]; then
+            echo "version=$(node -p "require('./packages/core/package.json').version")" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Only runs when the step above actually published. The fork is past 1.0.0, so the version is
+      # used as it is (v4.4.0), matching the existing v4.0.x tags.
+      - name: Create the GitHub release
+        if: steps.publish.outputs.version != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="v${{ steps.publish.outputs.version }}"
+
+          # Same idempotency the publish step has, so a re-run after npm succeeded but this step did
+          # not still creates the release instead of skipping it forever.
+          if gh release view "$tag" > /dev/null 2>&1; then
+            echo "$tag already exists, nothing to do."
+            exit 0
+          fi
+
+          echo "Tagging ${{ github.sha }} as $tag"
+
+          gh release create "$tag" \
+            --target "${{ github.sha }}" \
+            --title "Release $tag" \
+            --generate-notes \
+            --latest
