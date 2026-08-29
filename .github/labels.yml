@@ -1,6 +1,0 @@
-- name: packages:core
-  color: 'fbca04'
-- name: packages:react
-  color: 'fbca04'
-- name: resolved in alpha
-  color: '445F94'
