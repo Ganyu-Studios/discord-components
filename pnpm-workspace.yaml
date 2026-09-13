@@ -2,8 +2,9 @@ packages:
   - packages/*
   - docs/
 
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - esbuild
-  - sharp
-  - unrs-resolver
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  rs-module-lexer: true
+  sharp: true
+  unrs-resolver: true
