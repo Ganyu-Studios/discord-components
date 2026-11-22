@@ -44,6 +44,8 @@ export class DiscordEmbed extends LitElement implements LightTheme {
 
 		:host .discord-embed-root {
 			display: grid;
+			/* minmax(0, …) so the column can be narrower than the embed's widest child on small screens. */
+			grid-template-columns: minmax(0, 1fr);
 			grid-auto-flow: row;
 			grid-row-gap: 0.25rem;
 			min-height: 0;
@@ -57,7 +59,7 @@ export class DiscordEmbed extends LitElement implements LightTheme {
 			align-self: start;
 			display: grid;
 			box-sizing: border-box;
-			max-width: 520px;
+			max-width: min(520px, 100%);
 			background-color: var(--background, #393a41);
 			border: 1px solid var(--border, #44454c);
 		}
@@ -69,10 +71,11 @@ export class DiscordEmbed extends LitElement implements LightTheme {
 
 		:host .discord-embed-wrapper .discord-embed-grid {
 			display: inline-grid;
-			grid-template-columns: auto -webkit-min-content;
-			grid-template-columns: auto min-content;
-			grid-template-columns: auto;
+			/* Content, then the thumbnail. Both explicit so media can span them with 1 / -1. */
+			grid-template-columns: minmax(0, 1fr) auto;
 			grid-template-rows: auto;
+			box-sizing: border-box;
+			max-width: 100%;
 			padding: 0.5rem 1rem 1rem 0.75rem;
 		}
 
@@ -179,7 +182,7 @@ export class DiscordEmbed extends LitElement implements LightTheme {
 
 		:host .discord-embed-image {
 			border-radius: 4px;
-			max-width: 350px;
+			max-width: min(350px, 100%);
 			max-height: 300px;
 			min-width: 100%;
 		}
@@ -190,6 +193,13 @@ export class DiscordEmbed extends LitElement implements LightTheme {
 			display: block;
 			grid-column: 1/1;
 			margin-top: 16px;
+		}
+
+		/* On narrow screens, run media under the thumbnail too instead of squeezing it into one column. */
+		@media (max-width: 600px) {
+			:host .discord-embed-media {
+				grid-column: 1 / -1;
+			}
 		}
 
 		:host .discord-embed-media.discord-embed-media-video {

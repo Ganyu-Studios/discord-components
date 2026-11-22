@@ -1,5 +1,5 @@
 import { consume, createContext, provide } from '@lit/context';
-import { css, html, LitElement } from 'lit';
+import { css, html, isServer, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
@@ -168,6 +168,10 @@ export class DiscordMessage extends LitElement implements LightTheme {
 		}
 
 		.discord-message-content {
+			/* Grow into the row but never past it: without min-width a wide child (an embed, a file,
+			   a long link) sets the minimum width and pushes the page sideways on small screens. */
+			flex: 1 1 auto;
+			min-width: 0;
 			width: 100%;
 			line-height: 160%;
 			font-weight: normal;
@@ -178,6 +182,7 @@ export class DiscordMessage extends LitElement implements LightTheme {
 			font-size: 1rem;
 			font-weight: 400;
 			word-break: break-word;
+			overflow-wrap: anywhere;
 			position: relative;
 		}
 
@@ -213,7 +218,7 @@ export class DiscordMessage extends LitElement implements LightTheme {
 
 		.discord-message-compact-indent {
 			display: grid;
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 
 		:host .discord-message-markup {
@@ -431,6 +436,9 @@ export class DiscordMessage extends LitElement implements LightTheme {
 	public dismissMessageClicked: () => void = () => {};
 
 	protected override willUpdate(): void {
+		// children are only inspectable on the client; during SSR the light DOM is streamed as-is.
+		if (isServer) return;
+
 		this.hasThread = Array.from(this.children).some((child): boolean => child.tagName.toLowerCase() === 'discord-thread');
 		this.highlight =
 			this.highlight ||

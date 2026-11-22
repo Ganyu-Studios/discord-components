@@ -113,7 +113,11 @@ export class DiscordMediaGallery extends LitElement {
 		this.setFullScreenSlotTarget = this.setFullScreenSlotTarget.bind(this);
 	}
 
-	@property({ type: Number, attribute: false })
+	/**
+	 * How many items the gallery lays out. Counted from the children in the browser; set it (and each item's
+	 * `slot="media-N"`) in the markup to get the right layout before that, e.g. when server-rendered.
+	 */
+	@property({ type: Number })
 	public size = 0;
 
 	@provide({ context: mediaItemsContext })
@@ -136,21 +140,17 @@ export class DiscordMediaGallery extends LitElement {
 	}
 
 	protected override updated(changed: PropertyValues) {
-		if (changed.has('mediaItems') || (changed.has('size') && changed.get('size') !== undefined)) return;
+		if (changed.has('mediaItems')) return;
 
-		const items = this.querySelectorAll('discord-media-gallery-item') as unknown as DiscordMediaGalleryItem[];
+		const items = [...this.querySelectorAll('discord-media-gallery-item')] as DiscordMediaGalleryItem[];
 
-		if (this.size === items.length) return;
+		// A size given in the markup still needs the items collected, for the fullscreen previewer.
+		if (this.size === items.length && this.mediaItems?.length === items.length) return;
 		this.size = items.length;
 
-		const mediaItems: DiscordMediaGalleryItem[] = [];
+		for (const [idx, item] of items.entries()) item.setAttribute('slot', `media-${idx + 1}`);
 
-		for (const [idx, item] of items.entries()) {
-			item.setAttribute('slot', `media-${idx + 1}`);
-			mediaItems.push(item);
-		}
-
-		this.mediaItems = mediaItems;
+		this.mediaItems = items;
 	}
 
 	protected override render() {

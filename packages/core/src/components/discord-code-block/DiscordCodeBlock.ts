@@ -9,11 +9,13 @@ import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import type { LightTheme } from '../../types.js';
+import { resetServerRenderedRoot } from '../_private/serverRenderedRoot.js';
 import { messagesLightTheme } from '../discord-messages/DiscordMessages.js';
 
 @customElement('discord-code-block')
 export class DiscordCodeBlock extends LitElement implements LightTheme {
 	protected override createRenderRoot() {
+		resetServerRenderedRoot(this, true);
 		return this;
 	}
 

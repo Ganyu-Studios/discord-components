@@ -203,21 +203,19 @@ import { Image } from 'astro:assets';
 
 	<div class="projects">
 		<ul>
-			{
-				templates.map((template) => (
-					<li class={`${template.color} tooltip`} data-tip={template.tooltipText}>
-						<div class="background" />
-						<a
-							href={`https://github.com/skyra-project/discord-components-implementations/tree/main/templates/${template.templateName}`}
-							target="_blank"
-							rel="noopener noreferrer"
-							title={template.title}
-						>
-							<Image src={template.image} alt={template.title} />
-						</a>
-					</li>
-				))
-			}
+			{templates.map((template) => (
+				<li class={`${template.color} tooltip`} data-tip={template.tooltipText}>
+					<div class="background" />
+					<a
+						href={`https://github.com/skyra-project/discord-components-implementations/tree/main/templates/${template.templateName}`}
+						target="_blank"
+						rel="noopener noreferrer"
+						title={template.title}
+					>
+						<Image src={template.image} alt={template.title} />
+					</a>
+				</li>
+			))}
 		</ul>
 	</div>
 </div>

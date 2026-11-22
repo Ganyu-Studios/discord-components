@@ -1,8 +1,11 @@
 import { css } from 'lit';
 
 export const DiscordPlaybackControlStyles = css`
+	/* The flex items below default to their content's min width (a range input is ~130px), which
+	   pushed the player past the edge on narrow screens. */
 	.discord-media-attachment-horizontal {
 		width: 100%;
+		min-width: 0;
 		display: flex;
 		align-self: stretch;
 	}
@@ -15,11 +18,13 @@ export const DiscordPlaybackControlStyles = css`
 		align-items: center;
 		cursor: pointer;
 		margin: 0 7px;
+		min-width: 0;
 	}
 
 	.discord-media-attachment-playback-control {
 		position: relative;
 		flex: 1 1 auto;
+		min-width: 0;
 		height: 6px;
 		border-radius: 3px;
 		background-color: hsl(210 calc(1 * 9.3%) 78.8% / 0.3);

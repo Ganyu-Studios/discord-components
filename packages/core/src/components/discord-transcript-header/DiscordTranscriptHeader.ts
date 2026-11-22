@@ -16,7 +16,10 @@ export class DiscordTranscriptHeader extends LitElement {
 		:host {
 			display: flex;
 			flex-direction: row;
-			max-height: 5rem;
+			align-items: flex-start;
+			/* Grows with the text: a fixed height let the description spill below the border on
+			   narrow screens. */
+			min-height: 5rem;
 			padding: 0.5rem;
 			gap: 0.5rem;
 			border-bottom: 1px solid rgba(79, 84, 92, 0.48);
@@ -24,8 +27,9 @@ export class DiscordTranscriptHeader extends LitElement {
 		}
 
 		.discord-header-icon {
-			float: left;
+			flex-shrink: 0;
 			width: 5rem;
+			height: 5rem;
 		}
 
 		.discord-header-icon > div {
@@ -42,17 +46,38 @@ export class DiscordTranscriptHeader extends LitElement {
 
 		.discord-header-icon > img {
 			border-radius: 50%;
-			width: auto;
+			width: 100%;
 			height: 100%;
+			object-fit: cover;
 		}
 
 		.discord-header-text {
 			flex-grow: 1;
+			min-width: 0;
+			overflow-wrap: anywhere;
 		}
 
 		.discord-header-text-guild {
 			font-size: 1.5rem;
 			font-weight: bold;
+		}
+
+		/* Last, so it wins over the rules above on small screens. */
+		@media (max-width: 480px) {
+			:host {
+				min-height: 3.5rem;
+			}
+
+			.discord-header-icon,
+			.discord-header-icon > div {
+				width: 3.5rem;
+				height: 3.5rem;
+				font-size: x-large;
+			}
+
+			.discord-header-text-guild {
+				font-size: 1.25rem;
+			}
 		}
 	`;
 

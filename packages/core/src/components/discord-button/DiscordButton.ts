@@ -1,5 +1,5 @@
 import { consume } from '@lit/context';
-import { css, html, LitElement } from 'lit';
+import { css, html, isServer, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { when } from 'lit/directives/when.js';
@@ -20,7 +20,8 @@ export class DiscordButton extends LitElement {
 			justify-content: center;
 			align-items: center;
 			cursor: pointer;
-			margin: 4px 8px 4px 0;
+			/* Spacing comes from the parent's gap (action row, section). A margin here doubled it. */
+			margin: 0;
 			width: auto;
 			height: 32px;
 			min-width: 60px;
@@ -187,6 +188,9 @@ export class DiscordButton extends LitElement {
 	}
 
 	public checkParentElement() {
+		// the parent is only known on the client; skip the structural validation during SSR.
+		if (isServer) return;
+
 		if (this.parentElement?.tagName.toLowerCase() !== 'discord-action-row' && this.parentElement?.tagName.toLowerCase() !== 'discord-section') {
 			throw new DiscordComponentsError('All <discord-button> components must be direct children of <discord-action-row>.');
 		}

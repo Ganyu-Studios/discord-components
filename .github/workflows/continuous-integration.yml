@@ -33,3 +33,9 @@ jobs:
       - name: Publish preview to pkg.pr.new
         if: github.repository == 'Ganyu-Studios/discord-components'
         run: pnpm dlx pkg-pr-new publish './packages/core' './packages/react' './packages/react-render'
+        env:
+          # pkg-pr-new rewrites workspace:^ dependencies to preview urls before packing, so the
+          # lockfile no longer matches the manifests. Packing runs each package's prepack through
+          # pnpm, and pnpm 12 checks the lockfile before running a script and aborts on that
+          # mismatch. The install step above already verified the real lockfile.
+          pnpm_config_verify_deps_before_run: 'false'

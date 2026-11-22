@@ -8,6 +8,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { when } from 'lit/directives/when.js';
 import type { LightTheme } from '../../types.js';
+import { resetServerRenderedRoot } from '../_private/serverRenderedRoot.js';
 import '../discord-link/DiscordLink.js';
 import { messagesLightTheme } from '../discord-messages/DiscordMessages.js';
 import AttachmentDownloadButton, {
@@ -98,6 +99,7 @@ export class DiscordTextFileAttachmentPreviewer extends LitElement implements Li
 	public lightTheme = false;
 
 	protected override createRenderRoot() {
+		resetServerRenderedRoot(this, true);
 		return this;
 	}
 

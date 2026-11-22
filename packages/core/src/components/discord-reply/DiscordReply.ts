@@ -197,7 +197,17 @@ export class DiscordReply extends LitElement implements LightTheme {
 			color: inherit;
 			font-size: inherit;
 			line-height: inherit;
-			white-space: pre;
+			/* One line, cut with an ellipsis. white-space alone cannot do it: slotted components
+			   (inline code, mentions) set their own white-space and would still wrap or push the page
+			   sideways on narrow screens, so the box is clamped to its first line instead. */
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 1;
+			line-clamp: 1;
+			min-width: 0;
+			overflow: hidden;
+			overflow-wrap: anywhere;
+			white-space: normal;
 			text-overflow: ellipsis;
 			user-select: none;
 			cursor: pointer;
@@ -425,7 +435,7 @@ export class DiscordReply extends LitElement implements LightTheme {
 						() =>
 							html`<span class="discord-clan-tag">
 								${
-									clanIcon === 'string'
+									typeof clanIcon === 'string'
 										? html`<img
 												srcset=${ifDefined(clanIcon)}
 												alt=${ifDefined(slicedClanTag)}
