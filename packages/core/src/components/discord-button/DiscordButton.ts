@@ -20,7 +20,8 @@ export class DiscordButton extends LitElement {
 			justify-content: center;
 			align-items: center;
 			cursor: pointer;
-			margin: 4px 8px 4px 0;
+			/* Spacing comes from the parent's gap (action row, section). A margin here doubled it. */
+			margin: 0;
 			width: auto;
 			height: 32px;
 			min-width: 60px;
