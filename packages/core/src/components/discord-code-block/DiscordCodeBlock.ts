@@ -3,13 +3,13 @@
  * https://github.com/ItzDerock/discord-components/tree/main/packages/core/src/components/discord-code-block
  */
 
-import { resetServerRenderedRoot } from '../_private/serverRenderedRoot.js';
 import { consume } from '@lit/context';
 import hljs from 'highlight.js';
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import type { LightTheme } from '../../types.js';
+import { resetServerRenderedRoot } from '../_private/serverRenderedRoot.js';
 import { messagesLightTheme } from '../discord-messages/DiscordMessages.js';
 
 @customElement('discord-code-block')

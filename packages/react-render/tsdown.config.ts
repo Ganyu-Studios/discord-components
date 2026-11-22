@@ -1,4 +1,4 @@
-import { rmdir } from 'node:fs';
+import { rm } from 'node:fs';
 import { defineConfig, type Options } from 'tsdown';
 
 const baseOptions: Options = {
@@ -15,7 +15,8 @@ const baseOptions: Options = {
 	}
 };
 
-rmdir('dist/core-bundle', { recursive: true }, () => {});
+// rmdir's recursive option is gone in newer Node versions; rm is the replacement.
+rm('dist/core-bundle', { recursive: true, force: true }, () => {});
 
 export default [
 	defineConfig({

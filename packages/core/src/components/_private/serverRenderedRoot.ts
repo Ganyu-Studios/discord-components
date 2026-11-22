@@ -30,17 +30,19 @@ export function resetServerRenderedRoot(element: HTMLElement, lightDom = false):
 
 let installed = false;
 
-/** Patch LitElement once so every component that keeps the default render root resets it. */
+/**
+ * Patch LitElement once so every component that keeps the default render root resets it.
+ */
 export function installServerRenderedRootReset(): void {
 	if (installed || isServer) return;
 	installed = true;
 
-	const prototype = LitElement.prototype as unknown as { createRenderRoot(this: LitElement): HTMLElement | DocumentFragment };
-	const createRenderRoot = prototype.createRenderRoot;
+	const prototype = LitElement.prototype as unknown as { createRenderRoot(this: LitElement): DocumentFragment | HTMLElement };
+	const original = prototype.createRenderRoot;
 
-	prototype.createRenderRoot = function patchedCreateRenderRoot(this: LitElement) {
+	prototype.createRenderRoot = function createRenderRoot(this: LitElement) {
 		resetServerRenderedRoot(this);
-		return createRenderRoot.call(this);
+		return original.call(this);
 	};
 }
 
