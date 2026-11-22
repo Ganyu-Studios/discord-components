@@ -37,16 +37,38 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 			display: contents;
 		}
 
+		dialog.media-fullscreen-dialog {
+			width: 100vw;
+			height: 100dvh;
+			max-width: none;
+			max-height: none;
+			margin: 0;
+			padding: 0;
+			border: 0;
+			background: transparent;
+			overflow: hidden;
+			/* Scroll gestures over the viewer must not scroll the page behind it. */
+			overscroll-behavior: contain;
+
+			&::backdrop {
+				background: transparent;
+				overflow: hidden;
+				overscroll-behavior: contain;
+			}
+		}
+
 		.media-fullscreen-previewer {
 			position: fixed;
 			inset: 0;
 			background-color: rgba(0, 0, 0, 0.92);
 			display: grid;
-			grid-template-rows: auto 1fr auto;
+			grid-template-rows: auto minmax(0, 1fr) auto;
+			grid-template-columns: minmax(0, 1fr);
 			gap: 8px;
 			z-index: 2000;
 			padding: 36px 24px;
 			user-select: none;
+			outline: none;
 			animation: fade-in 0.25s ease-out;
 
 			--button-border-color: color-mix(in oklab, hsl(240 calc(1 * 4%) 60.784% /0.1607843137254902) 100%, hsl(0 0% 0% /0.1607843137254902) 0%);
@@ -82,6 +104,7 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 					display: flex;
 					align-items: center;
 					gap: 12px;
+					min-width: 0;
 
 					&.hidden {
 						visibility: hidden;
@@ -95,10 +118,16 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 						border-radius: 50%;
 					}
 
+					img {
+						flex: none;
+					}
+
 					& > div {
 						display: flex;
 						flex-direction: column;
 						gap: 2px;
+						min-width: 0;
+						overflow: hidden;
 
 						span {
 							line-height: 16px;
@@ -111,6 +140,7 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 				.media-actions {
 					pointer-events: auto;
 					display: flex;
+					flex: none;
 					gap: 8px;
 
 					.group-buttons-container {
@@ -171,8 +201,8 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 				align-self: stretch;
 				overflow: hidden;
 				display: grid;
-				grid-template-columns: auto 1fr auto;
-				grid-template-rows: 1fr;
+				grid-template-columns: auto minmax(0, 1fr) auto;
+				grid-template-rows: minmax(0, 1fr);
 				gap: 12px;
 				pointer-events: none;
 
@@ -215,19 +245,23 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 
 			nav {
 				display: flex;
-				justify-content: center;
+				justify-content: safe center;
 				align-items: center;
+				min-width: 0;
 				pointer-events: none;
 				.items-navigation-container {
 					pointer-events: auto;
 					display: flex;
 					height: 40px;
+					max-width: 100%;
 					gap: 2px;
 					align-items: center;
-					justify-content: center;
 					border-radius: 8px;
-					overflow: hidden;
+					overflow-x: auto;
+					overflow-y: hidden;
+					scrollbar-width: none;
 					button {
+						flex: none;
 						width: 40px;
 						height: 40px;
 						padding: 0;
@@ -314,6 +348,30 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 				nav {
 					opacity: 0;
 					pointer-events: none !important;
+				}
+			}
+		}
+
+		@media (max-width: 600px) {
+			.media-fullscreen-previewer {
+				padding: 12px 8px;
+
+				header .author-info {
+					gap: 8px;
+
+					img {
+						width: 32px;
+						height: 32px;
+					}
+				}
+
+				main {
+					gap: 4px;
+				}
+
+				button.btn {
+					min-height: 32px;
+					min-width: 32px;
 				}
 			}
 		}
@@ -629,12 +687,44 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 			this.prevSlot();
 		} else if (event.key === 'ArrowRight') {
 			this.nextSlot();
-		} else if (event.key === 'Escape') {
-			this.close();
 		}
 	}
 
 	private containerRef: Ref<HTMLDivElement> = createRef();
+
+	private dialogRef: Ref<HTMLDialogElement> = createRef();
+
+	/**
+	 * Escape (or the back gesture) asks the dialog to close: run the fade-out instead of closing at once.
+	 */
+	private handleDialogCancel(event: Event) {
+		event.preventDefault();
+		this.close();
+	}
+
+	/**
+	 * The dialog can still close natively (a repeated Escape cannot always be prevented): finish closing.
+	 */
+	private handleDialogClose() {
+		if (this.isOpen) this.finishClose();
+	}
+
+	private finishClose() {
+		window.clearTimeout(this.__closeTimeout);
+		// Closing the dialog before it leaves the DOM returns focus to the media that opened it.
+		if (this.dialogRef.value?.open) this.dialogRef.value.close();
+		this.isOpen = false;
+		this.isZoomed = false;
+		this.isCurrentlyClosing = false;
+
+		const event = new CustomEvent<CloseFullScreenEventDetail>('close-full-screen', {
+			detail: {
+				closed: true
+			}
+		});
+
+		this.dispatchEvent(event);
+	}
 
 	private isCurrentlyClosing = false;
 
@@ -643,19 +733,7 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 		this.isCurrentlyClosing = true;
 		const container = this.containerRef.value;
 		container?.classList.add('closing');
-		this.__closeTimeout = window.setTimeout(() => {
-			this.isOpen = false;
-			this.isZoomed = false;
-
-			const event = new CustomEvent<CloseFullScreenEventDetail>('close-full-screen', {
-				detail: {
-					closed: true
-				}
-			});
-
-			this.dispatchEvent(event);
-			this.isCurrentlyClosing = false;
-		}, 250);
+		this.__closeTimeout = window.setTimeout(() => this.finishClose(), 250);
 	}
 
 	private __closeTimeout: number | undefined;
@@ -678,6 +756,19 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 	public override updated(changed: PropertyValues) {
 		super.updated(changed);
 		this.patchCurrentMediaContainerHeight();
+
+		// A modal dialog puts the viewer in the top layer, makes the page inert and handles Escape.
+		// The arrow keys listen on the container, so it takes focus.
+		if (changed.has('isOpen') && this.isOpen) {
+			const dialog = this.dialogRef.value;
+			if (dialog && !dialog.open) dialog.showModal();
+			this.containerRef.value?.focus({ preventScroll: true });
+		}
+
+		// The thumbnail strip scrolls on narrow screens: keep the current one in view.
+		if (changed.has('currentSlot') || changed.has('isOpen')) {
+			this.renderRoot.querySelector('.items-navigation-container button.selected')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+		}
 	}
 
 	protected override render() {
@@ -689,53 +780,86 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 		const isOnlyOne = this.mediaItems.length === 1;
 
 		return html`
-			<div
-				class=${classMap({
-					'media-fullscreen-previewer': true,
-					zoomed: this.isZoomed,
-					isOnlyOne
-				})}
-				${ref(this.containerRef)}
-				tabindex="-1"
-				@click=${this.handleContainerClick}
-				@keyup=${this.handleContainerKeyUp}
+			<dialog
+				class="media-fullscreen-dialog"
+				aria-label="Media viewer"
+				${ref(this.dialogRef)}
+				@cancel=${this.handleDialogCancel}
+				@close=${this.handleDialogClose}
 			>
-				<header>
-					<div
-						class=${classMap({
-							'author-info': true,
-							hidden: !this.profile
-						})}
-					>
-						<img width="40" height="40" src=${ifDefined(this.profile?.avatar)} alt="avatar" />
-						<div>
-							${when(
-								this.profile,
-								() => html`
-									<discord-author-info
-										author=${this.profile!.author ?? ''}
-										?bot=${this.profile!.bot ?? false}
-										?server=${this.profile!.server ?? false}
-										?official-app=${this.profile!.officialApp ?? false}
-										?verified=${this.profile!.verified ?? false}
-										?op=${this.profile!.op ?? false}
-										role-color=${this.profile!.roleColor ?? ''}
-										role-icon=${this.profile!.roleIcon ?? ''}
-										role-name=${this.profile!.roleName ?? ''}
-										clan-icon=${this.profile!.clanIcon ?? ''}
-										clan-tag=${this.profile!.clanTag ?? ''}
-									></discord-author-info>
-								`
-							)}
-							<span class="timestamp">${timeFormatter.format(this.timestamp ? new Date(this.timestamp) : new Date())}</span>
+				<div
+					class=${classMap({
+						'media-fullscreen-previewer': true,
+						zoomed: this.isZoomed,
+						isOnlyOne
+					})}
+					${ref(this.containerRef)}
+					tabindex="-1"
+					@click=${this.handleContainerClick}
+					@keyup=${this.handleContainerKeyUp}
+				>
+					<header>
+						<div
+							class=${classMap({
+								'author-info': true,
+								hidden: !this.profile
+							})}
+						>
+							<img width="40" height="40" src=${ifDefined(this.profile?.avatar)} alt="avatar" />
+							<div>
+								${when(
+									this.profile,
+									() => html`
+										<discord-author-info
+											author=${this.profile!.author ?? ''}
+											?bot=${this.profile!.bot ?? false}
+											?server=${this.profile!.server ?? false}
+											?official-app=${this.profile!.officialApp ?? false}
+											?verified=${this.profile!.verified ?? false}
+											?op=${this.profile!.op ?? false}
+											role-color=${this.profile!.roleColor ?? ''}
+											role-icon=${this.profile!.roleIcon ?? ''}
+											role-name=${this.profile!.roleName ?? ''}
+											clan-icon=${this.profile!.clanIcon ?? ''}
+											clan-tag=${this.profile!.clanTag ?? ''}
+										></discord-author-info>
+									`
+								)}
+								<span class="timestamp">${timeFormatter.format(this.timestamp ? new Date(this.timestamp) : new Date())}</span>
+							</div>
 						</div>
-					</div>
-					<div class="media-actions">
-						<div class="group-buttons-container">
-							${when(
-								!isVideo,
-								() =>
-									html`<button class="btn" @click=${this.zoomIn}>
+						<div class="media-actions">
+							<div class="group-buttons-container">
+								${when(
+									!isVideo,
+									() =>
+										html`<button class="btn" @click=${this.zoomIn}>
+											<svg
+												aria-hidden="true"
+												role="img"
+												xmlns="http://www.w3.org/2000/svg"
+												width="16"
+												height="16"
+												fill="none"
+												viewBox="0 0 24 24"
+											>
+												<path
+													fill="currentColor"
+													fill-rule="evenodd"
+													d="M15.62 17.03a9 9 0 1 1 1.41-1.41l4.68 4.67a1 1 0 0 1-1.42 1.42l-4.67-4.68ZM17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+													clip-rule="evenodd"
+													class=""
+												></path>
+												<path
+													fill="currentColor"
+													d="M11 7a1 1 0 1 0-2 0v2H7a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0v-2h2a1 1 0 1 0 0-2h-2V7Z"
+													class=""
+												></path>
+											</svg>
+										</button>`
+								)}
+								<button class="btn">
+									<a href=${currentItemSlot.media} target="_blank">
 										<svg
 											aria-hidden="true"
 											role="img"
@@ -747,146 +871,124 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 										>
 											<path
 												fill="currentColor"
-												fill-rule="evenodd"
-												d="M15.62 17.03a9 9 0 1 1 1.41-1.41l4.68 4.67a1 1 0 0 1-1.42 1.42l-4.67-4.68ZM17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
-												clip-rule="evenodd"
+												d="M15 2a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0V4.41l-4.3 4.3a1 1 0 1 1-1.4-1.42L19.58 3H16a1 1 0 0 1-1-1Z"
 												class=""
 											></path>
 											<path
 												fill="currentColor"
-												d="M11 7a1 1 0 1 0-2 0v2H7a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0v-2h2a1 1 0 1 0 0-2h-2V7Z"
+												d="M5 2a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-6a1 1 0 1 0-2 0v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h6a1 1 0 1 0 0-2H5Z"
 												class=""
 											></path>
 										</svg>
-									</button>`
-							)}
-							<button class="btn">
-								<a href=${currentItemSlot.media} target="_blank">
-									<svg
-										aria-hidden="true"
-										role="img"
-										xmlns="http://www.w3.org/2000/svg"
-										width="16"
-										height="16"
-										fill="none"
-										viewBox="0 0 24 24"
-									>
-										<path
-											fill="currentColor"
-											d="M15 2a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0V4.41l-4.3 4.3a1 1 0 1 1-1.4-1.42L19.58 3H16a1 1 0 0 1-1-1Z"
-											class=""
-										></path>
-										<path
-											fill="currentColor"
-											d="M5 2a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-6a1 1 0 1 0-2 0v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h6a1 1 0 1 0 0-2H5Z"
-											class=""
-										></path>
-									</svg>
-								</a>
+									</a>
+								</button>
+							</div>
+							<button class="btn" @click=${this.close}>
+								<svg
+									aria-hidden="true"
+									role="img"
+									xmlns="http://www.w3.org/2000/svg"
+									width="20"
+									height="20"
+									fill="none"
+									viewBox="0 0 24 24"
+								>
+									<path
+										fill="currentColor"
+										d="M17.3 18.7a1 1 0 0 0 1.4-1.4L13.42 12l5.3-5.3a1 1 0 0 0-1.42-1.4L12 10.58l-5.3-5.3a1 1 0 0 0-1.4 1.42L10.58 12l-5.3 5.3a1 1 0 1 0 1.42 1.4L12 13.42l5.3 5.3Z"
+										class=""
+									></path>
+								</svg>
 							</button>
 						</div>
-						<button class="btn" @click=${this.close}>
-							<svg
-								aria-hidden="true"
-								role="img"
-								xmlns="http://www.w3.org/2000/svg"
-								width="20"
-								height="20"
-								fill="none"
-								viewBox="0 0 24 24"
-							>
-								<path
-									fill="currentColor"
-									d="M17.3 18.7a1 1 0 0 0 1.4-1.4L13.42 12l5.3-5.3a1 1 0 0 0-1.42-1.4L12 10.58l-5.3-5.3a1 1 0 0 0-1.4 1.42L10.58 12l-5.3 5.3a1 1 0 1 0 1.42 1.4L12 13.42l5.3 5.3Z"
-									class=""
-								></path>
-							</svg>
-						</button>
-					</div>
-				</header>
-				<main>
-					<div class="button-container">
-						<button @click=${this.prevSlot} class="btn">
-							<svg
-								aria-hidden="true"
-								role="img"
-								xmlns="http://www.w3.org/2000/svg"
-								width="20"
-								height="20"
-								fill="none"
-								viewBox="0 0 24 24"
-							>
-								<path
-									fill="currentColor"
-									d="M3.3 11.3a1 1 0 0 0 0 1.4l8 8a1 1 0 1 0 1.4-1.4L6.42 13H20a1 1 0 1 0 0-2H6.41l6.3-6.3a1 1 0 0 0-1.42-1.4l-8 8Z"
-									class=""
-								></path>
-							</svg>
-						</button>
-					</div>
-					<div class="current-media-container" ${ref(this.currentMediaContainer)}>
-						${keyed(
-							currentItemSlot.media,
-							when(
-								isVideo,
-								() =>
-									html`<discord-video-attachment
-										href=${currentItemSlot.media}
-										class="video-attachment-in-fullscreen-previewer"
-										width=${ifDefined(currentItemSlot.width)}
-										height=${ifDefined(currentItemSlot.height)}
-									></discord-video-attachment>`,
-								() =>
-									html`<img
-										${ref(this.imageRef)}
-										@wheel=${this.handleImageWheel}
-										@mousemove=${this.handleImageMouseMove}
-										@mouseup=${this.handleImageMouseUp}
-										@mousedown=${this.handleImageMouseDown}
-										@click=${this.handleImageClick}
-										draggable="false"
-										src=${currentItemSlot.media}
-										alt=${currentItemSlot.media}
-										class="current-image-preview"
-									/>`
-							)
-						)}
-					</div>
-					<div class="button-container">
-						<button @click=${this.nextSlot} class="btn">
-							<svg
-								aria-hidden="true"
-								role="img"
-								xmlns="http://www.w3.org/2000/svg"
-								width="20"
-								height="20"
-								fill="none"
-								viewBox="0 0 24 24"
-							>
-								<path
-									fill="currentColor"
-									d="M20.7 12.7a1 1 0 0 0 0-1.4l-8-8a1 1 0 1 0-1.4 1.4l6.29 6.3H4a1 1 0 1 0 0 2h13.59l-6.3 6.3a1 1 0 0 0 1.42 1.4l8-8Z"
-									class=""
-								></path>
-							</svg>
-						</button>
-					</div>
-				</main>
-				<nav>
-					<div class="items-navigation-container">
-						${this.mediaItems.map((item, idx) => {
-							const isVideo = DiscordMediaGalleryItem.isVideo(item.media, item.mimeType);
-							return html`<button @click=${() => this.setCurrentSlot(idx)} class=${classMap({ selected: this.currentSlot === idx })}>
-								${when(
+					</header>
+					<main>
+						<div class="button-container">
+							<button @click=${this.prevSlot} class="btn">
+								<svg
+									aria-hidden="true"
+									role="img"
+									xmlns="http://www.w3.org/2000/svg"
+									width="20"
+									height="20"
+									fill="none"
+									viewBox="0 0 24 24"
+								>
+									<path
+										fill="currentColor"
+										d="M3.3 11.3a1 1 0 0 0 0 1.4l8 8a1 1 0 1 0 1.4-1.4L6.42 13H20a1 1 0 1 0 0-2H6.41l6.3-6.3a1 1 0 0 0-1.42-1.4l-8 8Z"
+										class=""
+									></path>
+								</svg>
+							</button>
+						</div>
+						<div class="current-media-container" ${ref(this.currentMediaContainer)}>
+							${keyed(
+								currentItemSlot.media,
+								when(
 									isVideo,
-									() => html`<video src=${item.media} alt=${item.media}></video>`,
-									() => html`<img src=${item.media} alt=${item.media} />`
-								)}
-							</button>`;
-						})}
-					</div>
-				</nav>
-			</div>
+									() =>
+										html`<discord-video-attachment
+											href=${currentItemSlot.media}
+											class="video-attachment-in-fullscreen-previewer"
+											width=${ifDefined(currentItemSlot.width)}
+											height=${ifDefined(currentItemSlot.height)}
+										></discord-video-attachment>`,
+									() =>
+										html`<img
+											${ref(this.imageRef)}
+											@wheel=${this.handleImageWheel}
+											@mousemove=${this.handleImageMouseMove}
+											@mouseup=${this.handleImageMouseUp}
+											@mousedown=${this.handleImageMouseDown}
+											@click=${this.handleImageClick}
+											draggable="false"
+											src=${currentItemSlot.media}
+											alt=${currentItemSlot.media}
+											class="current-image-preview"
+										/>`
+								)
+							)}
+						</div>
+						<div class="button-container">
+							<button @click=${this.nextSlot} class="btn">
+								<svg
+									aria-hidden="true"
+									role="img"
+									xmlns="http://www.w3.org/2000/svg"
+									width="20"
+									height="20"
+									fill="none"
+									viewBox="0 0 24 24"
+								>
+									<path
+										fill="currentColor"
+										d="M20.7 12.7a1 1 0 0 0 0-1.4l-8-8a1 1 0 1 0-1.4 1.4l6.29 6.3H4a1 1 0 1 0 0 2h13.59l-6.3 6.3a1 1 0 0 0 1.42 1.4l8-8Z"
+										class=""
+									></path>
+								</svg>
+							</button>
+						</div>
+					</main>
+					<nav>
+						<div class="items-navigation-container">
+							${this.mediaItems.map((item, idx) => {
+								const isVideo = DiscordMediaGalleryItem.isVideo(item.media, item.mimeType);
+								return html`<button
+									@click=${() => this.setCurrentSlot(idx)}
+									class=${classMap({ selected: this.currentSlot === idx })}
+								>
+									${when(
+										isVideo,
+										() => html`<video src=${item.media} alt=${item.media}></video>`,
+										() => html`<img src=${item.media} alt=${item.media} />`
+									)}
+								</button>`;
+							})}
+						</div>
+					</nav>
+				</div>
+			</dialog>
 		`;
 	}
 }
