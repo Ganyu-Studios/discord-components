@@ -1,3 +1,4 @@
+import { resetServerRenderedRoot } from '../_private/serverRenderedRoot.js';
 import { consume } from '@lit/context';
 import { createPopper } from '@popperjs/core';
 import hljs from 'highlight.js';
@@ -98,6 +99,7 @@ export class DiscordTextFileAttachmentPreviewer extends LitElement implements Li
 	public lightTheme = false;
 
 	protected override createRenderRoot() {
+		resetServerRenderedRoot(this, true);
 		return this;
 	}
 

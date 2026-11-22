@@ -1,5 +1,8 @@
 /* eslint-disable vars-on-top */
 
+// First, so it is installed before any component below registers and upgrades.
+import './components/_private/serverRenderedRoot.js';
+
 import type { ChannelSelectMenuOptionData } from './components/discord-channel-select-menu-option/DiscordChannelSelectMenuOption.js';
 import type { RoleSelectMenuOptionData } from './components/discord-role-select-menu-option/DiscordRoleSelectMenuOption.js';
 import type { UserSelectMenuOptionData } from './components/discord-user-select-menu-option/DiscordUserSelectMenuOption.js';

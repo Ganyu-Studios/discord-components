@@ -1,6 +1,6 @@
 {
 	"name": "@penwin/discord-components-core",
-	"version": "4.5.0",
+	"version": "4.6.0",
 	"description": "Web components to easily build and display fake Discord messages on your webpages.",
 	"author": "@skyra",
 	"license": "MIT",
@@ -11,6 +11,7 @@
 	"customElements": "custom-elements.json",
 	"exports": {
 		".": "./dist/index.js",
+		"./ssr": "./dist/ssr/index.js",
 		"./discord-action-row.js": "./dist/components/discord-action-row/DiscordActionRow.js",
 		"./discord-attachments.js": "./dist/components/discord-attachments/DiscordAttachments.js",
 		"./discord-audio-attachment.js": "./dist/components/discord-audio-attachment/DiscordAudioAttachment.js",
@@ -82,6 +83,7 @@
 	},
 	"sideEffects": [
 		"./dist/index.js",
+		"./dist/ssr/index.js",
 		"./dist/components/discord-action-row/DiscordActionRow.js",
 		"./dist/components/discord-attachments/DiscordAttachments.js",
 		"./dist/components/discord-audio-attachment/DiscordAudioAttachment.js",
@@ -167,6 +169,7 @@
 		"npm-publish": "pnpm npm publish"
 	},
 	"dependencies": {
+		"@lit-labs/ssr": "^4.1.0",
 		"@lit/context": "^1.1.6",
 		"@popperjs/core": "^2.11.8",
 		"@types/pako": "^3.0.0",
