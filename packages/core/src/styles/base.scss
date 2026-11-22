@@ -462,8 +462,15 @@ discord-text-file-attachment-previewer {
 		color: var(--tfp-text);
 		overflow: visible;
 
+		// Scroll gestures over the full view or its backdrop must not scroll the page behind it.
+		&:modal {
+			overscroll-behavior: contain;
+		}
+
 		&::backdrop {
 			background-color: rgba(0, 0, 0, 0.85);
+			overflow: hidden;
+			overscroll-behavior: contain;
 		}
 
 		&[open] {

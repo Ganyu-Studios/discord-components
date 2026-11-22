@@ -1,5 +1,5 @@
 // The dialog listens to clicks only to close on its backdrop; Escape closes it natively.
-/* eslint-disable lit-a11y/click-events-have-key-events */
+
 import { consume } from '@lit/context';
 import { createPopper, type Instance as PopperInstance } from '@popperjs/core';
 import hljs from 'highlight.js';
@@ -95,6 +95,11 @@ function languageLabel(language: string | undefined): string {
 }
 
 type Popup = 'language' | 'menu';
+
+/**
+ * `<dialog closedby="any">` closes on a backdrop click natively; elsewhere a pointer fallback does.
+ */
+const supportsClosedBy = !isServer && 'closedBy' in HTMLDialogElement.prototype;
 type Place = 'full' | 'inline';
 
 @customElement('discord-text-file-attachment-previewer')
@@ -211,17 +216,29 @@ export class DiscordTextFileAttachmentPreviewer extends LitElement implements Li
 
 	private popper: PopperInstance | null = null;
 
+	/**
+	 * The trigger pressed while its popup was open. Light dismiss may already have closed the popup by
+	 * the time its click arrives, so the click must not open it again.
+	 */
+	private pressedOpenTrigger: string | null = null;
+
+	/**
+	 * Whether the open popup was opened from the keyboard, which moves focus into it.
+	 */
+	private openedFromKeyboard = false;
+
+	private wrapCloseTimeout: number | undefined;
+
+	/**
+	 * Whether the pointer went down outside the full view, for the light-dismiss fallback.
+	 */
+	private pressedOutsideDialog = false;
+
 	private readonly dialogRef = createRef<HTMLDialogElement>();
 
 	private readonly inlineBodyRef = createRef<HTMLDivElement>();
 
 	private readonly inputRef = createRef<HTMLInputElement>();
-
-	public constructor() {
-		super();
-		this.handleOutsidePointer = this.handleOutsidePointer.bind(this);
-		this.handleKeydown = this.handleKeydown.bind(this);
-	}
 
 	protected override createRenderRoot() {
 		resetServerRenderedRoot(this, true);
@@ -271,31 +288,37 @@ export class DiscordTextFileAttachmentPreviewer extends LitElement implements Li
 			if (this.fullView && dialog && !dialog.open) dialog.showModal();
 		}
 
-		if (changed.has('popup')) this.positionPopup();
+		if (changed.has('popup')) this.showPopup();
 	}
 
-	private openPopup(kind: Popup, place: Place) {
-		if (this.popup?.kind === kind && this.popup.place === place) {
-			this.closePopup();
-			return;
-		}
+	private isPopupOpen(kind: Popup, place: Place) {
+		return this.popup?.kind === kind && this.popup.place === place;
+	}
 
+	private openPopup(kind: Popup, place: Place, fromKeyboard = false) {
+		window.clearTimeout(this.wrapCloseTimeout);
 		this.popper?.destroy();
 		this.popper = null;
 		this.currentSearch = '';
+		this.openedFromKeyboard = fromKeyboard;
 		this.popup = { kind, place };
-		document.addEventListener('pointerdown', this.handleOutsidePointer, true);
-		document.addEventListener('keydown', this.handleKeydown, true);
 	}
 
-	private closePopup() {
+	/**
+	 * Close the open popup. Focus goes back to its trigger when it was inside the popup, without a
+	 * focus ring after a pointer action.
+	 */
+	private closePopup(focusVisible = true) {
+		const elements = this.popupElements();
+		if (elements?.popup.contains(document.activeElement)) {
+			elements.anchor.focus({ preventScroll: true, focusVisible } as FocusOptions);
+		}
+
+		window.clearTimeout(this.wrapCloseTimeout);
 		this.popper?.destroy();
 		this.popper = null;
 		this.popup = null;
 		this.currentSearch = '';
-		if (isServer) return;
-		document.removeEventListener('pointerdown', this.handleOutsidePointer, true);
-		document.removeEventListener('keydown', this.handleKeydown, true);
 	}
 
 	private popupElements() {
@@ -306,14 +329,18 @@ export class DiscordTextFileAttachmentPreviewer extends LitElement implements Li
 		return anchor && popup ? { anchor, popup } : null;
 	}
 
-	private positionPopup() {
+	private showPopup() {
 		const elements = this.popupElements();
 		if (!elements) return;
+		const { anchor, popup } = elements;
 
-		// The top layer keeps the popup above later messages and inside the full view's dialog.
-		if (typeof elements.popup.showPopover === 'function') elements.popup.showPopover();
+		// A popover sits in the top layer, above later messages and inside the full view's dialog.
+		// `source` keeps the trigger out of light dismiss, so clicking it toggles the popup.
+		if (typeof popup.showPopover === 'function') {
+			(popup as HTMLElement & { showPopover(options?: { source?: HTMLElement }): void }).showPopover({ source: anchor });
+		}
 
-		this.popper = createPopper(elements.anchor, elements.popup, {
+		this.popper = createPopper(anchor, popup, {
 			placement: 'top-end',
 			strategy: 'fixed',
 			modifiers: [
@@ -324,21 +351,67 @@ export class DiscordTextFileAttachmentPreviewer extends LitElement implements Li
 		});
 
 		if (this.popup?.kind === 'language') this.inputRef.value?.focus({ preventScroll: true });
+		else if (this.openedFromKeyboard) popup.querySelector<HTMLElement>('.tfp-menu-item')?.focus({ preventScroll: true });
 	}
 
-	private handleOutsidePointer(event: PointerEvent) {
-		const elements = this.popupElements();
-		const path = event.composedPath();
-		if (elements && (path.includes(elements.popup) || path.includes(elements.anchor))) return;
-		this.closePopup();
+	private handlePopupToggle(event: ToggleEvent) {
+		// Light dismiss or Escape closed it natively: drop it from the state too. A late event from a
+		// popup that was already replaced is ignored.
+		if (event.newState === 'closed' && event.target === this.popupElements()?.popup) this.closePopup();
 	}
 
-	private handleKeydown(event: KeyboardEvent) {
-		if (event.key !== 'Escape') return;
-		// Close the popup first; a second Escape closes the full view.
+	private handleTriggerPointerDown(kind: Popup, place: Place) {
+		this.pressedOpenTrigger = this.isPopupOpen(kind, place) ? `${place}-${kind}` : null;
+	}
+
+	private handleTriggerClick(event: MouseEvent, kind: Popup, place: Place) {
+		const wasOpen = this.pressedOpenTrigger === `${place}-${kind}` || this.isPopupOpen(kind, place);
+		this.pressedOpenTrigger = null;
+
+		// A click with no pointer (`detail` 0) came from Enter or Space.
+		if (wasOpen) this.closePopup(event.detail === 0);
+		else this.openPopup(kind, place, event.detail === 0);
+	}
+
+	private handleMenuTriggerKeydown(event: KeyboardEvent, place: Place) {
+		if (event.key !== 'ArrowDown') return;
 		event.preventDefault();
-		event.stopPropagation();
-		this.closePopup();
+
+		if (this.isPopupOpen('menu', place)) this.popupElements()?.popup.querySelector<HTMLElement>('.tfp-menu-item')?.focus();
+		else this.openPopup('menu', place, true);
+	}
+
+	private handleMenuKeydown(event: KeyboardEvent) {
+		const items = [...(event.currentTarget as HTMLElement).querySelectorAll<HTMLElement>('.tfp-menu-item')];
+		const current = items.indexOf(document.activeElement as HTMLElement);
+		const last = items.length - 1;
+
+		let next: number;
+		switch (event.key) {
+			case 'ArrowDown':
+				next = current >= last ? 0 : current + 1;
+				break;
+			case 'ArrowUp':
+				next = current <= 0 ? last : current - 1;
+				break;
+			case 'Home':
+				next = 0;
+				break;
+			case 'End':
+				next = last;
+				break;
+			case 'Tab':
+				// Tab leaves the menu and closes it; focus moves on as usual.
+				this.popper?.destroy();
+				this.popper = null;
+				this.popup = null;
+				return;
+			default:
+				return;
+		}
+
+		event.preventDefault();
+		items[next]?.focus();
 	}
 
 	private toggleExpanded() {
@@ -360,19 +433,37 @@ export class DiscordTextFileAttachmentPreviewer extends LitElement implements Li
 		this.closePopup();
 	}
 
-	private handleDialogClick(event: MouseEvent) {
-		// A click on the backdrop lands on the dialog itself.
-		if (event.target === this.dialogRef.value) this.closeFullView();
+	private isOutsideDialog(event: PointerEvent) {
+		const dialog = this.dialogRef.value;
+		if (!dialog || (event.target as Element).closest('[popover]')) return false;
+		const rect = dialog.getBoundingClientRect();
+		return event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom;
 	}
 
-	private toggleWrap() {
+	// Light-dismiss fallback where `closedby` is missing. It tests the pointer position, not the
+	// target, and needs both the press and the release outside, so a text selection that ends on the
+	// backdrop does not close the full view.
+	private handleDialogPointerDown(event: PointerEvent) {
+		if (supportsClosedBy) return;
+		this.pressedOutsideDialog = this.isOutsideDialog(event);
+	}
+
+	private handleDialogPointerUp(event: PointerEvent) {
+		if (supportsClosedBy) return;
+		if (this.pressedOutsideDialog && this.isOutsideDialog(event)) this.closeFullView();
+		this.pressedOutsideDialog = false;
+	}
+
+	private toggleWrap(event: MouseEvent) {
 		this.wrapText = !this.wrapText;
-		this.closePopup();
+		// Keep the menu up for a moment so the changed check mark is visible.
+		const focusVisible = event.detail === 0;
+		this.wrapCloseTimeout = window.setTimeout(() => this.closePopup(focusVisible), 300);
 	}
 
-	private selectLanguage(language: string) {
+	private selectLanguage(event: MouseEvent, language: string) {
 		this.language = language;
-		this.closePopup();
+		this.closePopup(event.detail === 0);
 	}
 
 	private handleSearchInput(event: Event) {
@@ -409,7 +500,13 @@ export class DiscordTextFileAttachmentPreviewer extends LitElement implements Li
 	private renderLanguageSelector(place: Place) {
 		let shown = 0;
 
-		return html`<div class="language-selector" popover="manual" data-popup="${place}-language">
+		return html`<div
+			class="language-selector"
+			popover="auto"
+			aria-label="Change language"
+			data-popup="${place}-language"
+			@toggle=${this.handlePopupToggle}
+		>
 			<label class="language-selector-input-container">
 				<input
 					type="text"
@@ -434,7 +531,7 @@ export class DiscordTextFileAttachmentPreviewer extends LitElement implements Li
 					return html`<li>
 						<button
 							class=${classMap({ 'language-selector-item': true, selected: this.language === language })}
-							@click=${() => this.selectLanguage(language)}
+							@click=${(event: MouseEvent) => this.selectLanguage(event, language)}
 						>
 							${language}
 						</button>
@@ -453,7 +550,15 @@ export class DiscordTextFileAttachmentPreviewer extends LitElement implements Li
 	}
 
 	private renderMenu(place: Place) {
-		return html`<div class="tfp-menu" role="menu" popover="manual" data-popup="${place}-menu">
+		return html`<div
+			class="tfp-menu"
+			role="menu"
+			aria-label="More"
+			popover="auto"
+			data-popup="${place}-menu"
+			@toggle=${this.handlePopupToggle}
+			@keydown=${this.handleMenuKeydown}
+		>
 			<a
 				class="tfp-menu-item"
 				role="menuitem"
@@ -461,7 +566,7 @@ export class DiscordTextFileAttachmentPreviewer extends LitElement implements Li
 				target="_blank"
 				rel="noreferrer noopener"
 				download=${ifDefined(this.name)}
-				@click=${this.closePopup}
+				@click=${(event: MouseEvent) => this.closePopup(event.detail === 0)}
 			>
 				<span>Download</span>${AttachmentDownloadButton()}
 			</a>
@@ -499,7 +604,8 @@ export class DiscordTextFileAttachmentPreviewer extends LitElement implements Li
 					aria-label="Change language"
 					aria-expanded=${open('language') ? 'true' : 'false'}
 					data-popup-anchor="${place}-language"
-					@click=${() => this.openPopup('language', place)}
+					@pointerdown=${() => this.handleTriggerPointerDown('language', place)}
+					@click=${(event: MouseEvent) => this.handleTriggerClick(event, 'language', place)}
 				>
 					${AttachmentLanguageSelectorSvg()}
 				</button>
@@ -514,7 +620,9 @@ export class DiscordTextFileAttachmentPreviewer extends LitElement implements Li
 					aria-haspopup="menu"
 					aria-expanded=${open('menu') ? 'true' : 'false'}
 					data-popup-anchor="${place}-menu"
-					@click=${() => this.openPopup('menu', place)}
+					@pointerdown=${() => this.handleTriggerPointerDown('menu', place)}
+					@click=${(event: MouseEvent) => this.handleTriggerClick(event, 'menu', place)}
+					@keydown=${(event: KeyboardEvent) => this.handleMenuTriggerKeydown(event, place)}
 				>
 					${TextFileMoreSvg()}
 				</button>
@@ -535,9 +643,11 @@ export class DiscordTextFileAttachmentPreviewer extends LitElement implements Li
 			<dialog
 				class=${classMap({ 'tfp-dialog': true, 'tfp-wrap': this.wrapText })}
 				aria-label=${ifDefined(this.name)}
+				closedby="any"
 				${ref(this.dialogRef)}
 				@close=${this.handleDialogClose}
-				@click=${this.handleDialogClick}
+				@pointerdown=${this.handleDialogPointerDown}
+				@pointerup=${this.handleDialogPointerUp}
 			>
 				${
 					this.fullView
