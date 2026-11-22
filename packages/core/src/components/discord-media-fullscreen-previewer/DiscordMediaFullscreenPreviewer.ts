@@ -42,11 +42,13 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 			inset: 0;
 			background-color: rgba(0, 0, 0, 0.92);
 			display: grid;
-			grid-template-rows: auto 1fr auto;
+			grid-template-rows: auto minmax(0, 1fr) auto;
+			grid-template-columns: minmax(0, 1fr);
 			gap: 8px;
 			z-index: 2000;
 			padding: 36px 24px;
 			user-select: none;
+			outline: none;
 			animation: fade-in 0.25s ease-out;
 
 			--button-border-color: color-mix(in oklab, hsl(240 calc(1 * 4%) 60.784% /0.1607843137254902) 100%, hsl(0 0% 0% /0.1607843137254902) 0%);
@@ -82,6 +84,7 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 					display: flex;
 					align-items: center;
 					gap: 12px;
+					min-width: 0;
 
 					&.hidden {
 						visibility: hidden;
@@ -95,10 +98,16 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 						border-radius: 50%;
 					}
 
+					img {
+						flex: none;
+					}
+
 					& > div {
 						display: flex;
 						flex-direction: column;
 						gap: 2px;
+						min-width: 0;
+						overflow: hidden;
 
 						span {
 							line-height: 16px;
@@ -111,6 +120,7 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 				.media-actions {
 					pointer-events: auto;
 					display: flex;
+					flex: none;
 					gap: 8px;
 
 					.group-buttons-container {
@@ -171,8 +181,8 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 				align-self: stretch;
 				overflow: hidden;
 				display: grid;
-				grid-template-columns: auto 1fr auto;
-				grid-template-rows: 1fr;
+				grid-template-columns: auto minmax(0, 1fr) auto;
+				grid-template-rows: minmax(0, 1fr);
 				gap: 12px;
 				pointer-events: none;
 
@@ -215,19 +225,23 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 
 			nav {
 				display: flex;
-				justify-content: center;
+				justify-content: safe center;
 				align-items: center;
+				min-width: 0;
 				pointer-events: none;
 				.items-navigation-container {
 					pointer-events: auto;
 					display: flex;
 					height: 40px;
+					max-width: 100%;
 					gap: 2px;
 					align-items: center;
-					justify-content: center;
 					border-radius: 8px;
-					overflow: hidden;
+					overflow-x: auto;
+					overflow-y: hidden;
+					scrollbar-width: none;
 					button {
+						flex: none;
 						width: 40px;
 						height: 40px;
 						padding: 0;
@@ -314,6 +328,30 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 				nav {
 					opacity: 0;
 					pointer-events: none !important;
+				}
+			}
+		}
+
+		@media (max-width: 600px) {
+			.media-fullscreen-previewer {
+				padding: 12px 8px;
+
+				header .author-info {
+					gap: 8px;
+
+					img {
+						width: 32px;
+						height: 32px;
+					}
+				}
+
+				main {
+					gap: 4px;
+				}
+
+				button.btn {
+					min-height: 32px;
+					min-width: 32px;
 				}
 			}
 		}
@@ -678,6 +716,14 @@ export class DiscordMediaFullscreenPreviewer extends LitElement implements Light
 	public override updated(changed: PropertyValues) {
 		super.updated(changed);
 		this.patchCurrentMediaContainerHeight();
+
+		// Keyboard navigation (arrows, Escape) listens on the container, so it needs focus once open.
+		if (changed.has('isOpen') && this.isOpen) this.containerRef.value?.focus({ preventScroll: true });
+
+		// The thumbnail strip scrolls on narrow screens: keep the current one in view.
+		if (changed.has('currentSlot') || changed.has('isOpen')) {
+			this.renderRoot.querySelector('.items-navigation-container button.selected')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+		}
 	}
 
 	protected override render() {
