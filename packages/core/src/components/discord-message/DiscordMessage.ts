@@ -168,6 +168,10 @@ export class DiscordMessage extends LitElement implements LightTheme {
 		}
 
 		.discord-message-content {
+			/* Grow into the row but never past it: without min-width a wide child (an embed, a file,
+			   a long link) sets the minimum width and pushes the page sideways on small screens. */
+			flex: 1 1 auto;
+			min-width: 0;
 			width: 100%;
 			line-height: 160%;
 			font-weight: normal;
@@ -178,6 +182,7 @@ export class DiscordMessage extends LitElement implements LightTheme {
 			font-size: 1rem;
 			font-weight: 400;
 			word-break: break-word;
+			overflow-wrap: anywhere;
 			position: relative;
 		}
 
@@ -213,7 +218,7 @@ export class DiscordMessage extends LitElement implements LightTheme {
 
 		.discord-message-compact-indent {
 			display: grid;
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 
 		:host .discord-message-markup {

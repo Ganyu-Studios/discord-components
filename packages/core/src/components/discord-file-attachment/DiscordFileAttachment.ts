@@ -131,6 +131,8 @@ export class DiscordFileAttachment extends LitElement implements LightTheme {
 
 			.discord-file-attachment-inner {
 				flex: 1;
+				/* Lets a long file name end in an ellipsis instead of widening the card. */
+				min-width: 0;
 				white-space: nowrap;
 				text-overflow: ellipsis;
 				overflow: hidden;

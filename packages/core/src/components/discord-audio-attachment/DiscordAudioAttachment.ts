@@ -101,6 +101,8 @@ export class DiscordAudioAttachment extends DiscordMediaLifecycle implements Lig
 			.discord-audio-attachment-audio-metadata-content {
 				padding: 0 8px;
 				flex: 1 1 auto;
+				min-width: 0;
+				text-overflow: ellipsis;
 				white-space: nowrap;
 				overflow: hidden;
 			}
@@ -173,7 +175,7 @@ export class DiscordAudioAttachment extends DiscordMediaLifecycle implements Lig
 	public lightTheme = false;
 
 	protected override render() {
-		const parsedName = this.name?.replaceAll(/\s/g, '_')?.replaceAll(/[^\w-]/g, '');
+		const parsedName = this.name?.replaceAll(/\s/g, '_')?.replaceAll(/[^\w.-]/g, '');
 
 		return html`<div class="discord-media-attachment-non-visual-media-item-container">
 			<div class="discord-audio-attachment-non-visual-media-item">
