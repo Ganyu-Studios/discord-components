@@ -435,7 +435,7 @@ export class DiscordReply extends LitElement implements LightTheme {
 						() =>
 							html`<span class="discord-clan-tag">
 								${
-									clanIcon === 'string'
+									typeof clanIcon === 'string'
 										? html`<img
 												srcset=${ifDefined(clanIcon)}
 												alt=${ifDefined(slicedClanTag)}
