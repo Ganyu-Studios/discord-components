@@ -22,7 +22,7 @@
 		"./dist/cjs/index.cjs",
 		"./dist/esm/index.mjs"
 	],
-	"homepage": "https://github.com/skyra-project/discord-components/tree/main/packages/react#readme",
+	"homepage": "https://github.com/Ganyu-Studios/discord-components/tree/main/packages/react#readme",
 	"scripts": {
 		"build": "tsdown",
 		"prepack": "pnpm build"
@@ -30,15 +30,15 @@
 	"dependencies": {
 		"@lit/react": "^1.0.8",
 		"@penwin/discord-components-core": "workspace:^",
-		"react": "^19.3.0"
+		"react": "^19.3.1"
 	},
 	"devDependencies": {
-		"lit": "^3.3.3",
 		"@types/react": "^19.3.0",
-		"colorette": "^2.0.20",
-		"rimraf": "^6.1.3",
-		"tsdown": "^0.23.0",
 		"@typescript/native": "npm:typescript@^7.0.2",
+		"colorette": "^2.0.20",
+		"lit": "^3.3.3",
+		"rimraf": "^6.1.4",
+		"tsdown": "^0.23.7",
 		"typescript": "npm:@typescript/typescript6@^6.0.2"
 	},
 	"peerDependencies": {
@@ -57,10 +57,11 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/skyra-project/discord-components.git"
+		"url": "git+https://github.com/Ganyu-Studios/discord-components.git",
+		"directory": "packages/react"
 	},
 	"bugs": {
-		"url": "https://github.com/skyra-project/discord-components/issues"
+		"url": "https://github.com/Ganyu-Studios/discord-components/issues"
 	},
 	"keywords": [
 		"skyra",
