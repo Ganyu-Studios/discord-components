@@ -17,10 +17,18 @@ export class DiscordTextDisplay extends LitElement {
 			font-family: 'gg sans', 'Noto Sans', Whitney, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
 			justify-content: var(--justify-content, flex-start);
 		}
+
+		/* One block for all the slotted content, so text, formatting and emojis flow inline as they
+		   do in a message instead of each becoming its own flex row. */
+		.discord-text-display-content {
+			display: block;
+			min-width: 0;
+			overflow-wrap: anywhere;
+		}
 	`;
 
 	protected override render() {
-		return html`<slot></slot>`;
+		return html`<div class="discord-text-display-content"><slot></slot></div>`;
 	}
 }
 

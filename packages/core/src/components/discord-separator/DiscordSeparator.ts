@@ -19,7 +19,16 @@ export class DiscordSeparator extends LitElement {
 		}
 	`;
 
-	@property({ type: Boolean })
+	/**
+	 * Whether a line is drawn, as in Discord's `divider` field. It defaults to `true`, so a
+	 * plain boolean attribute could never turn it off: `divider="false"` does.
+	 */
+	@property({
+		converter: {
+			fromAttribute: (value) => value !== 'false',
+			toAttribute: (value: boolean) => (value ? '' : 'false')
+		}
+	})
 	public divider = true;
 
 	@property({ type: Number, reflect: true })
